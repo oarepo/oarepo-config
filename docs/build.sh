@@ -6,6 +6,7 @@
 #   ./docs/build.sh          build the HTML docs into docs/_build/html
 #   ./docs/build.sh --open   ...and open them in the default browser
 #   ./docs/build.sh --serve  ...and serve them with auto-rebuild on change
+#   ./docs/build.sh vars     regenerate variables.md from oarepo_config functions
 #
 # Reuses the repository's own .venv (the same one ./run.sh sets up for
 # tests) if one already exists, so it also picks up the "oarepo[rdm,tests]"
@@ -60,6 +61,11 @@ fi
 mode="${1:-build}"
 
 case "${mode}" in
+    vars)
+        echo "==> Regenerating variables.md from oarepo_config functions" >&2
+        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH:-/opt/homebrew/lib}
+        python "${docs_dir}/mkvars.py"
+        ;;
     --serve)
         echo "==> Serving docs with live-reload at http://127.0.0.1:8000" >&2
         sphinx-autobuild "${docs_dir}" "${build_dir}"
