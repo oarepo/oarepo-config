@@ -5,5 +5,6 @@
 :hidden:
 :caption: Contents
 
+guide
 api
 ```
