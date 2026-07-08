@@ -9,6 +9,12 @@ def initialize_i18n():
 
     Invenio configuration variables set: none - this only patches
     Marshmallow's error-message machinery in memory.
+
+    Example:
+
+    ```python
+    config.initialize_i18n()
+    ```
     """
     from flask_babel import lazy_gettext as _
     from marshmallow_i18n_messages import add_i18n_to_marshmallow

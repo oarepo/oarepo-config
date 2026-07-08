@@ -3,9 +3,9 @@ from __future__ import annotations
 import inspect
 from typing import TYPE_CHECKING
 
-from invenio_i18n import gettext as _
 from flask_babel import LazyString
 from invenio_base.utils import obj_or_import_string
+from invenio_i18n import gettext as _
 
 if TYPE_CHECKING:
     try:
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
         DefaultWorkflowPermissions = None
 
 from .base import get_constant_from_caller, set_constants_in_caller
+
 
 def register_workflow(
     workflow_code: str,
@@ -62,6 +63,22 @@ def register_workflow(
     * ``REQUESTS_PERMISSION_POLICY`` - only if not already set by an
       earlier call; defaults to
       ``CreatorsFromWorkflowRequestsPermissionPolicy``.
+
+    Example:
+
+    ```python
+    from oarepo_workflows.services.permissions import DefaultWorkflowPermissions
+    from oarepo_requests.services.permissions.workflow_policies import (
+        CreatorsFromWorkflowRequestsPermissionPolicy,
+    )
+
+    config.register_workflow(
+        workflow_code="default",
+        workflow_name=_("Default workflow"),
+        permissions_policy=DefaultWorkflowPermissions,
+        requests_policy=CreatorsFromWorkflowRequestsPermissionPolicy,
+    )
+    ```
     """
     try:
         from oarepo_requests.services.permissions.workflow_policies import (
@@ -85,12 +102,14 @@ def register_workflow(
         requests_policy_cls, WorkflowRequestPolicy
     )
 
-    WORKFLOWS.append(Workflow(
-        code=workflow_code,
-        label=_(workflow_name),
-        permission_policy_cls=permission_policy_cls,
-        request_policy_cls=requests_policy_cls,
-    ))
+    WORKFLOWS.append(
+        Workflow(
+            code=workflow_code,
+            label=_(workflow_name),
+            permission_policy_cls=permission_policy_cls,
+            request_policy_cls=requests_policy_cls,
+        )
+    )
     REQUESTS_PERMISSION_POLICY = get_constant_from_caller(
         "REQUESTS_PERMISSION_POLICY", CreatorsFromWorkflowRequestsPermissionPolicy
     )

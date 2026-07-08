@@ -20,6 +20,17 @@ def configure_jobs(permission_policy=None, logging_level=None):
 
     * ``APP_LOGS_PERMISSION_POLICY`` - the ``permission_policy`` above.
     * ``JOBS_LOGGING_LEVEL`` - the ``logging_level`` above.
+
+    Example:
+
+    ```python
+    config.configure_jobs()
+    # or with custom settings:
+    config.configure_jobs(
+        permission_policy="my_package:policies:MyJobPolicy",
+        logging_level="DEBUG",
+    )
+    ```
     """
     from invenio_jobs.services.permissions import (
         JobLogsPermissionPolicy as InvenioJobLogsPermissionPolicy,

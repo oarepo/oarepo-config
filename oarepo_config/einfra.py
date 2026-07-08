@@ -7,10 +7,15 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Configuration for oarepo-oidc-einfra module."""
+
 import os
 import sys
 
-from .base import merge_with_caller, load_configuration_variables, set_constants_in_caller
+from .base import (
+    load_configuration_variables,
+    merge_with_caller,
+    set_constants_in_caller,
+)
 
 
 def configure_einfra_oidc() -> None:
@@ -43,6 +48,16 @@ def configure_einfra_oidc() -> None:
       client credentials and endpoint configuration.
     * ``USERPROFILES_READ_ONLY`` - only when e-INFRA login is enabled;
       forced to ``True``.
+
+    Example:
+
+    ```python
+    config.configure_einfra_oidc()
+    ```
+
+    Make sure to set ``INVENIO_REMOTE_AUTH_ENABLED=true`` and provide
+    ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``
+    in your deployment's ``variables`` or environment.
     """
     try:
         from oarepo_oidc_einfra import EINFRA_LOGIN_APP
@@ -57,7 +72,9 @@ def configure_einfra_oidc() -> None:
         "yes",
         "1",
     ):
-        OAUTHCLIENT_REMOTE_APPS = merge_with_caller("OAUTHCLIENT_REMOTE_APPS", {"e-infra": EINFRA_LOGIN_APP})
+        OAUTHCLIENT_REMOTE_APPS = merge_with_caller(
+            "OAUTHCLIENT_REMOTE_APPS", {"e-infra": EINFRA_LOGIN_APP}
+        )
         # needed for disconnect
         EINFRA = dict(
             consumer_key=env.INVENIO_EINFRA_CONSUMER_KEY,

@@ -31,6 +31,24 @@ def configure_vocabulary(code: str, **kwargs: Any) -> None:
     * ``INVENIO_VOCABULARY_TYPE_METADATA`` - the entry for ``code`` is
       set to ``kwargs``; entries for other vocabulary codes (added by
       earlier calls) are kept.
+
+    Example:
+
+    ```python
+    config.configure_vocabulary(
+        code="languages",
+        name=_("Languages"),
+        description=_("Language definitions"),
+        props={
+            "alpha3Code": {
+                "description": _("ISO 639-2 standard 3-letter language code"),
+                "multiple": False,
+                "search": False,
+            },
+        },
+        dump_options=True,
+    )
+    ```
     """
     INVENIO_VOCABULARY_TYPE_METADATA = get_constant_from_caller(
         "INVENIO_VOCABULARY_TYPE_METADATA", {}

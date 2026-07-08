@@ -77,6 +77,30 @@ def configure_communities(communities_roles=None):
       and join communities.
     * ``COMMUNITIES_ROLES`` - the ``communities_roles`` list described
       above.
+
+    Example, adding a fourth "submitter" role below "owner"/"curator":
+
+    ```python
+    config.configure_communities(
+        communities_roles=[
+            dict(
+                name="owner",
+                title=_("Community owner"),
+                is_owner=True,
+                can_manage=True,
+                can_manage_roles=["owner", "curator", "member", "submitter"],
+            ),
+            dict(
+                name="curator",
+                title=_("Curator"),
+                can_manage=True,
+                can_manage_roles=["member", "submitter"],
+            ),
+            dict(name="submitter", title=_("Submitter"), can_manage=True),
+            dict(name="member", title=_("Member")),
+        ]
+    )
+    ```
     """
     COMMUNITIES_REGISTER_UI_BLUEPRINT = True
     COMMUNITIES_PERMISSION_POLICY = DefaultCommunitiesPermissionPolicy

@@ -29,6 +29,14 @@ def add_model(model_package_name: str) -> None:
     * ``GLOBAL_SEARCH_MODELS`` - the model's ``MODEL_DEFINITION`` is
       appended to this list; any models already registered (by earlier
       calls, or by other packages) are kept.
+
+    Example:
+
+    ```python
+    from datasets import datasets_model
+    datasets_model.register()
+    config.add_model("datasets")
+    ```
     """
     GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller(
         "GLOBAL_SEARCH_MODELS", []
