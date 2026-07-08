@@ -3,10 +3,10 @@
 # Build the Sphinx API documentation for oarepo-config locally.
 #
 # Usage:
-#   ./docs/build.sh          build the HTML docs into docs/_build/html
+#   ./docs/build.sh          build the HTML docs into docs/_build/html (includes variables.md)
 #   ./docs/build.sh --open   ...and open them in the default browser
 #   ./docs/build.sh --serve  ...and serve them with auto-rebuild on change
-#   ./docs/build.sh vars     regenerate variables.md from oarepo_config functions
+#   ./docs/build.sh vars     regenerate only variables.md
 #
 # Reuses the repository's own .venv (the same one ./run.sh sets up for
 # tests) if one already exists, so it also picks up the "oarepo[rdm,tests]"
@@ -67,10 +67,18 @@ case "${mode}" in
         python "${docs_dir}/mkvars.py"
         ;;
     --serve)
+        echo "==> Generating variables.md first" >&2
+        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH:-/opt/homebrew/lib}
+        python "${docs_dir}/mkvars.py" 2>&1 | grep -v "WARNING\|DEBUG\|Flask-DebugToolbar\|JSONSCHEMAS" || true
+
         echo "==> Serving docs with live-reload at http://127.0.0.1:8000" >&2
         sphinx-autobuild "${docs_dir}" "${build_dir}"
         ;;
     --open | build | "")
+        echo "==> Generating variables.md first" >&2
+        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH:-/opt/homebrew/lib}
+        python "${docs_dir}/mkvars.py" 2>&1 | grep -v "WARNING\|DEBUG\|Flask-DebugToolbar\|JSONSCHEMAS" || true
+
         echo "==> Building HTML documentation" >&2
         sphinx-build -b html "${docs_dir}" "${build_dir}"
         echo "==> Documentation built at ${build_dir}/index.html" >&2

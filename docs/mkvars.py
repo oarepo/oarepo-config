@@ -93,6 +93,7 @@ def extract_config_variables_from_file(file_path):
     - Module-level assignments with uppercase variable names
     - Docstrings (triple-quoted strings) following the assignment
     - Inline comments after assignments
+    - Line numbers where variables are defined
     """
     variables = {}
 
@@ -103,12 +104,6 @@ def extract_config_variables_from_file(file_path):
         tree = ast.parse(source)
         lines = source.split("\n")
 
-        # Build a map of line numbers to nodes for easier lookup
-        node_by_line = {}
-        for node in ast.walk(tree):
-            if hasattr(node, "lineno"):
-                node_by_line[node.lineno] = node
-
         for node in ast.walk(tree):
             # Look for assignments at module level
             if isinstance(node, ast.Assign):
@@ -116,6 +111,7 @@ def extract_config_variables_from_file(file_path):
                     if isinstance(target, ast.Name) and target.id.isupper():
                         var_name = target.id
                         docstring = None
+                        line_number = node.lineno
 
                         # Get value representation
                         try:
@@ -176,12 +172,47 @@ def extract_config_variables_from_file(file_path):
                             "docstring": docstring,
                             "file": str(file_path),
                             "value": value_repr,
+                            "line": line_number,
                         }
 
     except Exception as e:
         print(f"Warning: Could not parse {file_path}: {e}", file=sys.stderr)
 
     return variables
+
+
+def convert_path_to_github_link(file_path, line_number):
+    """Convert a file path to a GitHub link.
+
+    For invenio_* packages: https://github.com/inveniosoftware/{package}/blob/master/{relative_path}#L{line}
+    For oarepo_* packages: https://github.com/oarepo/{package}/blob/master/{relative_path}#L{line}
+    For other paths: return as-is with line number
+    """
+    from pathlib import Path
+
+    path = Path(file_path)
+
+    # Check if it's an invenio_ package
+    if path.parent.name.startswith("invenio_"):
+        package_name = path.parent.name
+        # Convert underscore to dash for GitHub repo name
+        repo_name = package_name.replace("_", "-")
+        relative_path = path.name
+        return f"[{repo_name}]({{base_url}}/{repo_name}/blob/master/{package_name}/{relative_path}#L{line_number})".replace(
+            "{base_url}", "https://github.com/inveniosoftware"
+        )
+
+    # Check if it's an oarepo_ package
+    elif path.parent.name.startswith("oarepo_"):
+        package_name = path.parent.name
+        # Convert underscore to dash for GitHub repo name
+        repo_name = package_name.replace("_", "-")
+        relative_path = path.name
+        return f"[{repo_name}](https://github.com/oarepo/{repo_name}/blob/master/{package_name}/{relative_path}#L{line_number})"
+
+    # For other paths, just show the filename with line number
+    else:
+        return f"{path.name} (line {line_number})"
 
 
 def analyze_oarepo_config_functions(oarepo_config_dir):
@@ -346,14 +377,14 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
                         else repr(value),
                         "type": type(value).__name__,
                         "docstring": None,
-                        "source": "app.config",
+                        "source": "unknown",
                     }
                 elif isinstance(value, (dict, list, tuple, set)):
                     all_variables[key] = {
                         "value": f"<{type(value).__name__}>",
                         "type": type(value).__name__,
                         "docstring": None,
-                        "source": "app.config",
+                        "source": "unknown",
                     }
 
     # Add variables from extension config files
@@ -366,19 +397,43 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
                     "type": "unknown",
                     "docstring": var_info.get("docstring"),
                     "source": info["path"],
+                    "line": var_info.get("line"),
+                    "sources": [
+                        (info["path"], var_info.get("line"))
+                    ],  # Track all sources
                 }
             else:
-                # If the variable already exists (from app.config),
-                # update it with the docstring from the config file if available
+                # If the variable already exists, add this source to the list
+                if "sources" not in all_variables[var_name]:
+                    # Initialize sources list with the existing source if it's from a file
+                    if all_variables[var_name].get("source") and not all_variables[
+                        var_name
+                    ]["source"].startswith("/"):
+                        # Source is not a file path (e.g., "unknown"), so don't add it
+                        all_variables[var_name]["sources"] = []
+                    else:
+                        # Source is a file path, add it to the list
+                        line = all_variables[var_name].get("line")
+                        all_variables[var_name]["sources"] = [
+                            (all_variables[var_name]["source"], line)
+                        ]
+
+                all_variables[var_name]["sources"].append(
+                    (info["path"], var_info.get("line"))
+                )
+
+                # Update docstring if available and not already set
                 if var_info.get("docstring") and not all_variables[var_name].get(
                     "docstring"
                 ):
                     all_variables[var_name]["docstring"] = var_info["docstring"]
-                    # Also update source to indicate it comes from extension config
-                    if all_variables[var_name].get("source") == "app.config":
-                        all_variables[var_name]["source"] = (
-                            f"{info['path']} (via app.config)"
-                        )
+
+                # Update line number if available (use first one found)
+                if var_info.get("line") and not all_variables[var_name].get("line"):
+                    all_variables[var_name]["line"] = var_info["line"]
+
+                # Update source to the current file (for backward compatibility)
+                all_variables[var_name]["source"] = info["path"]
 
     # Merge with oarepo_config function references
     variables_with_functions = defaultdict(list)
@@ -407,7 +462,10 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
             ref_names = "-"
 
         var_type = var_info.get("type", "unknown")
-        lines.append(f"| `{var_name}` | {var_type} | {ref_names} |\n")
+        # Create a link from the variable name to its detailed section
+        lines.append(
+            f"| [`{var_name}`](#{var_name.lower()}) | {var_type} | {ref_names} |\n"
+        )
 
     # Generate detailed sections
     lines.append("\n## Detailed Variable Reference\n")
@@ -416,7 +474,9 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
         var_info = all_variables[var_name]
         ref_funcs = variables_with_functions.get(var_name, [])
 
-        lines.append(f"### `{var_name}`\n")
+        # Create anchor for the variable (lowercase for markdown compatibility)
+        anchor = var_name.lower()
+        lines.append(f"### <a id='{anchor}'></a>`{var_name}`\n")
 
         # Build table rows without header
         table_rows = []
@@ -439,8 +499,37 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
 
         # Source
         if var_info.get("source"):
-            source = var_info["source"].replace("|", "\\|")
-            table_rows.append(f"| **Source** | {source} |")
+            source = var_info["source"]
+            # Check if there are multiple sources
+            if var_info.get("sources") and len(var_info["sources"]) > 1:
+                # Show all sources as GitHub links
+                sources_list = []
+                for path, line in var_info["sources"]:
+                    github_link = convert_path_to_github_link(path, line)
+                    sources_list.append(github_link)
+                sources_str = "; ".join(sources_list)
+                table_rows.append(f"| **Sources** | {sources_str} |")
+            elif var_info.get("line"):
+                # Single source with line number - convert to GitHub link
+                github_link = convert_path_to_github_link(source, var_info["line"])
+                table_rows.append(f"| **Source** | {github_link} |")
+            else:
+                table_rows.append(f"| **Source** | {source.replace('|', '\\|')} |")
+
+        # Set by functions
+        if ref_funcs:
+            # Get unique function names
+            seen_funcs = set()
+            func_links = []
+            for func in ref_funcs:
+                if func["function"] not in seen_funcs:
+                    seen_funcs.add(func["function"])
+                    # Create a link to the API docs with full module path
+                    func_link = f"[`{func['function']}`](api.html#oarepo_config.{func['function']})"
+                    func_links.append(func_link)
+            if func_links:
+                funcs_str = ", ".join(func_links)
+                table_rows.append(f"| **Set by** | {funcs_str} |")
 
         # Add table with separator after first row
         if table_rows:
@@ -448,25 +537,10 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):
             lines.append("|--------------|-----------|\n")
             for row in table_rows[1:]:
                 lines.append(row + "\n")
-            lines.append("\n")
-
-        # Referencing functions
-        if ref_funcs:
-            lines.append("**Set/Referenced by:**\n")
-            seen_funcs = set()
-            for func in ref_funcs:
-                if func["function"] not in seen_funcs:
-                    seen_funcs.add(func["function"])
-                    lines.append(f"- [`{func['function']}`](#) in `{func['file']}`\n")
-                    if func.get("docstring"):
-                        doc = func["docstring"].replace("\n", " ").strip()
-                        if len(doc) > 200:
-                            doc = doc[:200] + "..."
-                        # Escape pipe characters
-                        doc = doc.replace("|", "\\|")
-                        lines.append(f"  > {doc}\n")
-
-        lines.append("---\n\n")
+            lines.append("\n---\n\n")
+        else:
+            # No table rows, just add a blank line and separator
+            lines.append("\n---\n\n")
 
     return "".join(lines)
 
