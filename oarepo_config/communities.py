@@ -68,6 +68,15 @@ def configure_communities(communities_roles=None):
             ``description``, ``is_owner``, ``can_manage``,
             ``can_curate`` and ``can_manage_roles`` (the names of the
             roles this role is allowed to add/remove).
+
+    Invenio configuration variables set:
+
+    * ``COMMUNITIES_REGISTER_UI_BLUEPRINT`` - always ``True``; enables
+      the communities UI.
+    * ``COMMUNITIES_PERMISSION_POLICY`` - who can create, manage, curate
+      and join communities.
+    * ``COMMUNITIES_ROLES`` - the ``communities_roles`` list described
+      above.
     """
     COMMUNITIES_REGISTER_UI_BLUEPRINT = True
     COMMUNITIES_PERMISSION_POLICY = DefaultCommunitiesPermissionPolicy

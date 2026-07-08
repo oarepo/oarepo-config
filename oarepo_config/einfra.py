@@ -33,6 +33,16 @@ def configure_einfra_oidc() -> None:
     ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``
     must also be provided (see the deployment's ``variables``/``.env``
     configuration).
+
+    Invenio configuration variables set:
+
+    * ``OAUTHCLIENT_REMOTE_APPS`` - always updated (merged with any
+      existing value); gets an ``"e-infra"`` entry only when e-INFRA
+      login is enabled.
+    * ``EINFRA`` - only when e-INFRA login is enabled; the e-INFRA
+      client credentials and endpoint configuration.
+    * ``USERPROFILES_READ_ONLY`` - only when e-INFRA login is enabled;
+      forced to ``True``.
     """
     try:
         from oarepo_oidc_einfra import EINFRA_LOGIN_APP

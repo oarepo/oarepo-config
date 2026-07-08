@@ -329,7 +329,8 @@ Sets `OAISERVER_REPOSITORY_NAME` from the already-configured
 `ValueError("REPOSITORY_NAME must be set, please configure UI before configuring OAI.")`
 if it isn't set yet. Takes no other arguments; most other OAI-PMH
 settings (`OAISERVER_ID_FETCHER`, `OAISERVER_RECORD_CLS`, etc.) live in
-`initial_rdm_config.py` instead (see [below](#initial-configuration-modules)).
+`initial_rdm_config.py` instead (see
+[below](#initial_configurationpy--initial_rdm_configpy)).
 
 ### `configure_einfra_oidc`
 

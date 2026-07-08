@@ -12,6 +12,11 @@ def configure_oai():
     Takes no parameters. Must be called *after* :func:`configure_ui`,
     since it needs the repository name that function sets up; calling it
     earlier raises an error explaining this.
+
+    Invenio configuration variables set:
+
+    * ``OAISERVER_REPOSITORY_NAME`` - copied from ``REPOSITORY_NAME``
+      (set by :func:`configure_ui`).
     """
     repo_name = get_constant_from_caller("REPOSITORY_NAME")
     if not repo_name:

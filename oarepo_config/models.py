@@ -23,6 +23,12 @@ def add_model(model_package_name: str) -> None:
             from a ``datasets`` model package. If the package cannot be
             found or has not been built yet, this is only logged as an
             error - it does not stop the repository from starting.
+
+    Invenio configuration variables set:
+
+    * ``GLOBAL_SEARCH_MODELS`` - the model's ``MODEL_DEFINITION`` is
+      appended to this list; any models already registered (by earlier
+      calls, or by other packages) are kept.
     """
     GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller(
         "GLOBAL_SEARCH_MODELS", []

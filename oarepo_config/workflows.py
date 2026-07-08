@@ -54,6 +54,14 @@ def register_workflow(
 
     Requires the optional ``oarepo_workflows`` (and, for its defaults,
     ``oarepo_requests``) package to be installed.
+
+    Invenio configuration variables set:
+
+    * ``WORKFLOWS`` - the new workflow is appended; workflows already
+      registered (by earlier calls) are kept.
+    * ``REQUESTS_PERMISSION_POLICY`` - only if not already set by an
+      earlier call; defaults to
+      ``CreatorsFromWorkflowRequestsPermissionPolicy``.
     """
     try:
         from oarepo_requests.services.permissions.workflow_policies import (

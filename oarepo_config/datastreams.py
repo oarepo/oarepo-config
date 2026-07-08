@@ -30,6 +30,15 @@ def configure_datastreams(readers: dict[str, Any] | None = None, writers: dict[s
     Any readers/writers/transformers already registered (for example by
     :func:`configure_generic_parameters`) are kept; the ones passed here
     are added on top.
+
+    Invenio configuration variables set:
+
+    * ``VOCABULARIES_DATASTREAM_READERS`` - only if ``readers`` is
+      given; merged with any existing value.
+    * ``VOCABULARIES_DATASTREAM_WRITERS`` - only if ``writers`` is
+      given; merged with any existing value.
+    * ``VOCABULARIES_DATASTREAM_TRANSFORMERS`` - only if
+      ``transformers`` is given; merged with any existing value.
     """
     # can't move into a function cause of constant_from_caller methods
     if readers:

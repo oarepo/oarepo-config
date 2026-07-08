@@ -30,6 +30,13 @@ def configure_stats(
         enable: Set to ``False`` to turn off collecting new usage
             statistics events (for example on a staging/test instance).
             Defaults to ``True``.
+
+    Invenio configuration variables set:
+
+    * ``STATS_REGISTER_RECEIVERS`` - the ``enable`` argument above.
+    * ``STATS_EVENTS``, ``STATS_AGGREGATIONS``, ``STATS_QUERIES``,
+      ``STATS_PERMISSION_FACTORY`` - always set to ``invenio-app-rdm``'s
+      defaults, regardless of ``enable``.
     """
     STATS_REGISTER_RECEIVERS = enable
 

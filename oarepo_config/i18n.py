@@ -6,6 +6,9 @@ def initialize_i18n():
     translated into their chosen language instead of always being shown
     in English. Takes no parameters; call it once, near the top of
     ``invenio.cfg``.
+
+    Invenio configuration variables set: none - this only patches
+    Marshmallow's error-message machinery in memory.
     """
     from flask_babel import lazy_gettext as _
     from marshmallow_i18n_messages import add_i18n_to_marshmallow

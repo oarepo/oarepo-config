@@ -64,6 +64,54 @@ def configure_ui(
     Should be called after :func:`configure_generic_parameters` (it
     builds on settings that function prepares) and before
     :func:`configure_oai` (which needs the repository name set here).
+
+    Invenio configuration variables set, grouped by area:
+
+    Versioning
+        * ``DEPLOYMENT_VERSION``
+
+    Theme & security
+        * ``APP_THEME``
+        * ``APP_DEFAULT_SECURE_HEADERS`` - extends the value prepared by
+          :func:`configure_generic_parameters`.
+
+    Page layout templates
+        * ``INSTANCE_THEME_FILE``
+        * ``BASE_TEMPLATE``, ``ADMINISTRATION_THEME_BASE_TEMPLATE``,
+          ``COVER_TEMPLATE``
+        * ``THEME_CSS_TEMPLATE``, ``THEME_JAVASCRIPT_TEMPLATE``
+        * ``HEADER_TEMPLATE``, ``THEME_HEADER_TEMPLATE``,
+          ``THEME_HEADER_LOGIN_TEMPLATE``, ``THEME_FOOTER_TEMPLATE``
+        * ``THEME_TRACKINGCODE_TEMPLATE``, ``THEME_FRONTPAGE_TEMPLATE``
+        * ``SETTINGS_TEMPLATE``, ``SEARCH_UI_SEARCH_TEMPLATE``
+
+    Analytics
+        * ``MATOMO_ANALYTICS_TEMPLATE``, ``MATOMO_ANALYTICS_URL``,
+          ``MATOMO_ANALYTICS_SITE_ID`` - only if ``analytics="matomo"``
+          and this is not a local-development deployment.
+
+    Branding
+        * ``THEME_FRONTPAGE``, ``THEME_LOGO``, ``THEME_FRONTPAGE_LOGO``
+        * ``THEME_SITENAME``, ``THEME_FRONTPAGE_TITLE``,
+          ``THEME_SHOW_FRONTPAGE_INTRO_SECTION``
+
+    Repository metadata (SEO & front page)
+        * ``REPOSITORY_NAME``, ``REPOSITORY_DESCRIPTION``,
+          ``REPOSITORY_SUPPORT_CONTACT``, ``REPOSITORY_SUBTITLE``,
+          ``REPOSITORY_KEYWORDS``
+
+    Build pipeline
+        * ``JAVASCRIPT_PACKAGES_MANAGER``, ``ASSETS_BUILDER``,
+          ``WEBPACKEXT_NPM_PKG_CLS``, ``WEBPACKEXT_PROJECT``
+
+    Records & deposit UI
+        * ``RECORDS_UI_ENDPOINTS``,
+          ``APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED``,
+          ``DASHBOARD_RECORD_CREATE_URL``
+        * ``APP_RDM_DETAIL_SIDE_BAR_TEMPLATES``
+
+    Search UI
+        * ``THEME_SEARCH_ENDPOINT``, ``SEARCH_UI_SEARCH_VIEW``
     """
     env = load_configuration_variables()
 

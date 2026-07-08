@@ -25,6 +25,12 @@ def configure_vocabulary(code: str, **kwargs: Any) -> None:
     Calling this multiple times with different ``code`` values adds
     multiple vocabularies; it does not replace previously configured
     ones.
+
+    Invenio configuration variables set:
+
+    * ``INVENIO_VOCABULARY_TYPE_METADATA`` - the entry for ``code`` is
+      set to ``kwargs``; entries for other vocabulary codes (added by
+      earlier calls) are kept.
     """
     INVENIO_VOCABULARY_TYPE_METADATA = get_constant_from_caller(
         "INVENIO_VOCABULARY_TYPE_METADATA", {}

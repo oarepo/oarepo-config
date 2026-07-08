@@ -33,6 +33,13 @@ def configure_cron(**extra_cron_items: Any) -> None:
                         "schedule": timedelta(minutes=30),
                     },
                 )
+
+    Invenio configuration variables set:
+
+    * ``CELERY_BEAT_SCHEDULE`` - merged with any schedule already
+      defined earlier in ``invenio.cfg``; entries from
+      ``**extra_cron_items`` win over the built-in defaults listed
+      above when their names collide.
     """
     CELERY_BEAT_SCHEDULE = merge_with_caller("CELERY_BEAT_SCHEDULE", {
         "indexer": {

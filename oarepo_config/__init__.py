@@ -6,35 +6,39 @@
 # oarepo-config is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-"""Helper classes for better invenio.cfg config file.
+"""Helper functions for writing a clean, high-level ``invenio.cfg``.
 
-To use the configuration, you need to put the following to invenio.cfg:
+Instead of hand-assembling dozens of Flask/Invenio config constants,
+``invenio.cfg`` calls a small number of ``configure_*()`` functions from
+this package. Each one computes a group of related settings and writes
+them directly into ``invenio.cfg``'s own configuration, as if you had
+set them by hand::
 
-from invenio_i18n import lazy_gettext as _
-from oarepo import config
+    import oarepo_config as config
+    from invenio_i18n import lazy_gettext as _
 
-# glitchtip for reporting incidents
-config.initialize_glitchtip()
+    config.initialize_i18n()
 
-# i18n
-config.initialize_i18n()
+    config.configure_generic_parameters(
+        languages=(("cs", _("Czech")),),
+    )
 
-env = config.load_configuration_variables()
+    config.configure_ui(
+        code="myrepo",
+        name=_("My repository"),
+        description=_("Description of my repository"),
+    )
 
-config.configure_generic_parameters(
-    env,
-    code="myrepo",
-    name=_("My repository"),
-    description=_("Description of my repository"),
-)
+    config.configure_communities()
+    config.configure_cron()
+    config.configure_stats()
 
-# use the config.<something> here to create high-level configuration of the repository
-# or use CONFIG_VARIABLE=VALUE to directly set the configuration variables
+    # Feel free to add/override plain CONFIG_VARIABLE = value assignments
+    # below, or use config.configure_vocabulary(...), config.add_model(...),
+    # config.register_workflow(...), etc. for further options.
 
-config.register_workflow(...)
-config.configure_cron(...)
-config.configure_vocabulary(...)
-config.add_model(...)
+See the project's README for the full list of available functions, the
+order they should be called in, and the environment variables they read.
 """
 
 from __future__ import annotations
@@ -65,6 +69,10 @@ except ImportError:
                 (e.g. a git commit or release tag), included with
                 reported errors so they can be traced back to a
                 specific version.
+
+        Invenio configuration variables set: implemented entirely in
+        the separate ``oarepo-glitchtip`` package, so the exact set of
+        variables it writes is documented there, not here.
         """
         raise ImportError("oarepo-glitchtip is not installed")
 

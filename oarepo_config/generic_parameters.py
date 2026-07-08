@@ -67,6 +67,103 @@ def configure_generic_parameters(
             uses record identifiers that themselves contain a slash
             (``/``); it adjusts the URLs used for managing record access
             so that such identifiers keep working.
+
+    Invenio configuration variables set, grouped by area:
+
+    Public URLs & security headers
+        * ``APP_ALLOWED_HOSTS``
+        * ``SITE_UI_URL``, ``SITE_API_URL``
+        * ``APP_DEFAULT_SECURE_HEADERS``
+
+    Local login & accounts
+        * ``ACCOUNTS_LOCAL_LOGIN_ENABLED``, ``SECURITY_REGISTERABLE``,
+          ``SECURITY_RECOVERABLE``, ``SECURITY_CHANGEABLE``,
+          ``SECURITY_CONFIRMABLE``,
+          ``SECURITY_LOGIN_WITHOUT_CONFIRMATION``
+        * ``SESSION_COOKIE_SECURE``
+        * ``RATELIMIT_GUEST_USER``, ``RATELIMIT_AUTHENTICATED_USER``
+        * ``OAUTHCLIENT_REMOTE_APPS`` - starts out empty here; extended
+          by :func:`configure_einfra_oidc` if used.
+        * ``ACCOUNTS_LOGIN_VIEW_FUNCTION``,
+          ``OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN``
+
+    Database
+        * ``SQLALCHEMY_DATABASE_URI``
+
+    Translation/locale
+        * ``BABEL_DEFAULT_LOCALE``, ``BABEL_DEFAULT_TIMEZONE``,
+          ``I18N_LANGUAGES``
+
+    Files & storage
+        * ``SEND_FILE_MAX_AGE_DEFAULT``, ``FILES_REST_STORAGE_FACTORY``
+        * ``S3_ENDPOINT_URL``, ``S3_ACCESS_KEY_ID``,
+          ``S3_SECRET_ACCESS_KEY``
+        * ``FILES_REST_STORAGE_CLASS_LIST``,
+          ``FILES_REST_DEFAULT_STORAGE_CLASS``,
+          ``FILES_REST_DEFAULT_QUOTA_SIZE``
+        * ``APP_RDM_DEPOSIT_FORM_QUOTA``
+
+    User profiles
+        * ``USERPROFILES_READ_ONLY``
+
+    OAI-PMH
+        * ``OAISERVER_ID_PREFIX``
+
+    Search (OpenSearch)
+        * ``SEARCH_INDEX_PREFIX``, ``SEARCH_HOSTS``,
+          ``SEARCH_CLIENT_CONFIG``
+        * ``VOCABULARIES_SERVICE_CONFIG``,
+          ``VOCABULARIES_RESOURCE_CONFIG`` - only if the optional
+          ``oarepo_vocabularies`` package is installed.
+
+    Caches (Redis)
+        * ``INVENIO_CACHE_TYPE``, ``CACHE_REDIS_URL``,
+          ``ACCOUNTS_SESSION_REDIS_URL``,
+          ``COMMUNITIES_IDENTITIES_CACHE_REDIS_URL``
+
+    Background jobs (Celery/RabbitMQ)
+        * ``CELERY_BROKER_URL``, ``BROKER_URL``,
+          ``CELERY_RESULT_BACKEND``
+
+    JSON schemas
+        * ``RECORDS_REFRESOLVER_CLS``, ``RECORDS_REFRESOLVER_STORE``,
+          ``JSONSCHEMAS_HOST``
+
+    Secrets
+        * ``SECRET_KEY``
+
+    Records/REST compatibility
+        * ``DASHBOARD_RECORD_CREATE_URL``, ``RECORD_ROUTES``,
+          ``RECORDS_REST_ENDPOINTS``
+
+    DataCite/DOIs
+        * ``DATACITE_TEST_MODE``
+
+    Mail
+        * ``MAIL_DEFAULT_SENDER``
+        * ``MAIL_SUPPRESS_SEND`` - only if ``INVENIO_MAIL_SUPPRESS_SEND``
+          is set in the environment.
+
+    Identifier/name/funder/affiliation vocabularies
+        * ``VOCABULARIES_NAMES_SCHEMES``, ``VOCABULARIES_FUNDER_SCHEMES``,
+          ``VOCABULARIES_AFFILIATION_SCHEMES`` - merged with any
+          existing value.
+        * ``APP_RDM_IDENTIFIER_SCHEMES_UI``
+        * ``VOCABULARIES_DATASTREAM_READERS``,
+          ``VOCABULARIES_DATASTREAM_WRITERS``,
+          ``VOCABULARIES_DATASTREAM_TRANSFORMERS`` - seeded from
+          ``invenio-app-rdm``'s defaults, merged with any existing
+          value; see :func:`configure_datastreams` to add your own.
+
+    Miscellaneous
+        * ``ROR_CLIENT_ID``, ``SESSION_COOKIE_DOMAIN``,
+          ``COLLECT_STORAGE``
+
+    In addition, if ``use_path_pid_ids`` is ``True``, this patches the
+    ``url_prefix`` of ``RDMParentRecordLinksResourceConfig``,
+    ``RDMParentGrantsResourceConfig``, ``RDMGrantUserAccessResourceConfig``
+    and ``RDMGrantGroupAccessResourceConfig`` directly - this is a class
+    attribute change, not a new ``invenio.cfg`` variable.
     """
     # see https://inveniordm.docs.cern.ch/install/configuration/ for the meaning
     # of the variables here

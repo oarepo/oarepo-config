@@ -126,11 +126,16 @@ def get_invenio_cfg_path():
 
 @functools.lru_cache(maxsize=1)
 def load_configuration_overrides():
-    """
-    Load configuration overrides from the environment variables.
+    """Read deployment configuration values from the current directory and the process environment.
 
-    This function looks for environment variables starting with
-    "INVENIO_OVERRIDE_" and returns a dictionary with the overrides.
+    This is the part of :func:`load_configuration_variables` that does
+    *not* depend on the location of ``invenio.cfg``: it merges, lowest
+    to highest priority, a ``variables`` file in the current working
+    directory, a ``.env`` file in the current working directory, any
+    ``.json``/``.yaml``/``.yml`` files under the directory named by the
+    ``INVENIO_CONFIG_PATH`` environment variable (if set), and finally
+    the actual process environment variables whose name starts with
+    ``INVENIO_``.
     """
     env = Config(os.path.dirname(__file__))
 
