@@ -15,9 +15,64 @@ The output is written to docs/variables.md in the same directory as this script.
 """
 
 import ast
+import pprint
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+# AST node types whose source is collapsed to a "<type>" placeholder in the
+# summary/detail tables, with the full literal shown separately underneath -
+# these can be arbitrarily long/nested and don't read well truncated mid-way.
+_AST_COMPLEX_LITERAL_TYPES = {
+    ast.Dict: "dict",
+    ast.List: "list",
+    ast.Tuple: "tuple",
+    ast.Set: "set",
+}
+
+# Container node types pretty_unparse() indents one entry per line; anything
+# else (calls, names, constants, ...) is rendered as-is via ast.unparse().
+_AST_CONTAINER_BRACKETS = {
+    ast.Dict: ("{", "}"),
+    ast.List: ("[", "]"),
+    ast.Set: ("{", "}"),
+    ast.Tuple: ("(", ")"),
+}
+
+
+def pretty_unparse(node, indent=0):
+    """Render a dict/list/tuple/set literal AST node as indented multi-line source.
+
+    Unlike ``ast.literal_eval`` + ``pprint``, this doesn't require the value to
+    be a pure literal - non-literal leaves (e.g. ``_("JSON")`` calls, which
+    are common in these config docstrings/defaults) are kept as-is via
+    ``ast.unparse``, only the surrounding containers get indented.
+    """
+    brackets = _AST_CONTAINER_BRACKETS.get(type(node))
+    if brackets is None:
+        return ast.unparse(node)
+
+    open_bracket, close_bracket = brackets
+    pad = "    " * indent
+    pad_inner = "    " * (indent + 1)
+
+    if isinstance(node, ast.Dict):
+        entries = [(k, v) for k, v in zip(node.keys, node.values, strict=True)]
+        if not entries:
+            return open_bracket + close_bracket
+        lines = []
+        for key, value in entries:
+            value_src = pretty_unparse(value, indent + 1)
+            if key is None:  # a "**other_dict" unpacking entry
+                lines.append(f"{pad_inner}**{value_src}")
+            else:
+                lines.append(f"{pad_inner}{pretty_unparse(key, indent + 1)}: {value_src}")
+    else:
+        if not node.elts:
+            return open_bracket + close_bracket
+        lines = [f"{pad_inner}{pretty_unparse(elt, indent + 1)}" for elt in node.elts]
+
+    return open_bracket + "\n" + ",\n".join(lines) + ",\n" + pad + close_bracket
 
 
 def load_flask_app():
@@ -27,9 +82,7 @@ def load_flask_app():
 
         return create_app()
     except OSError as e:
-        sys.stderr.write(f"Warning: Could not load Flask app: {e}\n")
-        sys.stderr.write("Using empty config as fallback.\n")
-        return None
+        raise RuntimeError("Could not load Flask app") from e
 
 
 def get_extension_configs(app):
@@ -107,11 +160,20 @@ def extract_config_variables_from_file(file_path):  # noqa: C901
                         docstring = None
                         line_number = node.lineno
 
-                        # Get value representation
+                        # Get value representation. dict/list/tuple/set literals
+                        # collapse to a "<type>" placeholder in the table (their
+                        # full source is shown separately, below it) rather than
+                        # being cut off mid-structure by the length truncation.
+                        full_value = None
                         try:
-                            value_repr = ast.unparse(node.value) if hasattr(ast, "unparse") else repr(node.value)
-                            if len(value_repr) > 100:
-                                value_repr = value_repr[:100] + "..."
+                            complex_type_name = _AST_COMPLEX_LITERAL_TYPES.get(type(node.value))
+                            if complex_type_name:
+                                full_value = pretty_unparse(node.value)
+                                value_repr = f"<{complex_type_name}>"
+                            else:
+                                value_repr = ast.unparse(node.value) if hasattr(ast, "unparse") else repr(node.value)
+                                if len(value_repr) > 100:
+                                    value_repr = value_repr[:100] + "..."
                         except OSError:
                             value_repr = "<value>"
 
@@ -165,6 +227,7 @@ def extract_config_variables_from_file(file_path):  # noqa: C901
                             "docstring": docstring,
                             "file": str(file_path),
                             "value": value_repr,
+                            "full_value": full_value,
                             "line": line_number,
                         }
 
@@ -367,17 +430,38 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
         for key in sorted(app.config.keys()):
             if key.isupper() and not key.startswith("_"):
                 value = app.config[key]
+                try:
+                    # Some config values are lazy proxies (e.g. Werkzeug
+                    # LocalProxy/cached_property-backed settings computed from
+                    # other extensions) that only resolve correctly inside a
+                    # request/app context, and can raise arbitrary errors -
+                    # not just on repr/pprint, but even from isinstance()
+                    # forcing the proxy to resolve - when poked at here.
+                    # Skipping that one key is better than crashing doc
+                    # generation over an unrelated extension's app-state bug.
+                    is_complex = isinstance(value, (dict, list, tuple, set))
+                    is_representable = not callable(value) and not isinstance(value, (type, dict, list, tuple, set))
+                except Exception as e:  # noqa: BLE001
+                    sys.stderr.write(f"Warning: Could not inspect app.config[{key!r}]: {e}\n")
+                    continue
+
                 # Skip complex objects that can't be easily represented
-                if not callable(value) and not isinstance(value, (type, dict, list, tuple, set)):
+                if is_representable:
                     all_variables[key] = {
                         "value": repr(value)[:100] + "..." if len(repr(value)) > 100 else repr(value),
                         "type": type(value).__name__,
                         "docstring": None,
                         "source": "unknown",
                     }
-                elif isinstance(value, (dict, list, tuple, set)):
+                elif is_complex:
+                    try:
+                        full_value = pprint.pformat(value, width=88)
+                    except Exception as e:  # noqa: BLE001 - see above
+                        sys.stderr.write(f"Warning: Could not format app.config[{key!r}]: {e}\n")
+                        full_value = None
                     all_variables[key] = {
                         "value": f"<{type(value).__name__}>",
+                        "full_value": full_value,
                         "type": type(value).__name__,
                         "docstring": None,
                         "source": "unknown",
@@ -390,6 +474,7 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
             if var_name not in all_variables:
                 all_variables[var_name] = {
                     "value": var_info.get("value", ""),
+                    "full_value": var_info.get("full_value"),
                     "type": "unknown",
                     "docstring": var_info.get("docstring"),
                     "source": info["path"],
@@ -550,10 +635,23 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
             lines.append(table_rows[0] + "\n")
             lines.append("|--------------|-----------|\n")
             lines.extend(row + "\n" for row in table_rows[1:])
-            lines.append("\n---\n\n")
+            lines.append("\n")
         else:
-            # No table rows, just add a blank line and separator
-            lines.append("\n---\n\n")
+            lines.append("\n")
+
+        # dict/list/tuple/set defaults are collapsed to a "<type>" placeholder
+        # in the table above (long/nested values don't fit a cell); show the
+        # full value underneath instead of just losing it. Left unlabelled
+        # (not a ```python fence) since values pulled from the live app config
+        # are a pprint() of the real objects, which often contain reprs like
+        # "<class 'invenio_foo.Bar'>" that aren't actually valid Python syntax
+        # and make the Pygments Python lexer choke.
+        if var_info.get("full_value"):
+            lines.append("```\n")
+            lines.append(var_info["full_value"].rstrip("\n") + "\n")
+            lines.append("```\n\n")
+
+        lines.append("---\n\n")
 
     return "".join(lines)
 
@@ -562,30 +660,30 @@ def main():
     """Run the script to generate documentation."""
     sys.stderr.write("Loading Flask application...\n")
     app = load_flask_app()
+    with app.app_context():
+        sys.stderr.write("Getting extension configurations...\n")
+        extension_configs = get_extension_configs(app)
+        sys.stderr.write(f"Found {len(extension_configs)} extension config files\n")
 
-    sys.stderr.write("Getting extension configurations...\n")
-    extension_configs = get_extension_configs(app)
-    sys.stderr.write(f"Found {len(extension_configs)} extension config files\n")
+        # Determine oarepo_config directory
+        script_dir = Path(__file__).parent
+        repo_root = script_dir.parent
+        oarepo_config_dir = repo_root / "oarepo_config"
 
-    # Determine oarepo_config directory
-    script_dir = Path(__file__).parent
-    repo_root = script_dir.parent
-    oarepo_config_dir = repo_root / "oarepo_config"
+        sys.stderr.write(f"Analyzing oarepo_config functions in {oarepo_config_dir}...\n")
+        oarepo_function_vars = analyze_oarepo_config_functions(oarepo_config_dir)
+        unique_functions = {f["function"] for vars_list in oarepo_function_vars.values() for f in vars_list}
+        sys.stderr.write(
+            f"Found {len(oarepo_function_vars)} variables referenced across {len(unique_functions)} functions\n"
+        )
 
-    sys.stderr.write(f"Analyzing oarepo_config functions in {oarepo_config_dir}...\n")
-    oarepo_function_vars = analyze_oarepo_config_functions(oarepo_config_dir)
-    unique_functions = {f["function"] for vars_list in oarepo_function_vars.values() for f in vars_list}
-    sys.stderr.write(
-        f"Found {len(oarepo_function_vars)} variables referenced across {len(unique_functions)} functions\n"
-    )
+        sys.stderr.write("Generating markdown...\n")
+        markdown = generate_markdown(app, extension_configs, oarepo_function_vars)
 
-    sys.stderr.write("Generating markdown...\n")
-    markdown = generate_markdown(app, extension_configs, oarepo_function_vars)
+        output_file = script_dir / "variables.md"
+        output_file.write_text(markdown, encoding="utf-8")
 
-    output_file = script_dir / "variables.md"
-    output_file.write_text(markdown, encoding="utf-8")
-
-    sys.stderr.write(f"Documentation written to {output_file}\n")
+        sys.stderr.write(f"Documentation written to {output_file}\n")
 
 
 if __name__ == "__main__":
