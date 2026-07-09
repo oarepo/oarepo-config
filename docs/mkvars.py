@@ -462,10 +462,10 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
         # logs a spurious "cross-reference target not found" warning for every
         # variable, even though the link itself works fine.
         lines.append(f"({variable_anchor(var_name)})=\n")
-        # Lead with the star for variables one of our own functions sets, so
-        # they stand out from the (much larger) set of plain Invenio/extension
-        # variables listed here purely for reference.
-        heading_name = f"{star}{var_name}"
+        # Lead with the star and bold the name for variables one of our own
+        # functions sets, so they stand out from the (much larger) set of
+        # plain Invenio/extension variables listed here purely for reference.
+        heading_name = f"**{star}{var_name}**" if star else var_name
         lines.append(f"### {heading_name}\n")
 
         # Description as a plain paragraph, not a table row, so it reads

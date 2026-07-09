@@ -11,8 +11,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from invenio_administration.generators import Administration
 from invenio_communities.generators import (
     CommunityManagersForRole,
@@ -59,7 +57,7 @@ try:
 except ImportError:
     from invenio_communities.permissions import CommunityPermissionPolicy
 
-    DefaultCommunitiesPermissionPolicy = CommunityPermissionPolicy  # type: ignore[assignment]
+    DefaultCommunitiesPermissionPolicy = CommunityPermissionPolicy  # type: ignore[misc,assignment]
 
 
 def configure_communities(
@@ -104,19 +102,35 @@ def configure_communities(
                 title=_("Community owner"),
                 is_owner=True,
                 can_manage=True,
-                can_manage_roles=["owner", "curator", "member", "submitter"],
+                can_manage_roles=[
+                    "owner",
+                    "curator",
+                    "member",
+                    "submitter",
+                ],
             ),
             dict(
                 name="curator",
                 title=_("Curator"),
                 can_manage=True,
-                can_manage_roles=["member", "submitter"],
+                can_manage_roles=[
+                    "member",
+                    "submitter",
+                ],
             ),
-            dict(name="submitter", title=_("Submitter"), can_manage=True),
-            dict(name="member", title=_("Member")),
+            dict(
+                name="submitter",
+                title=_("Submitter"),
+                can_manage=True,
+            ),
+            dict(
+                name="member",
+                title=_("Member"),
+            ),
         ]
     )
     ```
+
     """
     COMMUNITIES_REGISTER_UI_BLUEPRINT = True
     COMMUNITIES_PERMISSION_POLICY = DefaultCommunitiesPermissionPolicy

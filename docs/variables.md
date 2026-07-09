@@ -146,7 +146,6 @@ It is automatically generated from:
 | [`COMMUNITIES_CUSTOM_FIELDS`](#communities-custom-fields) | list | - |
 | [`COMMUNITIES_CUSTOM_FIELDS_UI`](#communities-custom-fields-ui) | list | - |
 | [`COMMUNITIES_DEFAULT_RECORD_SUBMISSION_POLICY`](#communities-default-record-submission-policy) | RecordSubmissionPolicyEnum | - |
-| [`COMMUNITIES_DEFAULT_VISIBILITY`](#communities-default-visibility) | configured by function | `configure_communities` |
 | [`COMMUNITIES_ERROR_HANDLERS`](#communities-error-handlers) | unknown | - |
 | [`COMMUNITIES_FACETS`](#communities-facets) | dict | - |
 | [`COMMUNITIES_IDENTITIES_CACHE_HANDLER`](#communities-identities-cache-handler) | str | - |
@@ -166,9 +165,9 @@ It is automatically generated from:
 | [`COMMUNITIES_NAMESPACES`](#communities-namespaces) | dict | - |
 | [`COMMUNITIES_OAI_SETS_PREFIX`](#communities-oai-sets-prefix) | str | - |
 | [`COMMUNITIES_PERMISSION_POLICY`](#communities-permission-policy) | configured by function | `configure_communities` |
-| [`COMMUNITIES_PRIMARY_ROLE`](#communities-primary-role) | configured by function | `configure_communities` |
 | [`COMMUNITIES_RECORDS_SEARCH`](#communities-records-search) | unknown | - |
 | [`COMMUNITIES_RECORDS_SEARCH_ALL`](#communities-records-search-all) | bool | - |
+| [`COMMUNITIES_REGISTER_UI_BLUEPRINT`](#communities-register-ui-blueprint) | configured by function | `configure_communities` |
 | [`COMMUNITIES_REQUESTS_SEARCH`](#communities-requests-search) | dict | - |
 | [`COMMUNITIES_ROLES`](#communities-roles) | list | `configure_communities` |
 | [`COMMUNITIES_ROUTES`](#communities-routes) | dict | - |
@@ -178,7 +177,6 @@ It is automatically generated from:
 | [`COMMUNITIES_SORT_OPTIONS`](#communities-sort-options) | dict | - |
 | [`COMMUNITIES_SUBCOMMUNITIES_FACETS`](#communities-subcommunities-facets) | dict | - |
 | [`COMMUNITIES_SUBCOMMUNITIES_SEARCH`](#communities-subcommunities-search) | dict | - |
-| [`COMMUNITIES_SUBMISSION_WORKFLOW_ENABLED`](#communities-submission-workflow-enabled) | configured by function | `configure_communities` |
 | [`COMMUNITIES_SUB_INVITATION_REQUEST_CLS`](#communities-sub-invitation-request-cls) | unknown | - |
 | [`COMMUNITIES_SUB_REQUEST_CLS`](#communities-sub-request-cls) | unknown | - |
 | [`CORS_EXPOSE_HEADERS`](#cors-expose-headers) | unknown | - |
@@ -1317,7 +1315,7 @@ Secret key for JWT.
 ---
 
 (accounts-local-login-enabled)=
-### *ACCOUNTS_LOCAL_LOGIN_ENABLED
+### ***ACCOUNTS_LOCAL_LOGIN_ENABLED**
 
 ```{eval-rst}
 Whether or not login with local account credentials should be enabled.
@@ -1371,7 +1369,7 @@ Prefix used to namespace login per-account limiter keys.
 ---
 
 (accounts-login-view-function)=
-### *ACCOUNTS_LOGIN_VIEW_FUNCTION
+### ***ACCOUNTS_LOGIN_VIEW_FUNCTION**
 
 ```{eval-rst}
 The view function to use for the login endpoint.
@@ -1533,7 +1531,7 @@ Enable session activity tracking.
 ---
 
 (accounts-session-redis-url)=
-### *ACCOUNTS_SESSION_REDIS_URL
+### ***ACCOUNTS_SESSION_REDIS_URL**
 
 ```{eval-rst}
 Redis URL used by the module as a cache system for sessions.
@@ -1729,7 +1727,7 @@ Example: [("my-app", "v1.3.2")]
 ---
 
 (administration-theme-base-template)=
-### *ADMINISTRATION_THEME_BASE_TEMPLATE
+### ***ADMINISTRATION_THEME_BASE_TEMPLATE**
 
 ```{eval-rst}
 Administration base template.
@@ -1810,7 +1808,7 @@ if Invenio-Theme is installed.
 ---
 
 (app-allowed-hosts)=
-### *APP_ALLOWED_HOSTS
+### ***APP_ALLOWED_HOSTS**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/generic_parameters.py#L46) |
@@ -1819,7 +1817,7 @@ if Invenio-Theme is installed.
 ---
 
 (app-default-secure-headers)=
-### *APP_DEFAULT_SECURE_HEADERS
+### ***APP_DEFAULT_SECURE_HEADERS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -1866,7 +1864,7 @@ Enable the ping (healthcheck) blueprint. (Default: ``False``)
 ---
 
 (app-logs-permission-policy)=
-### *APP_LOGS_PERMISSION_POLICY
+### ***APP_LOGS_PERMISSION_POLICY**
 
 ```{eval-rst}
 Permission policy for job logs.
@@ -1958,7 +1956,7 @@ Additional text/html to be displayed in the publish and submit for review modal.
 ---
 
 (app-rdm-deposit-form-quota)=
-### *APP_RDM_DEPOSIT_FORM_QUOTA
+### ***APP_RDM_DEPOSIT_FORM_QUOTA**
 | **Default Value** | `{'maxFiles': 100, 'maxStorage': RDM_FILES_DEFAULT_QUOTA_SIZE}` |
 |--------------|-----------|
 | **Type** | unknown |
@@ -1982,7 +1980,7 @@ Deposit page's form template.
 ---
 
 (app-rdm-deposit-ng-files-ui-enabled)=
-### *APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED
+### ***APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED**
 
 ```{eval-rst}
 Feature toggle to enable the next-generation (NG) file uploader UI in the deposit form.
@@ -1999,7 +1997,7 @@ When enabled, the deposit form will use the new Uppy.io-based file uploader, rep
 ---
 
 (app-rdm-detail-side-bar-templates)=
-### *APP_RDM_DETAIL_SIDE_BAR_TEMPLATES
+### ***APP_RDM_DETAIL_SIDE_BAR_TEMPLATES**
 | **Default Value** | `['invenio_app_rdm/records/details/side_bar/manage_menu.html', 'invenio_app_rdm/records/details/side_...` |
 |--------------|-----------|
 | **Type** | unknown |
@@ -2046,7 +2044,7 @@ Files integrity report subject
 ---
 
 (app-rdm-identifier-schemes-ui)=
-### *APP_RDM_IDENTIFIER_SCHEMES_UI
+### ***APP_RDM_IDENTIFIER_SCHEMES_UI**
 | **Default Value** | `{'orcid': {'url_prefix': 'http://orcid.org/', 'icon': 'images/orcid.svg', 'label': 'ORCID'}, 'ror': ...` |
 |--------------|-----------|
 | **Type** | unknown |
@@ -2245,7 +2243,7 @@ Set to ``None`` to not extract a request id.
 ---
 
 (app-theme)=
-### *APP_THEME
+### ***APP_THEME**
 
 ```{eval-rst}
 Application-wide themes list used for template and assets lookup.
@@ -2271,7 +2269,7 @@ used. If none of the lookups are successful, a non-prefixed lookup is done.
 ---
 
 (assets-builder)=
-### *ASSETS_BUILDER
+### ***ASSETS_BUILDER**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -2340,7 +2338,7 @@ Feature flag. Disabled by default.
 ---
 
 (babel-default-locale)=
-### *BABEL_DEFAULT_LOCALE
+### ***BABEL_DEFAULT_LOCALE**
 
 ```{eval-rst}
 Default locale (language).
@@ -2355,7 +2353,7 @@ Default locale (language).
 ---
 
 (babel-default-timezone)=
-### *BABEL_DEFAULT_TIMEZONE
+### ***BABEL_DEFAULT_TIMEZONE**
 
 ```{eval-rst}
 Default time zone.
@@ -2411,7 +2409,7 @@ Function to transform the banner category to a specific Semantic-UI class.
 ---
 
 (base-template)=
-### *BASE_TEMPLATE
+### ***BASE_TEMPLATE**
 
 ```{eval-rst}
 Base template for user facing pages.
@@ -2431,7 +2429,7 @@ template allows to change design and layout of Invenio.
 ---
 
 (broker-url)=
-### *BROKER_URL
+### ***BROKER_URL**
 
 ```{eval-rst}
 URL of message broker for Celery 3 (default is RabbitMQ).
@@ -2476,7 +2474,7 @@ Cache key prefix.
 ---
 
 (cache-redis-url)=
-### *CACHE_REDIS_URL
+### ***CACHE_REDIS_URL**
 
 ```{eval-rst}
 Redis location and database.
@@ -2521,7 +2519,7 @@ A whitelist of content-types/serializers.
 ---
 
 (celery-beat-schedule)=
-### *CELERY_BEAT_SCHEDULE
+### ***CELERY_BEAT_SCHEDULE**
 | **Default Value** | `{'indexer': {'task': 'invenio_records_resources.tasks.manage_indexer_queues', 'schedule': timedelta(...` |
 |--------------|-----------|
 | **Type** | unknown |
@@ -2531,7 +2529,7 @@ A whitelist of content-types/serializers.
 ---
 
 (celery-broker-url)=
-### *CELERY_BROKER_URL
+### ***CELERY_BROKER_URL**
 
 ```{eval-rst}
 Same as BROKER_URL to support Celery 4.
@@ -2546,7 +2544,7 @@ Same as BROKER_URL to support Celery 4.
 ---
 
 (celery-result-backend)=
-### *CELERY_RESULT_BACKEND
+### ***CELERY_RESULT_BACKEND**
 
 ```{eval-rst}
 URL of backend for result storage (default is Redis).
@@ -2700,7 +2698,7 @@ Permission policy used by invenio-collections for managing collection trees.
 ---
 
 (collect-storage)=
-### *COLLECT_STORAGE
+### ***COLLECT_STORAGE**
 
 ```{eval-rst}
 Static files collection method (defaults to copying files).
@@ -2867,15 +2865,6 @@ Default value of record submission policy community access setting.
 
 ---
 
-(communities-default-visibility)=
-### *COMMUNITIES_DEFAULT_VISIBILITY
-| **Type** | configured by function |
-|--------------|-----------|
-| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L38) |
-| **Set by** | {py:func}`~oarepo_config.configure_communities` |
-
----
-
 (communities-error-handlers)=
 ### COMMUNITIES_ERROR_HANDLERS
 | **Default Value** | `{**community_error_handlers, InvalidCommunityVisibility: create_error_handler(lambda e: HTTPJSONExce...` |
@@ -2904,7 +2893,7 @@ Default value of record submission policy community access setting.
 ---
 
 (communities-identities-cache-redis-url)=
-### *COMMUNITIES_IDENTITIES_CACHE_REDIS_URL
+### ***COMMUNITIES_IDENTITIES_CACHE_REDIS_URL**
 | **Default Value** | `'redis://localhost:6379/4'` |
 |--------------|-----------|
 | **Type** | str |
@@ -3071,19 +3060,10 @@ For example:
 ---
 
 (communities-permission-policy)=
-### *COMMUNITIES_PERMISSION_POLICY
+### ***COMMUNITIES_PERMISSION_POLICY**
 | **Type** | configured by function |
 |--------------|-----------|
-| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L38) |
-| **Set by** | {py:func}`~oarepo_config.configure_communities` |
-
----
-
-(communities-primary-role)=
-### *COMMUNITIES_PRIMARY_ROLE
-| **Type** | configured by function |
-|--------------|-----------|
-| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L38) |
+| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L65) |
 | **Set by** | {py:func}`~oarepo_config.configure_communities` |
 
 ---
@@ -3106,6 +3086,15 @@ For example:
 
 ---
 
+(communities-register-ui-blueprint)=
+### ***COMMUNITIES_REGISTER_UI_BLUEPRINT**
+| **Type** | configured by function |
+|--------------|-----------|
+| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L65) |
+| **Set by** | {py:func}`~oarepo_config.configure_communities` |
+
+---
+
 (communities-requests-search)=
 ### COMMUNITIES_REQUESTS_SEARCH
 | **Default Value** | `<dict>` |
@@ -3116,7 +3105,7 @@ For example:
 ---
 
 (communities-roles)=
-### *COMMUNITIES_ROLES
+### ***COMMUNITIES_ROLES**
 | **Default Value** | `<list>` |
 |--------------|-----------|
 | **Type** | list |
@@ -3190,15 +3179,6 @@ Sort communities by 'verified' first.
 |--------------|-----------|
 | **Type** | dict |
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L156) |
-
----
-
-(communities-submission-workflow-enabled)=
-### *COMMUNITIES_SUBMISSION_WORKFLOW_ENABLED
-| **Type** | configured by function |
-|--------------|-----------|
-| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/communities.py#L38) |
-| **Set by** | {py:func}`~oarepo_config.configure_communities` |
 
 ---
 
@@ -3280,7 +3260,7 @@ Sending wildcard CORS header.
 ---
 
 (cover-template)=
-### *COVER_TEMPLATE
+### ***COVER_TEMPLATE**
 
 ```{eval-rst}
 Cover page template normally used e.g. for login and sign up pages.
@@ -3545,7 +3525,7 @@ Crossref username.
 ---
 
 (dashboard-record-create-url)=
-### *DASHBOARD_RECORD_CREATE_URL
+### ***DASHBOARD_RECORD_CREATE_URL**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -3652,7 +3632,7 @@ DataCite DOI prefix.
 ---
 
 (datacite-test-mode)=
-### *DATACITE_TEST_MODE
+### ***DATACITE_TEST_MODE**
 
 ```{eval-rst}
 DataCite test mode enabled.
@@ -3758,7 +3738,7 @@ Switches off incept of redirects by Flask-DebugToolbar.
 ---
 
 (deployment-version)=
-### *DEPLOYMENT_VERSION
+### ***DEPLOYMENT_VERSION**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -3812,7 +3792,7 @@ Switches off incept of redirects by Flask-DebugToolbar.
 ---
 
 (einfra)=
-### *EINFRA
+### ***EINFRA**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/einfra.py#L24) |
@@ -3948,7 +3928,7 @@ Path to the last dump file in the S3 bucket.
 ---
 
 (einfra-login-app)=
-### *EINFRA_LOGIN_APP
+### ***EINFRA_LOGIN_APP**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/einfra.py#L24) |
@@ -4087,7 +4067,7 @@ Default maximum file size for a bucket in bytes. `None` if unlimited.
 ---
 
 (files-rest-default-quota-size)=
-### *FILES_REST_DEFAULT_QUOTA_SIZE
+### ***FILES_REST_DEFAULT_QUOTA_SIZE**
 
 ```{eval-rst}
 Default quota size for a bucket in bytes. `None` if unlimited.
@@ -4102,7 +4082,7 @@ Default quota size for a bucket in bytes. `None` if unlimited.
 ---
 
 (files-rest-default-storage-class)=
-### *FILES_REST_DEFAULT_STORAGE_CLASS
+### ***FILES_REST_DEFAULT_STORAGE_CLASS**
 
 ```{eval-rst}
 Default storage class. Must be one of `FILES_REST_STORAGE_CLASS_LIST`.
@@ -4274,7 +4254,7 @@ Import path of file size limiters factory to control bucket size limits.
 ---
 
 (files-rest-storage-class-list)=
-### *FILES_REST_STORAGE_CLASS_LIST
+### ***FILES_REST_STORAGE_CLASS_LIST**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -4284,7 +4264,7 @@ Import path of file size limiters factory to control bucket size limits.
 ---
 
 (files-rest-storage-factory)=
-### *FILES_REST_STORAGE_FACTORY
+### ***FILES_REST_STORAGE_FACTORY**
 
 ```{eval-rst}
 Import path of factory used to create a storage instance.
@@ -4450,7 +4430,7 @@ Mapping of titles.
 ---
 
 (global-search-models)=
-### *GLOBAL_SEARCH_MODELS
+### ***GLOBAL_SEARCH_MODELS**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/models.py#L22) |
@@ -4468,7 +4448,7 @@ Mapping of titles.
 ---
 
 (header-template)=
-### *HEADER_TEMPLATE
+### ***HEADER_TEMPLATE**
 
 ```{eval-rst}
 Base header template to be extended on custom headers.
@@ -4515,7 +4495,7 @@ This mapping is used to associate exceptional entrypoint names with their packag
 ---
 
 (i18n-languages)=
-### *I18N_LANGUAGES
+### ***I18N_LANGUAGES**
 
 ```{eval-rst}
 List of tuples of available languages.
@@ -4990,7 +4970,7 @@ Whether to replace JSONRefs prior to indexing record.
 ---
 
 (instance-theme-file)=
-### *INSTANCE_THEME_FILE
+### ***INSTANCE_THEME_FILE**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -4999,7 +4979,7 @@ Whether to replace JSONRefs prior to indexing record.
 ---
 
 (invenio-cache-type)=
-### *INVENIO_CACHE_TYPE
+### ***INVENIO_CACHE_TYPE**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/generic_parameters.py#L46) |
@@ -5017,7 +4997,7 @@ Whether to replace JSONRefs prior to indexing record.
 ---
 
 (invenio-vocabulary-type-metadata)=
-### *INVENIO_VOCABULARY_TYPE_METADATA
+### ***INVENIO_VOCABULARY_TYPE_METADATA**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -5027,7 +5007,7 @@ Whether to replace JSONRefs prior to indexing record.
 ---
 
 (javascript-packages-manager)=
-### *JAVASCRIPT_PACKAGES_MANAGER
+### ***JAVASCRIPT_PACKAGES_MANAGER**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -5092,7 +5072,7 @@ Enable logging for jobs.
 ---
 
 (jobs-logging-level)=
-### *JOBS_LOGGING_LEVEL
+### ***JOBS_LOGGING_LEVEL**
 
 ```{eval-rst}
 Logging level for jobs.
@@ -5232,7 +5212,7 @@ Default schema endpoint.
 ---
 
 (jsonschemas-host)=
-### *JSONSCHEMAS_HOST
+### ***JSONSCHEMAS_HOST**
 
 ```{eval-rst}
 Default json schema host.
@@ -5645,7 +5625,7 @@ Reply to mail address for e-mails.
 ---
 
 (mail-default-sender)=
-### *MAIL_DEFAULT_SENDER
+### ***MAIL_DEFAULT_SENDER**
 
 ```{eval-rst}
 Email address used as sender of account registration emails.
@@ -5704,7 +5684,7 @@ Minimum logging level for the mail logger.
 ---
 
 (mail-suppress-send)=
-### *MAIL_SUPPRESS_SEND
+### ***MAIL_SUPPRESS_SEND**
 
 ```{eval-rst}
 Disable email sending by default.
@@ -5719,7 +5699,7 @@ Disable email sending by default.
 ---
 
 (matomo-analytics-site-id)=
-### *MATOMO_ANALYTICS_SITE_ID
+### ***MATOMO_ANALYTICS_SITE_ID**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -5728,7 +5708,7 @@ Disable email sending by default.
 ---
 
 (matomo-analytics-template)=
-### *MATOMO_ANALYTICS_TEMPLATE
+### ***MATOMO_ANALYTICS_TEMPLATE**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -5737,7 +5717,7 @@ Disable email sending by default.
 ---
 
 (matomo-analytics-url)=
-### *MATOMO_ANALYTICS_URL
+### ***MATOMO_ANALYTICS_URL**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -6154,7 +6134,7 @@ OAI ID fetcher function.
 ---
 
 (oaiserver-id-prefix)=
-### *OAISERVER_ID_PREFIX
+### ***OAISERVER_ID_PREFIX**
 
 ```{eval-rst}
 The prefix that will be applied to the generated OAI-PMH ids.
@@ -6184,7 +6164,7 @@ Record update key.
 
 (oaiserver-metadata-formats)=
 ### OAISERVER_METADATA_FORMATS
-| **Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x11397b0e0>` |
+| **Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x1135db0e0>` |
 |--------------|-----------|
 | **Type** | OAIServerMetadataFormats |
 | **Sources** | [oarepo-rdm](https://github.com/oarepo/oarepo-rdm/blob/master/oarepo_rdm/initial_config.py#L53); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L642); [invenio-oaiserver](https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py#L70) |
@@ -6356,7 +6336,7 @@ field.
 ---
 
 (oaiserver-repository-name)=
-### *OAISERVER_REPOSITORY_NAME
+### ***OAISERVER_REPOSITORY_NAME**
 | **Default Value** | `'Invenio-OAIServer'` |
 |--------------|-----------|
 | **Type** | str |
@@ -6848,7 +6828,7 @@ Error view endpoint.
 ---
 
 (oauthclient-auto-redirect-to-external-login)=
-### *OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN
+### ***OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN**
 
 ```{eval-rst}
 Redirect to the only external login service under specific conditions.
@@ -6895,7 +6875,7 @@ that external authentication service.
 ---
 
 (oauthclient-remote-apps)=
-### *OAUTHCLIENT_REMOTE_APPS
+### ***OAUTHCLIENT_REMOTE_APPS**
 
 ```{eval-rst}
 Configuration of remote applications.
@@ -7600,7 +7580,7 @@ Global rate limit.
 ---
 
 (ratelimit-authenticated-user)=
-### *RATELIMIT_AUTHENTICATED_USER
+### ***RATELIMIT_AUTHENTICATED_USER**
 
 ```{eval-rst}
 Rate limit for logged in users.
@@ -7624,7 +7604,7 @@ Rate limit for logged in users.
 ---
 
 (ratelimit-guest-user)=
-### *RATELIMIT_GUEST_USER
+### ***RATELIMIT_GUEST_USER**
 
 ```{eval-rst}
 Rate limit for non logged in users.
@@ -9126,7 +9106,7 @@ An example of this configuration is provided in the
 ---
 
 (records-refresolver-cls)=
-### *RECORDS_REFRESOLVER_CLS
+### ***RECORDS_REFRESOLVER_CLS**
 
 ```{eval-rst}
 Custom JSONSchemas ref resolver class.
@@ -9144,7 +9124,7 @@ Note that when using a custom ref resolver class you should also set
 ---
 
 (records-refresolver-store)=
-### *RECORDS_REFRESOLVER_STORE
+### ***RECORDS_REFRESOLVER_STORE**
 
 ```{eval-rst}
 JSONSchemas ref resolver store.
@@ -9444,7 +9424,7 @@ Default update permission factory: reject any request.
 ---
 
 (records-rest-endpoints)=
-### *RECORDS_REST_ENDPOINTS
+### ***RECORDS_REST_ENDPOINTS**
 | **Default Value** | `<list>` |
 |--------------|-----------|
 | **Type** | list |
@@ -9518,7 +9498,7 @@ Configure the default permission factory.
 ---
 
 (records-ui-endpoints)=
-### *RECORDS_UI_ENDPOINTS
+### ***RECORDS_UI_ENDPOINTS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -9602,7 +9582,7 @@ For more details, see:
 ---
 
 (record-routes)=
-### *RECORD_ROUTES
+### ***RECORD_ROUTES**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/generic_parameters.py#L46) |
@@ -9688,7 +9668,7 @@ Remember me cookie life time changed to 90 days instead of 365 days.
 ---
 
 (repository-description)=
-### *REPOSITORY_DESCRIPTION
+### ***REPOSITORY_DESCRIPTION**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -9697,7 +9677,7 @@ Remember me cookie life time changed to 90 days instead of 365 days.
 ---
 
 (repository-keywords)=
-### *REPOSITORY_KEYWORDS
+### ***REPOSITORY_KEYWORDS**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -9706,7 +9686,7 @@ Remember me cookie life time changed to 90 days instead of 365 days.
 ---
 
 (repository-name)=
-### *REPOSITORY_NAME
+### ***REPOSITORY_NAME**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -9715,7 +9695,7 @@ Remember me cookie life time changed to 90 days instead of 365 days.
 ---
 
 (repository-subtitle)=
-### *REPOSITORY_SUBTITLE
+### ***REPOSITORY_SUBTITLE**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -9724,7 +9704,7 @@ Remember me cookie life time changed to 90 days instead of 365 days.
 ---
 
 (repository-support-contact)=
-### *REPOSITORY_SUPPORT_CONTACT
+### ***REPOSITORY_SUPPORT_CONTACT**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -9888,7 +9868,7 @@ ID of the Role used for moderation.
 ---
 
 (requests-permission-policy)=
-### *REQUESTS_PERMISSION_POLICY
+### ***REQUESTS_PERMISSION_POLICY**
 
 ```{eval-rst}
 The requests permission policy, extended to work with guest access requests.
@@ -10168,7 +10148,7 @@ Name of the query argument to specify the mimetype wanted for the output.
 ---
 
 (ror-client-id)=
-### *ROR_CLIENT_ID
+### ***ROR_CLIENT_ID**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/generic_parameters.py#L46) |
@@ -10177,7 +10157,7 @@ Name of the query argument to specify the mimetype wanted for the output.
 ---
 
 (s3-access-key-id)=
-### *S3_ACCESS_KEY_ID
+### ***S3_ACCESS_KEY_ID**
 
 ```{eval-rst}
 The access key to use when creating the client.
@@ -10235,7 +10215,7 @@ Typically 5Mb is minimum allowed by the API.
 ---
 
 (s3-endpoint-url)=
-### *S3_ENDPOINT_URL
+### ***S3_ENDPOINT_URL**
 
 ```{eval-rst}
 S3 server URL endpoint.
@@ -10296,7 +10276,7 @@ If set to a value it will be passed as ``region_name`` to boto3 `client
 ---
 
 (s3-secret-access-key)=
-### *S3_SECRET_ACCESS_KEY
+### ***S3_SECRET_ACCESS_KEY**
 
 ```{eval-rst}
 The secret key to use when creating the client.
@@ -10371,7 +10351,7 @@ for more information.
 ---
 
 (search-client-config)=
-### *SEARCH_CLIENT_CONFIG
+### ***SEARCH_CLIENT_CONFIG**
 
 ```{eval-rst}
 Dictionary of options for the Elasticsearch/OpenSearch client.
@@ -10415,7 +10395,7 @@ Deprecated alias for ``SEARCH_HOSTS``.
 ---
 
 (search-hosts)=
-### *SEARCH_HOSTS
+### ***SEARCH_HOSTS**
 
 ```{eval-rst}
 Search hosts.
@@ -10430,7 +10410,7 @@ Search hosts.
 ---
 
 (search-index-prefix)=
-### *SEARCH_INDEX_PREFIX
+### ***SEARCH_INDEX_PREFIX**
 
 ```{eval-rst}
 Any index, alias and templates will be prefixed with this string.
@@ -10718,7 +10698,7 @@ Name of the search index used.
 ---
 
 (search-ui-search-template)=
-### *SEARCH_UI_SEARCH_TEMPLATE
+### ***SEARCH_UI_SEARCH_TEMPLATE**
 
 ```{eval-rst}
 Configure the search page template.
@@ -10733,7 +10713,7 @@ Configure the search page template.
 ---
 
 (search-ui-search-view)=
-### *SEARCH_UI_SEARCH_VIEW
+### ***SEARCH_UI_SEARCH_VIEW**
 
 ```{eval-rst}
 Default funtion to do the `search` route.
@@ -10748,7 +10728,7 @@ Default funtion to do the `search` route.
 ---
 
 (secret-key)=
-### *SECRET_KEY
+### ***SECRET_KEY**
 
 ```{eval-rst}
 Flask secret key.
@@ -10794,7 +10774,7 @@ SECURITY WARNING: keep the secret key used in production secret!
 ---
 
 (security-changeable)=
-### *SECURITY_CHANGEABLE
+### ***SECURITY_CHANGEABLE**
 
 ```{eval-rst}
 Allow password change by users.
@@ -10864,7 +10844,7 @@ URL endpoint for password change.
 ---
 
 (security-confirmable)=
-### *SECURITY_CONFIRMABLE
+### ***SECURITY_CONFIRMABLE**
 
 ```{eval-rst}
 Allow user to confirm their email address.
@@ -11139,7 +11119,7 @@ Default template for login.
 ---
 
 (security-login-without-confirmation)=
-### *SECURITY_LOGIN_WITHOUT_CONFIRMATION
+### ***SECURITY_LOGIN_WITHOUT_CONFIRMATION**
 
 ```{eval-rst}
 Allow users to login without first confirming their email address.
@@ -11696,7 +11676,7 @@ Password hashing algorithms requiring single hasing only.
 ---
 
 (security-recoverable)=
-### *SECURITY_RECOVERABLE
+### ***SECURITY_RECOVERABLE**
 
 ```{eval-rst}
 Allow password recovery by users.
@@ -11711,7 +11691,7 @@ Allow password recovery by users.
 ---
 
 (security-registerable)=
-### *SECURITY_REGISTERABLE
+### ***SECURITY_REGISTERABLE**
 
 ```{eval-rst}
 Allow users to register.
@@ -11949,7 +11929,7 @@ Enable user tracking on login.
 ---
 
 (send-file-max-age-default)=
-### *SEND_FILE_MAX_AGE_DEFAULT
+### ***SEND_FILE_MAX_AGE_DEFAULT**
 | **Default Value** | `None` |
 |--------------|-----------|
 | **Type** | NoneType |
@@ -11982,7 +11962,7 @@ Set SENTRY_DSN environment variable.
 ---
 
 (session-cookie-domain)=
-### *SESSION_COOKIE_DOMAIN
+### ***SESSION_COOKIE_DOMAIN**
 | **Default Value** | `None` |
 |--------------|-----------|
 | **Type** | NoneType |
@@ -12042,7 +12022,7 @@ Restricts how cookies are sent with requests from external sites.
 ---
 
 (session-cookie-secure)=
-### *SESSION_COOKIE_SECURE
+### ***SESSION_COOKIE_SECURE**
 
 ```{eval-rst}
 Sets cookie with the secure flag by default.
@@ -12067,7 +12047,7 @@ Sets cookie with the secure flag by default.
 
 (session-random-source)=
 ### SESSION_RANDOM_SOURCE
-| **Default Value** | `<random.SystemRandom object at 0xc7ae93020>` |
+| **Default Value** | `<random.SystemRandom object at 0xac4ec2420>` |
 |--------------|-----------|
 | **Type** | SystemRandom |
 | **Source** | unknown |
@@ -12084,7 +12064,7 @@ Sets cookie with the secure flag by default.
 ---
 
 (settings-template)=
-### *SETTINGS_TEMPLATE
+### ***SETTINGS_TEMPLATE**
 
 ```{eval-rst}
 Settings page template used for e.g. display user settings views.
@@ -12148,7 +12128,7 @@ Instances of `sitemap.SitemapSection` that will populate the Sitemap files.
 ---
 
 (site-api-url)=
-### *SITE_API_URL
+### ***SITE_API_URL**
 | **Default Value** | `'https://127.0.0.1:5000/api'` |
 |--------------|-----------|
 | **Type** | str |
@@ -12158,7 +12138,7 @@ Instances of `sitemap.SitemapSection` that will populate the Sitemap files.
 ---
 
 (site-ui-url)=
-### *SITE_UI_URL
+### ***SITE_UI_URL**
 | **Default Value** | `'https://127.0.0.1:5000'` |
 |--------------|-----------|
 | **Type** | str |
@@ -12177,7 +12157,7 @@ Instances of `sitemap.SitemapSection` that will populate the Sitemap files.
 ---
 
 (sqlalchemy-database-uri)=
-### *SQLALCHEMY_DATABASE_URI
+### ***SQLALCHEMY_DATABASE_URI**
 | **Default Value** | `'sqlite:////Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/var/instan...` |
 |--------------|-----------|
 | **Type** | str |
@@ -12343,7 +12323,7 @@ Default behaviour will register the templates as search templates.
 ---
 
 (stats-register-receivers)=
-### *STATS_REGISTER_RECEIVERS
+### ***STATS_REGISTER_RECEIVERS**
 
 ```{eval-rst}
 Enable the registration of signal receivers.
@@ -12483,7 +12463,7 @@ Defaults to value of :const:`COVER_TEMPLATE`.
 ---
 
 (theme-css-template)=
-### *THEME_CSS_TEMPLATE
+### ***THEME_CSS_TEMPLATE**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -12506,7 +12486,7 @@ Base template for error pages.
 ---
 
 (theme-footer-template)=
-### *THEME_FOOTER_TEMPLATE
+### ***THEME_FOOTER_TEMPLATE**
 
 ```{eval-rst}
 Footer template which is normally included in :data:`BASE_TEMPLATE`.
@@ -12521,7 +12501,7 @@ Footer template which is normally included in :data:`BASE_TEMPLATE`.
 ---
 
 (theme-frontpage)=
-### *THEME_FRONTPAGE
+### ***THEME_FRONTPAGE**
 
 ```{eval-rst}
 Enable or disable basic frontpage view.
@@ -12536,7 +12516,7 @@ Enable or disable basic frontpage view.
 ---
 
 (theme-frontpage-logo)=
-### *THEME_FRONTPAGE_LOGO
+### ***THEME_FRONTPAGE_LOGO**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -12545,7 +12525,7 @@ Enable or disable basic frontpage view.
 ---
 
 (theme-frontpage-template)=
-### *THEME_FRONTPAGE_TEMPLATE
+### ***THEME_FRONTPAGE_TEMPLATE**
 
 ```{eval-rst}
 Template for front page.
@@ -12560,7 +12540,7 @@ Template for front page.
 ---
 
 (theme-frontpage-title)=
-### *THEME_FRONTPAGE_TITLE
+### ***THEME_FRONTPAGE_TITLE**
 
 ```{eval-rst}
 The title shown on the frontpage.
@@ -12607,7 +12587,7 @@ This adds the Google Site Verification into the meta tags of all pages.
 ---
 
 (theme-header-login-template)=
-### *THEME_HEADER_LOGIN_TEMPLATE
+### ***THEME_HEADER_LOGIN_TEMPLATE**
 
 ```{eval-rst}
 Header login template, included in :data:`THEME_HEADER_TEMPLATE`.
@@ -12622,7 +12602,7 @@ Header login template, included in :data:`THEME_HEADER_TEMPLATE`.
 ---
 
 (theme-header-template)=
-### *THEME_HEADER_TEMPLATE
+### ***THEME_HEADER_TEMPLATE**
 
 ```{eval-rst}
 Header template which is normally included in :data:`BASE_TEMPLATE`.
@@ -12646,7 +12626,7 @@ Header template which is normally included in :data:`BASE_TEMPLATE`.
 ---
 
 (theme-javascript-template)=
-### *THEME_JAVASCRIPT_TEMPLATE
+### ***THEME_JAVASCRIPT_TEMPLATE**
 
 ```{eval-rst}
 Javascript assets template, normally included in :data:`BASE_TEMPLATE`.
@@ -12665,7 +12645,7 @@ included on all pages.
 ---
 
 (theme-logo)=
-### *THEME_LOGO
+### ***THEME_LOGO**
 
 ```{eval-rst}
 The logo to be used on the header and on the cover.
@@ -12752,7 +12732,7 @@ Enable or disable the header search bar.
 ---
 
 (theme-search-endpoint)=
-### *THEME_SEARCH_ENDPOINT
+### ***THEME_SEARCH_ENDPOINT**
 
 ```{eval-rst}
 The endpoint for the search bar.
@@ -12783,7 +12763,7 @@ Defaults to value of :const:`SETTINGS_TEMPLATE`.
 ---
 
 (theme-show-frontpage-intro-section)=
-### *THEME_SHOW_FRONTPAGE_INTRO_SECTION
+### ***THEME_SHOW_FRONTPAGE_INTRO_SECTION**
 
 ```{eval-rst}
 Front page intro section visibility
@@ -12798,7 +12778,7 @@ Front page intro section visibility
 ---
 
 (theme-sitename)=
-### *THEME_SITENAME
+### ***THEME_SITENAME**
 
 ```{eval-rst}
 The name of the site to be used on the header and as a title.
@@ -12822,7 +12802,7 @@ The name of the site to be used on the header and as a title.
 ---
 
 (theme-trackingcode-template)=
-### *THEME_TRACKINGCODE_TEMPLATE
+### ***THEME_TRACKINGCODE_TEMPLATE**
 
 ```{eval-rst}
 Template for including a tracking code for web analytics.
@@ -12989,7 +12969,7 @@ Default profile URL endpoint.
 ---
 
 (userprofiles-read-only)=
-### *USERPROFILES_READ_ONLY
+### ***USERPROFILES_READ_ONLY**
 
 ```{eval-rst}
 Make the user profiles read-only.
@@ -13264,7 +13244,7 @@ Overrides for "dashboard" menu.
 ---
 
 (vocabularies-affiliation-schemes)=
-### *VOCABULARIES_AFFILIATION_SCHEMES
+### ***VOCABULARIES_AFFILIATION_SCHEMES**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13324,7 +13304,7 @@ ROR ID for EC funder.
 ---
 
 (vocabularies-datastream-readers)=
-### *VOCABULARIES_DATASTREAM_READERS
+### ***VOCABULARIES_DATASTREAM_READERS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13334,7 +13314,7 @@ ROR ID for EC funder.
 ---
 
 (vocabularies-datastream-transformers)=
-### *VOCABULARIES_DATASTREAM_TRANSFORMERS
+### ***VOCABULARIES_DATASTREAM_TRANSFORMERS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13344,7 +13324,7 @@ ROR ID for EC funder.
 ---
 
 (vocabularies-datastream-writers)=
-### *VOCABULARIES_DATASTREAM_WRITERS
+### ***VOCABULARIES_DATASTREAM_WRITERS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13386,7 +13366,7 @@ DOI prefix for the identifier formed with the FundRef id.
 ---
 
 (vocabularies-funder-schemes)=
-### *VOCABULARIES_FUNDER_SCHEMES
+### ***VOCABULARIES_FUNDER_SCHEMES**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13405,7 +13385,7 @@ DOI prefix for the identifier formed with the FundRef id.
 ---
 
 (vocabularies-names-schemes)=
-### *VOCABULARIES_NAMES_SCHEMES
+### ***VOCABULARIES_NAMES_SCHEMES**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
@@ -13503,7 +13483,7 @@ ORCID max number of simultaneous workers/connections.
 ---
 
 (vocabularies-resource-config)=
-### *VOCABULARIES_RESOURCE_CONFIG
+### ***VOCABULARIES_RESOURCE_CONFIG**
 
 ```{eval-rst}
 Configure the resource.
@@ -13518,7 +13498,7 @@ Configure the resource.
 ---
 
 (vocabularies-service-config)=
-### *VOCABULARIES_SERVICE_CONFIG
+### ***VOCABULARIES_SERVICE_CONFIG**
 
 ```{eval-rst}
 Configure the service.
@@ -13624,7 +13604,7 @@ Subject NVS-P02 file download link.
 ---
 
 (webpackext-npm-pkg-cls)=
-### *WEBPACKEXT_NPM_PKG_CLS
+### ***WEBPACKEXT_NPM_PKG_CLS**
 | **Type** | configured by function |
 |--------------|-----------|
 | **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/ui.py#L25) |
@@ -13633,7 +13613,7 @@ Subject NVS-P02 file download link.
 ---
 
 (webpackext-project)=
-### *WEBPACKEXT_PROJECT
+### ***WEBPACKEXT_PROJECT**
 | **Default Value** | `'oarepo_ui.webpack:project'` |
 |--------------|-----------|
 | **Type** | str |
@@ -13670,7 +13650,7 @@ Subject NVS-P02 file download link.
 ---
 
 (workflows)=
-### *WORKFLOWS
+### ***WORKFLOWS**
 | **Default Value** | `<dict>` |
 |--------------|-----------|
 | **Type** | dict |
