@@ -32,6 +32,12 @@ jobs:
           PIP_EXTRA_INDEX_URL: https://gitlab.cesnet.cz/api/v4/projects/1408/packages/pypi/simple
         run: pip install --pre -e ".[docs]"
 
+      - name: Set environment variable for library path
+        run: echo "DYLD_FALLBACK_LIBRARY_PATH=/usr/local/lib" >> $GITHUB_ENV
+
+      - name: Generate variables.md documentation
+        run: python docs/mkvars.py
+
       - name: Build HTML documentation
         run: sphinx-build -b html --keep-going docs docs/_build/html
 

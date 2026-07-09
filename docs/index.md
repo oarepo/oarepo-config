@@ -6,5 +6,6 @@
 :caption: Contents
 
 guide
+variables
 api
 ```

@@ -1,10 +1,21 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Generic configuration parameters for oarepo-config."""
+
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
 from flask import current_app
-from invenio_i18n import lazy_gettext as _
 from invenio_oauthclient.views.client import auto_redirect_login
 from werkzeug.local import LocalProxy
 
@@ -15,7 +26,8 @@ from .base import (
 )
 
 
-def configure_global_logging():
+def configure_global_logging() -> None:
+    """Configure global logging settings."""
     import logging
     import os
 
@@ -28,14 +40,12 @@ def configure_global_logging():
         except ValueError:
             logging.basicConfig(level=logging.INFO)
             logging.getLogger().setLevel(logging.INFO)
-            logging.getLogger().error(
-                "Invalid log level: %s, setting to INFO", log_level
-            )
+            logging.getLogger().exception("Invalid log level: %s, setting to INFO", log_level)
 
 
-def configure_generic_parameters(
-    languages=(("cs", _("Czech")),),
-    use_path_pid_ids=False,
+def configure_generic_parameters(  # noqa PLR0915
+    languages: tuple[tuple[str, str], ...] = (("en", "English"),),
+    use_path_pid_ids: bool = False,
 ) -> None:
     """Set up the core, infrastructure-level configuration of the repository.
 
@@ -164,6 +174,18 @@ def configure_generic_parameters(
     ``RDMParentGrantsResourceConfig``, ``RDMGrantUserAccessResourceConfig``
     and ``RDMGrantGroupAccessResourceConfig`` directly - this is a class
     attribute change, not a new ``invenio.cfg`` variable.
+
+    Example:
+
+    .. code-block:: python
+
+        config.configure_generic_parameters(
+            languages=(
+                ("cs", _("Czech")),
+                ("de", _("German")),
+            ),
+        )
+
     """
     # see https://inveniordm.docs.cern.ch/install/configuration/ for the meaning
     # of the variables here
@@ -172,15 +194,9 @@ def configure_generic_parameters(
     configure_global_logging()
 
     # generic
-    APP_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
-    SITE_UI_URL = (
-        env.get("INVENIO_SITE_UI_URL", None)
-        or f"https://{env.INVENIO_UI_HOST}:{env.INVENIO_UI_PORT}"
-    )
-    SITE_API_URL = (
-        env.get("INVENIO_SITE_API_URL", None)
-        or f"https://{env.INVENIO_API_HOST}:{env.INVENIO_API_PORT}/api"
-    )
+    APP_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]  # noqa S104
+    SITE_UI_URL = env.get("INVENIO_SITE_UI_URL", None) or f"https://{env.INVENIO_UI_HOST}:{env.INVENIO_UI_PORT}"
+    SITE_API_URL = env.get("INVENIO_SITE_API_URL", None) or f"https://{env.INVENIO_API_HOST}:{env.INVENIO_API_PORT}/api"
 
     # security
     APP_DEFAULT_SECURE_HEADERS: dict[str, Any] = {
@@ -197,9 +213,10 @@ def configure_generic_parameters(
             "script-src": [
                 "'self'",
                 "blob:",
-                "'wasm-unsafe-eval'",  # for WASM-based workers
+                "'wasm-unsafe-eval'",  # for WASM-based workers and file uploads
                 # Multipart file uploads use a Web Worker running `hash-wasm` to compute content checksums
-                # (e.g., MD5) of uploaded parts. This requires both 'blob:' and 'wasm-unsafe-eval' enabled in `script-src`.
+                # (e.g., MD5) of uploaded parts. This requires both 'blob:' and 'wasm-unsafe-eval'
+                # enabled in `script-src`.
             ],
         },
         "content_security_policy_report_only": False,
@@ -227,18 +244,14 @@ def configure_generic_parameters(
     # local login: users can confirm e-mail address
     SECURITY_CONFIRMABLE = env.INVENIO_SECURITY_CONFIRMABLE
     # require users to confirm email before being able to login
-    SECURITY_LOGIN_WITHOUT_CONFIRMATION = (
-        env.INVENIO_SECURITY_LOGIN_WITHOUT_CONFIRMATION
-    )
+    SECURITY_LOGIN_WITHOUT_CONFIRMATION = env.INVENIO_SECURITY_LOGIN_WITHOUT_CONFIRMATION
     SESSION_COOKIE_SECURE = True
 
     # user security settings
     RATELIMIT_GUEST_USER = "5000 per hour;500 per minute"
     RATELIMIT_AUTHENTICATED_USER = "20000 per hour;2000 per minute"
     OAUTHCLIENT_REMOTE_APPS: dict[str, Any] = {}  # configure external login providers
-    ACCOUNTS_LOGIN_VIEW_FUNCTION = (
-        auto_redirect_login  # autoredirect to external login if enabled
-    )
+    ACCOUNTS_LOGIN_VIEW_FUNCTION = auto_redirect_login  # autoredirect to external login if enabled
     OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN = True  # autoredirect to external login
 
     # database
@@ -262,53 +275,40 @@ def configure_generic_parameters(
     )
     S3_ACCESS_KEY_ID = env.INVENIO_S3_ACCESS_KEY
     S3_SECRET_ACCESS_KEY = env.INVENIO_S3_SECRET_KEY
-    APP_DEFAULT_SECURE_HEADERS["content_security_policy"]["default-src"].append(
-        S3_ENDPOINT_URL
-    )
+    APP_DEFAULT_SECURE_HEADERS["content_security_policy"]["default-src"].append(S3_ENDPOINT_URL)
     FILES_REST_STORAGE_CLASS_LIST = {
         "L": "Local",
     }
     FILES_REST_DEFAULT_STORAGE_CLASS = "L"
 
     # user profiles
-    USERPROFILES_READ_ONLY = (
-        False  # allow users to change profile info (name, email, etc...)
-    )
+    USERPROFILES_READ_ONLY = False  # allow users to change profile info (name, email, etc...)
 
-    OAISERVER_ID_PREFIX = LocalProxy(
-        lambda: urlparse(current_app.config["SITE_UI_URL"]).hostname or ""
-    )
+    OAISERVER_ID_PREFIX = LocalProxy(lambda: urlparse(current_app.config["SITE_UI_URL"]).hostname or "")
 
     # search
     SEARCH_INDEX_PREFIX = env.INVENIO_SEARCH_INDEX_PREFIX
     SEARCH_HOSTS = [
-        dict(host=env.INVENIO_OPENSEARCH_HOST, port=env.INVENIO_OPENSEARCH_PORT),
+        {"host": env.INVENIO_OPENSEARCH_HOST, "port": env.INVENIO_OPENSEARCH_PORT},
     ]
-    SEARCH_CLIENT_CONFIG = dict(
-        use_ssl=env.INVENIO_OPENSEARCH_USE_SSL,
-        verify_certs=env.INVENIO_OPENSEARCH_VERIFY_CERTS,
-        ssl_assert_hostname=env.INVENIO_OPENSEARCH_ASSERT_HOSTNAME,
-        ssl_show_warn=env.INVENIO_OPENSEARCH_SHOW_WARN,
-        ca_certs=env.get("INVENIO_OPENSEARCH_CA_CERTS_PATH", None),
-    )
+    SEARCH_CLIENT_CONFIG = {
+        "use_ssl": env.INVENIO_OPENSEARCH_USE_SSL,
+        "verify_certs": env.INVENIO_OPENSEARCH_VERIFY_CERTS,
+        "ssl_assert_hostname": env.INVENIO_OPENSEARCH_ASSERT_HOSTNAME,
+        "ssl_show_warn": env.INVENIO_OPENSEARCH_SHOW_WARN,
+        "ca_certs": env.get("INVENIO_OPENSEARCH_CA_CERTS_PATH", None),
+    }
 
     # caches
     INVENIO_CACHE_TYPE = "redis"
     CACHE_REDIS_URL = env.get("INVENIO_CACHE_REDIS_URL", None) or (
-        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}"
-        f"/{env.INVENIO_REDIS_CACHE_DB}"
+        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_CACHE_DB}"
     )
-    ACCOUNTS_SESSION_REDIS_URL = env.get(
-        "INVENIO_ACCOUNTS_SESSION_REDIS_URL", None
-    ) or (
-        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}"
-        f"/{env.INVENIO_REDIS_SESSION_DB}"
+    ACCOUNTS_SESSION_REDIS_URL = env.get("INVENIO_ACCOUNTS_SESSION_REDIS_URL", None) or (
+        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_SESSION_DB}"
     )
-    COMMUNITIES_IDENTITIES_CACHE_REDIS_URL = env.get(
-        "INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL", None
-    ) or (
-        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}"
-        f"/{env.INVENIO_REDIS_COMMUNITIES_CACHE_DB}"
+    COMMUNITIES_IDENTITIES_CACHE_REDIS_URL = env.get("INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL", None) or (
+        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_COMMUNITIES_CACHE_DB}"
     )
 
     # json schemas for validation
@@ -335,8 +335,7 @@ def configure_generic_parameters(
     )
     BROKER_URL = CELERY_BROKER_URL
     CELERY_RESULT_BACKEND = env.get("INVENIO_CELERY_RESULT_BACKEND", None) or (
-        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}"
-        f"/{env.INVENIO_REDIS_CELERY_RESULT_DB}"
+        f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_CELERY_RESULT_DB}"
     )
 
     # Instance secret key, used to encrypt stuff (for example, access tokens) inside database
@@ -345,8 +344,8 @@ def configure_generic_parameters(
     DASHBOARD_RECORD_CREATE_URL = None
 
     # Do not add default records as we provide our own compatibility layer
-    RECORD_ROUTES = {}
-    RECORDS_REST_ENDPOINTS = {}
+    RECORD_ROUTES: dict = {}  # type: ignore[var-annotated]
+    RECORDS_REST_ENDPOINTS: dict = {}  # type: ignore[var-annotated]
 
     # datacite & dois default
     DATACITE_TEST_MODE = True
@@ -381,7 +380,7 @@ def configure_generic_parameters(
             **vocab_config.VOCABULARIES_FUNDER_SCHEMES,
             "crossrefFunderId": {
                 "label": "CrossrefFunderID",
-                "validator": lambda identifier: True,
+                "validator": lambda _: True,
             },
         },
     )
@@ -391,8 +390,8 @@ def configure_generic_parameters(
         "VOCABULARIES_AFFILIATION_SCHEMES",
         {
             **vocab_config.VOCABULARIES_AFFILIATION_SCHEMES,
-            "ico": {"label": "ICO", "validator": lambda identifier: True},
-            "url": {"label": "URL", "validator": lambda identifier: True},
+            "ico": {"label": "ICO", "validator": lambda _: True},
+            "url": {"label": "URL", "validator": lambda _: True},
         },
     )
 
@@ -444,14 +443,10 @@ def configure_generic_parameters(
             RDMParentRecordLinksResourceConfig,
         )
 
-        RDMParentRecordLinksResourceConfig.url_prefix = (
-            "/records/<path:pid_value>/access"
-        )
+        RDMParentRecordLinksResourceConfig.url_prefix = "/records/<path:pid_value>/access"
         RDMParentGrantsResourceConfig.url_prefix = "/records/<path:pid_value>/access"
         RDMGrantUserAccessResourceConfig.url_prefix = "/records/<path:pid_value>/access"
-        RDMGrantGroupAccessResourceConfig.url_prefix = (
-            "/records/<path:pid_value>/access"
-        )
+        RDMGrantGroupAccessResourceConfig.url_prefix = "/records/<path:pid_value>/access"
 
     OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN = False
 
@@ -464,6 +459,6 @@ def configure_generic_parameters(
     import os
     import platform
 
-    if os.path.exists("/opt/homebrew/lib") and platform.system() == "Darwin":
+    if Path("/opt/homebrew/lib").exists() and platform.system() == "Darwin":
         os.environ["DYLD_FALLBACK_LIBRARY_PATH"] = "/opt/homebrew/lib"
     set_constants_in_caller(locals())

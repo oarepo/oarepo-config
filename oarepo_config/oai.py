@@ -1,7 +1,20 @@
-from oarepo.config.base import set_constants_in_caller, get_constant_from_caller
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for OAI-PMH."""
+
+from __future__ import annotations
+
+from .base import get_constant_from_caller, set_constants_in_caller
 
 
-def configure_oai():
+def configure_oai() -> None:
     """Set up OAI-PMH, the protocol other systems use to harvest records from this repository.
 
     OAI-PMH is a standard way for external services (e.g. national
@@ -17,6 +30,13 @@ def configure_oai():
 
     * ``OAISERVER_REPOSITORY_NAME`` - copied from ``REPOSITORY_NAME``
       (set by :func:`configure_ui`).
+
+    Example:
+
+    .. code-block:: python
+
+        config.configure_oai()
+
     """
     repo_name = get_constant_from_caller("REPOSITORY_NAME")
     if not repo_name:

@@ -1,7 +1,25 @@
-from oarepo.config.base import set_constants_in_caller
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for the Jobs feature."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from .base import set_constants_in_caller
 
 
-def configure_jobs(permission_policy=None, logging_level=None):
+def configure_jobs(
+    permission_policy: str | type | None = None,
+    logging_level: str | None = None,
+) -> None:
     """Set up the "Jobs" feature (manually or automatically run administrative tasks).
 
     Invenio-jobs lets administrators run and monitor maintenance tasks
@@ -20,6 +38,18 @@ def configure_jobs(permission_policy=None, logging_level=None):
 
     * ``APP_LOGS_PERMISSION_POLICY`` - the ``permission_policy`` above.
     * ``JOBS_LOGGING_LEVEL`` - the ``logging_level`` above.
+
+    Example:
+
+    .. code-block:: python
+
+        config.configure_jobs()
+        # or with custom settings:
+        config.configure_jobs(
+            permission_policy="my_package:policies:MyJobPolicy",
+            logging_level="DEBUG",
+        )
+
     """
     from invenio_jobs.services.permissions import (
         JobLogsPermissionPolicy as InvenioJobLogsPermissionPolicy,
@@ -29,7 +59,7 @@ def configure_jobs(permission_policy=None, logging_level=None):
     class JobLogsPermissionPolicy(InvenioJobLogsPermissionPolicy):
         """Permission policy for job logs."""
 
-        can_read = [AdministrationWithQueryFilter()]
+        can_read: tuple[Any] = (AdministrationWithQueryFilter(),)
 
     # invenio-jobs configuration
     APP_LOGS_PERMISSION_POLICY = permission_policy or JobLogsPermissionPolicy

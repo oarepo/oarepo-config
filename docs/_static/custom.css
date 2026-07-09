@@ -1,0 +1,35 @@
+/* Sphinx's basic.css centers un-aligned tables (table.align-default); the
+   variable-detail tables in variables.md are short key/value tables that
+   read better left-aligned like the surrounding prose. */
+table.align-default {
+    margin-left: 0;
+}
+
+/* furo hard-codes "th { text-align: center }". The detail tables' header row
+   is really just the first data row (e.g. "Default Value" / its value) since
+   these tables have no header semantically - centering it inconsistently
+   with the left-aligned body rows below looks off. */
+table.docutils th {
+    text-align: left;
+}
+
+/* The Summary Table in variables.md has a long, code-formatted variable name
+   in its first column. Sphinx hard-codes code spans (span.pre) to
+   "white-space: nowrap", so without this override that column can't wrap at
+   all and forces the whole table wider than the page, pushing later columns
+   off-screen. mkvars.py inserts a zero-width space after every "_" in that
+   column so, once wrapping is allowed again here, long names break at
+   underscores rather than overflowing or wrapping at arbitrary points.
+   Scoped to the "Summary Table" section only - the per-variable detail
+   tables further down are short two-column key/value tables that already
+   size themselves fine and would just end up with a wastefully wide first
+   column under table-layout: fixed. */
+#summary-table table.docutils {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#summary-table table.docutils span.pre {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

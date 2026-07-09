@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 # Copyright (c) 2025 CESNET z.s.p.o.
 #
@@ -8,17 +9,18 @@
 #
 """Configuration for invenio-stats module."""
 
+from __future__ import annotations
+
 from .base import set_constants_in_caller
-
-
 
 # Invenio-Stats
 # =============
 # See https://invenio-stats.readthedocs.io/en/latest/configuration.html
 #     https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L120
 
+
 def configure_stats(
-        enable: bool = True,
+    enable: bool = True,
 ) -> None:
     """Set up usage statistics (record views, downloads, etc.).
 
@@ -37,8 +39,16 @@ def configure_stats(
     * ``STATS_EVENTS``, ``STATS_AGGREGATIONS``, ``STATS_QUERIES``,
       ``STATS_PERMISSION_FACTORY`` - always set to ``invenio-app-rdm``'s
       defaults, regardless of ``enable``.
+
+    Example:
+
+    .. code-block:: python
+
+        config.configure_stats()
+        # or on a test instance:
+        config.configure_stats(enable=False)
+
     """
     STATS_REGISTER_RECEIVERS = enable
 
-    from invenio_app_rdm.config import STATS_EVENTS, STATS_AGGREGATIONS, STATS_QUERIES, STATS_PERMISSION_FACTORY
     set_constants_in_caller(locals())

@@ -15,7 +15,9 @@ them directly into ``invenio.cfg``'s own configuration, as if you had
 set them by hand::
 
     import oarepo_config as config
-    from invenio_i18n import lazy_gettext as _
+    from invenio_i18n import (
+        lazy_gettext as _,
+    )
 
     config.initialize_i18n()
 
@@ -26,7 +28,9 @@ set them by hand::
     config.configure_ui(
         code="myrepo",
         name=_("My repository"),
-        description=_("Description of my repository"),
+        description=_(
+            "Description of my repository"
+        ),
     )
 
     config.configure_communities()
@@ -53,9 +57,7 @@ try:
     from oarepo_glitchtip import initialize_glitchtip
 except ImportError:
 
-    def initialize_glitchtip(
-        dsn: str | None = None, deployment_version: str | None = None
-    ) -> None:
+    def initialize_glitchtip(dsn: str | None = None, deployment_version: str | None = None) -> None:  # noqa: ARG001
         """Set up automatic error reporting to Glitchtip/Sentry.
 
         Requires the optional ``oarepo-glitchtip`` package; without it,
@@ -73,6 +75,7 @@ except ImportError:
         Invenio configuration variables set: implemented entirely in
         the separate ``oarepo-glitchtip`` package, so the exact set of
         variables it writes is documented there, not here.
+
         """
         raise ImportError("oarepo-glitchtip is not installed")
 

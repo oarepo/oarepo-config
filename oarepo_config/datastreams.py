@@ -1,11 +1,31 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for datastreams."""
+
+from __future__ import annotations
+
 from typing import Any
 
 from invenio_base.utils import obj_or_import_string
-from oarepo.config.base import set_constants_in_caller, get_constant_from_caller, merge_with_caller
+
+from .base import (
+    merge_with_caller,
+    set_constants_in_caller,
+)
 
 
-def configure_datastreams(readers: dict[str, Any] | None = None, writers: dict[str, Any] | None = None,
-                          transformers: dict[str, Any] | None = None)->None:
+def configure_datastreams(
+    readers: dict[str, Any] | None = None,
+    writers: dict[str, Any] | None = None,
+    transformers: dict[str, Any] | None = None,
+) -> None:
     """Register custom sources for importing vocabularies (fixtures) into the repository.
 
     Vocabularies (controlled lists such as languages, resource types or
@@ -39,6 +59,20 @@ def configure_datastreams(readers: dict[str, Any] | None = None, writers: dict[s
       given; merged with any existing value.
     * ``VOCABULARIES_DATASTREAM_TRANSFORMERS`` - only if
       ``transformers`` is given; merged with any existing value.
+
+    Example:
+
+    .. code-block:: python
+
+        config.configure_datastreams(
+            readers={
+                "myreader": "my_package:MyReader"
+            },
+            writers={
+                "mywriter": "my_package:MyWriter"
+            },
+        )
+
     """
     # can't move into a function cause of constant_from_caller methods
     if readers:

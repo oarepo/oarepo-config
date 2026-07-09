@@ -141,17 +141,6 @@ Two additional modules ship plain module-level constants rather than
   preview settings, etc.) intended to replace pieces of
   `invenio-app-rdm`'s own defaults.
 
-Upstream (inside the `oarepo` metapackage, where this code originally
-lived as `oarepo.config`), these two modules are registered as
-`invenio_config.module` entry points and load automatically before
-`invenio.cfg` itself, at `[invenio_config.module] oarepo = ...` /
-`invenio_app_rdm = ...`. **As of this standalone `oarepo-config` package,
-`pyproject.toml` does not yet declare that `[project.entry-points]`
-section**, so these two modules are not currently wired up to load
-automatically — if you need their constants, import them explicitly from
-`invenio.cfg` (`from oarepo_config.initial_rdm_config import *`, or
-individual names) until the entry points are added.
-
 ## Full example
 
 Adapted from a production `invenio.cfg` (CESNET catch-all data
@@ -260,20 +249,3 @@ Three consequences of this design that matter when using the package:
   lets you pre-declare a partial `CELERY_BEAT_SCHEDULE` or
   `OAUTHCLIENT_REMOTE_APPS` before calling the relevant `configure_*()` and
   have it combined with the defaults instead of overwritten.
-
-## Known gaps (as of this package's initial extraction from `oarepo`)
-
-These are observations from reading the current source, useful if you're
-picking up the standalone-package conversion work:
-
-* `oarepo_config/jobs.py`, `oarepo_config/oai.py` and
-  `oarepo_config/datastreams.py` still import their helpers via
-  `from oarepo.config.base import ...` (the old in-monorepo module path)
-  instead of the local `from .base import ...` used everywhere else in
-  this package. This currently works only because the `oarepo` metapackage
-  dependency happens to ship its own (older) `oarepo.config.base`, which
-  `configure_jobs()`/`configure_oai()`/`configure_datastreams()` end up
-  using instead of this package's own `base.py`.
-* `pyproject.toml` has no `[project.entry-points."invenio_config.module"]`
-  section, so `initial_configuration.py` / `initial_rdm_config.py` are not
-  auto-loaded (see [above](#initial_configurationpy--initial_rdm_configpy)).

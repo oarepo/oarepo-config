@@ -1,28 +1,44 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for workflows."""
+
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from invenio_i18n import gettext as _
 from flask_babel import LazyString
 from invenio_base.utils import obj_or_import_string
+from invenio_i18n import gettext as _
 
 if TYPE_CHECKING:
     try:
         from oarepo_workflows import WorkflowRequestPolicy
         from oarepo_workflows.services.permissions import DefaultWorkflowPermissions
     except ImportError:
-        WorkflowRequestPolicy = None
-        DefaultWorkflowPermissions = None
+        WorkflowRequestPolicy = None  # type: ignore[assignment]
+        DefaultWorkflowPermissions = None  # type: ignore[assignment]
+
+    from flask_babel import LazyString
+else:
+    LazyString = Any  # type: ignore[assignment]
 
 from .base import get_constant_from_caller, set_constants_in_caller
 
+
 def register_workflow(
     workflow_code: str,
-    workflow_name: "str | LazyString",
-    permissions_policy: "str | DefaultWorkflowPermissions",
-    requests_policy: "str | WorkflowRequestPolicy",
-):
+    workflow_name: str | LazyString,
+    permissions_policy: str | type,
+    requests_policy: str | type,
+) -> None:
     """Register a submission/review workflow that records can go through.
 
     A workflow defines the path a record takes from being created to
@@ -62,6 +78,25 @@ def register_workflow(
     * ``REQUESTS_PERMISSION_POLICY`` - only if not already set by an
       earlier call; defaults to
       ``CreatorsFromWorkflowRequestsPermissionPolicy``.
+
+    Example:
+
+    .. code-block:: python
+
+        from oarepo_workflows.services.permissions import (
+            DefaultWorkflowPermissions,
+        )
+        from oarepo_requests.services.permissions.workflow_policies import (
+            CreatorsFromWorkflowRequestsPermissionPolicy,
+        )
+
+        config.register_workflow(
+            workflow_code="default",
+            workflow_name=_("Default workflow"),
+            permissions_policy=DefaultWorkflowPermissions,
+            requests_policy=CreatorsFromWorkflowRequestsPermissionPolicy,
+        )
+
     """
     try:
         from oarepo_requests.services.permissions.workflow_policies import (
@@ -69,28 +104,26 @@ def register_workflow(
         )
         from oarepo_workflows import Workflow, WorkflowRequestPolicy
         from oarepo_workflows.services.permissions import DefaultWorkflowPermissions
-    except ImportError:
-        raise ImportError(
-            "oarepo_workflows package is required for workflow registration."
-        )
+    except ImportError as e:
+        raise ImportError("oarepo_workflows package is required for workflow registration.") from e
 
     WORKFLOWS = get_constant_from_caller("WORKFLOWS", [])
     permission_policy_cls = obj_or_import_string(permissions_policy)
-    assert inspect.isclass(permission_policy_cls) and issubclass(
-        permission_policy_cls, DefaultWorkflowPermissions
-    )
+    if not (inspect.isclass(permission_policy_cls) and issubclass(permission_policy_cls, DefaultWorkflowPermissions)):
+        raise TypeError("permissions_policy must be a subclass of DefaultWorkflowPermissions")
 
     requests_policy_cls = obj_or_import_string(requests_policy)
-    assert inspect.isclass(requests_policy_cls) and issubclass(
-        requests_policy_cls, WorkflowRequestPolicy
-    )
+    if not (inspect.isclass(requests_policy_cls) and issubclass(requests_policy_cls, WorkflowRequestPolicy)):
+        raise TypeError("requests_policy must be a subclass of WorkflowRequestPolicy")
 
-    WORKFLOWS.append(Workflow(
-        code=workflow_code,
-        label=_(workflow_name),
-        permission_policy_cls=permission_policy_cls,
-        request_policy_cls=requests_policy_cls,
-    ))
+    WORKFLOWS.append(
+        Workflow(
+            code=workflow_code,
+            label=_(workflow_name),
+            permission_policy_cls=permission_policy_cls,
+            request_policy_cls=requests_policy_cls,
+        )
+    )
     REQUESTS_PERMISSION_POLICY = get_constant_from_caller(
         "REQUESTS_PERMISSION_POLICY", CreatorsFromWorkflowRequestsPermissionPolicy
     )
