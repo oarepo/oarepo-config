@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 # Copyright (c) 2025 CESNET z.s.p.o.
 #
@@ -7,6 +8,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Configuration for oarepo-oidc-einfra module."""
+
+from __future__ import annotations
 
 import os
 import sys
@@ -50,7 +53,6 @@ def configure_einfra_oidc() -> None:
       forced to ``True``.
 
     Example:
-
     ```python
     config.configure_einfra_oidc()
     ```
@@ -58,12 +60,13 @@ def configure_einfra_oidc() -> None:
     Make sure to set ``INVENIO_REMOTE_AUTH_ENABLED=true`` and provide
     ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``
     in your deployment's ``variables`` or environment.
+
     """
     try:
         from oarepo_oidc_einfra import EINFRA_LOGIN_APP
         from oarepo_oidc_einfra import config as oarepo_einfra_config
     except ImportError:
-        print("Please install oarepo-oidc-einfra to use E-INFRA OIDC login.")
+        print("Please install oarepo-oidc-einfra to use E-INFRA OIDC login.")  # noqa: T201
         sys.exit(1)
 
     env = load_configuration_variables()
@@ -72,9 +75,7 @@ def configure_einfra_oidc() -> None:
         "yes",
         "1",
     ):
-        OAUTHCLIENT_REMOTE_APPS = merge_with_caller(
-            "OAUTHCLIENT_REMOTE_APPS", {"e-infra": EINFRA_LOGIN_APP}
-        )
+        OAUTHCLIENT_REMOTE_APPS = merge_with_caller("OAUTHCLIENT_REMOTE_APPS", {"e-infra": EINFRA_LOGIN_APP})
         # needed for disconnect
         EINFRA = dict(
             consumer_key=env.INVENIO_EINFRA_CONSUMER_KEY,

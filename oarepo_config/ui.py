@@ -1,6 +1,17 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for the repository UI."""
+
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from invenio_i18n import lazy_gettext as _
 
@@ -10,21 +21,18 @@ from .base import (
     set_constants_in_caller,
 )
 
-if TYPE_CHECKING:
-    from typing import Any
 
-
-def configure_ui(
-    code="myrepo",
-    name=_("My Repository"),
-    subtitle="",
-    description="",
-    support_contact="",
-    keywords="",
-    use_default_frontpage=False,
-    show_frontpage_intro=True,
-    analytics=False,
-    languages=(("cs", _("Czech")),),
+def configure_ui(  # noqa PLR0915
+    code: str = "myrepo",
+    name: str | Any = "My Repository",
+    subtitle: str = "",
+    description: str = "",
+    support_contact: str = "",
+    keywords: str = "",
+    use_default_frontpage: bool = False,
+    show_frontpage_intro: bool = True,
+    analytics: str | bool = False,
+    languages: tuple[tuple[str, str], ...] = (("en", "English"),),
 ) -> None:
     """Set up the repository's branding, name and general look-and-feel.
 
@@ -66,12 +74,13 @@ def configure_ui(
     :func:`configure_oai` (which needs the repository name set here).
 
     Example:
-
     ```python
     config.configure_ui(
         code="myrepo",
         name=_("My Repository"),
-        description=_("A repository for my data"),
+        description=_(
+            "A repository for my data"
+        ),
         support_contact="support@example.com",
     )
     ```
@@ -123,17 +132,16 @@ def configure_ui(
 
     Search UI
         * ``THEME_SEARCH_ENDPOINT``, ``SEARCH_UI_SEARCH_VIEW``
+
     """
     env = load_configuration_variables()
 
     DEPLOYMENT_VERSION = env.get("INVENIO_DEPLOYMENT_VERSION", "local development")
 
     APP_THEME = [code, "oarepo", "semantic-ui"]
-    APP_DEFAULT_SECURE_HEADERS: dict[str, Any] = get_constant_from_caller(
-        "APP_DEFAULT_SECURE_HEADERS", {}
-    )
+    APP_DEFAULT_SECURE_HEADERS: dict[str, Any] = get_constant_from_caller("APP_DEFAULT_SECURE_HEADERS", {})
     APP_DEFAULT_SECURE_HEADERS["content_security_policy"]["default-src"].append(
-        # hack for displaying images from another source (this one is for licenses specifically)
+        # Fix for displaying images from another source (this one is for licenses specifically)
         "https://licensebuttons.net/"
     )
 
@@ -151,9 +159,7 @@ def configure_ui(
     THEME_FOOTER_TEMPLATE = "footer.html"
     THEME_TRACKINGCODE_TEMPLATE = "oarepo_ui/trackingcode.html"
     THEME_FRONTPAGE_TEMPLATE = "frontpage.html"
-    """Front page intro section visibility"""
 
-    # hack:
     # Invenio has problems with order of loading templates. If invenio-userprofiles is loaded
     # before invenio-theme, the userprofile page will not work because base settings page
     # will be taken from userprofiles/semantic-ui/userprofiles/settings/base.html which is faulty.
@@ -164,17 +170,11 @@ def configure_ui(
     HEADER_TEMPLATE = "invenio_theme/header.html"
     SEARCH_UI_SEARCH_TEMPLATE = "invenio_app_rdm/records/search.html"
 
-    if (
-        analytics
-        and analytics == "matomo"
-        and DEPLOYMENT_VERSION != "local development"
-    ):
+    if analytics == "matomo" and DEPLOYMENT_VERSION != "local development":
         MATOMO_ANALYTICS_TEMPLATE = "oarepo_ui/matomo_analytics.html"
         MATOMO_ANALYTICS_URL = env.INVENIO_MATOMO_ANALYTICS_URL
         MATOMO_ANALYTICS_SITE_ID = env.INVENIO_MATOMO_ANALYTICS_SITE_ID
-        APP_DEFAULT_SECURE_HEADERS["content_security_policy"]["default-src"].append(
-            env.INVENIO_MATOMO_ANALYTICS_URL
-        )
+        APP_DEFAULT_SECURE_HEADERS["content_security_policy"]["default-src"].append(env.INVENIO_MATOMO_ANALYTICS_URL)
 
     # UI Branding & copywriting
     THEME_FRONTPAGE = use_default_frontpage
@@ -198,14 +198,14 @@ def configure_ui(
     WEBPACKEXT_PROJECT = "oarepo_ui.webpack:project"
 
     # Do not add default records UI as we provide our own compatibility layer
-    RECORDS_UI_ENDPOINTS = []
+    RECORDS_UI_ENDPOINTS: list = []  # type: ignore[var-annotated]
     # UPPY uploader is default for us
     APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED = True
 
     WEBPACKEXT_NPM_PKG_CLS = "pynpm:PNPMPackage"
     DASHBOARD_RECORD_CREATE_URL = "/uploads/new"
 
-    # todo: consult using app_rdm ones @mirekys
+    # TODO: consult using app_rdm ones @mirekys
     APP_RDM_DETAIL_SIDE_BAR_TEMPLATES = [
         "invenio_app_rdm/records/details/side_bar/external_resources.html",
         "invenio_app_rdm/records/details/side_bar/keywords_subjects.html",

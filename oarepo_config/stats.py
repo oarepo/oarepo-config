@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 # Copyright (c) 2025 CESNET z.s.p.o.
 #
@@ -7,6 +8,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Configuration for invenio-stats module."""
+
+from __future__ import annotations
 
 from .base import set_constants_in_caller
 
@@ -38,20 +41,13 @@ def configure_stats(
       defaults, regardless of ``enable``.
 
     Example:
-
     ```python
     config.configure_stats()
     # or on a test instance:
     config.configure_stats(enable=False)
     ```
+
     """
     STATS_REGISTER_RECEIVERS = enable
-
-    from invenio_app_rdm.config import (
-        STATS_AGGREGATIONS,
-        STATS_EVENTS,
-        STATS_PERMISSION_FACTORY,
-        STATS_QUERIES,
-    )
 
     set_constants_in_caller(locals())

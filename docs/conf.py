@@ -10,19 +10,19 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as get_version
+from pathlib import Path
 
 # Make sure the package can be imported even if it was not pip-installed
 # (e.g. when running sphinx-build directly against a checkout).
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, str(Path("..").resolve()))
 
 # -- Project information -----------------------------------------------
 
 project = "oarepo-config"
-copyright = "2026, CESNET z.s.p.o."
+copyright = "2026, CESNET z.s.p.o."  # noqa: A001
 author = "CESNET z.s.p.o."
 
 try:
@@ -94,4 +94,5 @@ intersphinx_mapping = {
 
 html_theme = "furo"
 html_title = f"{project} {version}"
-html_static_path: list[str] = []
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]

@@ -1,0 +1,6 @@
+/* Sphinx's basic.css centers un-aligned tables (table.align-default); the
+   variable-detail tables in variables.md are short key/value tables that
+   read better left-aligned like the surrounding prose. */
+table.align-default {
+    margin-left: 0;
+}

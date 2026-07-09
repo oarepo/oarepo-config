@@ -1,7 +1,20 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2026 CESNET z.s.p.o.
+#
+# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
+#
+# oarepo-config is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""Configuration for models."""
+
+from __future__ import annotations
+
 import logging
 from typing import Any
 
-from .base import get_constant_from_caller, set_constants_in_caller
+from oarepo.config.base import get_constant_from_caller, set_constants_in_caller
 
 log = logging.getLogger("config.models")
 
@@ -31,26 +44,23 @@ def add_model(model_package_name: str) -> None:
       calls, or by other packages) are kept.
 
     Example:
-
     ```python
     from datasets import datasets_model
+
     datasets_model.register()
     config.add_model("datasets")
     ```
+
     """
-    GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller(
-        "GLOBAL_SEARCH_MODELS", []
-    )
+    GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller("GLOBAL_SEARCH_MODELS", [])  # type: ignore[var-annotated]
 
     try:
         from invenio_base.utils import obj_or_import_string
 
-        model_definition = obj_or_import_string(
-            model_package_name + ":" + "MODEL_DEFINITION"
-        )
+        model_definition = obj_or_import_string(model_package_name + ":" + "MODEL_DEFINITION")
         GLOBAL_SEARCH_MODELS.append(model_definition)
     except ImportError:
-        log.error(
+        log.exception(
             "Could not import model definition from package: %s. Has the model been compiled?",
             model_package_name,
         )

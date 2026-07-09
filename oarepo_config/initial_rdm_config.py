@@ -6,9 +6,12 @@
 # oarepo is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-"""Initial configuration which replaces RDM service with oarepo extensions. This is the place where we will keep
-most RDM related configuration (all that is possible) in order to avoid keeping it in oarepo-rdm which then creates
-a problem, where every package needs to depend on oarepo-rdm."""
+"""Initial configuration which replaces RDM service with oarepo extensions.
+
+This is the place where we will keep most RDM related configuration (all
+that is possible) in order to avoid keeping it in oarepo-rdm which then
+creates a problem, where every package needs to depend on oarepo-rdm.
+"""
 
 from __future__ import annotations
 
@@ -182,9 +185,7 @@ RDM_CITATION_STYLES = [
 RDM_CITATION_STYLES_DEFAULT = "iso690-author-date-cs"
 """Default citation style for records."""
 
-APP_RDM_MODERATION_REQUEST_SORT_OPTIONS = (
-    app_rdm_config.APP_RDM_MODERATION_REQUEST_SORT_OPTIONS
-)
+APP_RDM_MODERATION_REQUEST_SORT_OPTIONS = app_rdm_config.APP_RDM_MODERATION_REQUEST_SORT_OPTIONS
 
 APP_RDM_MODERATION_REQUEST_SEARCH = app_rdm_config.APP_RDM_MODERATION_REQUEST_SEARCH
 
