@@ -6164,7 +6164,7 @@ Record update key.
 
 (oaiserver-metadata-formats)=
 ### OAISERVER_METADATA_FORMATS
-| **OARepo Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x1141130e0>` |
+| **OARepo Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x1111ab0e0>` |
 |--------------|-----------|
 | **Type** | OAIServerMetadataFormats |
 | **Sources** | [oarepo-rdm](https://github.com/oarepo/oarepo-rdm/blob/master/oarepo_rdm/initial_config.py#L53); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L642); [invenio-oaiserver](https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py#L70) |
@@ -12047,7 +12047,7 @@ Sets cookie with the secure flag by default.
 
 (session-random-source)=
 ### SESSION_RANDOM_SOURCE
-| **Default Value** | `<random.SystemRandom object at 0x9cce43020>` |
+| **Default Value** | `<random.SystemRandom object at 0x9dfff7020>` |
 |--------------|-----------|
 | **Type** | SystemRandom |
 | **Source** | unknown |
