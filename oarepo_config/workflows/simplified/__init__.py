@@ -70,6 +70,7 @@ def configure_workflows(
     the caller's globals.
 
     See https://nrp-cz.github.io/docs/customize/workflows for more information on how to customize the workflows.
+
     """
     if not workflow_definitions:
         workflow_definitions = (
