@@ -90,7 +90,7 @@ from .oai import configure_oai
 from .stats import configure_stats
 from .ui import configure_ui
 from .vocabulary import configure_vocabulary
-from .workflows import register_workflow
+from .workflows import CommunityWorkflow, IndividualWorkflow, configure_workflows, register_workflow
 
 try:
     __version__ = version("oarepo-config")
@@ -98,6 +98,8 @@ except PackageNotFoundError:
     __version__ = "0.0.0dev0+unknown"
 
 __all__ = (
+    "CommunityWorkflow",
+    "IndividualWorkflow",
     "__version__",
     "add_model",
     "configure_communities",
@@ -110,6 +112,7 @@ __all__ = (
     "configure_stats",
     "configure_ui",
     "configure_vocabulary",
+    "configure_workflows",
     "initialize_glitchtip",
     "initialize_i18n",
     "load_configuration_variables",

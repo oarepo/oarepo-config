@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import inspect
+import warnings
 from typing import TYPE_CHECKING, Any
 
 from flask_babel import LazyString
@@ -30,7 +31,7 @@ if TYPE_CHECKING:
 else:
     LazyString = Any  # type: ignore[assignment]
 
-from .base import get_constant_from_caller, set_constants_in_caller
+from ..base import get_constant_from_caller, set_constants_in_caller
 
 
 def register_workflow(
@@ -38,6 +39,7 @@ def register_workflow(
     workflow_name: str | LazyString,
     permissions_policy: str | type,
     requests_policy: str | type,
+    use_low_level_workflows: bool = False,
 ) -> None:
     """Register a submission/review workflow that records can go through.
 
@@ -67,6 +69,10 @@ def register_workflow(
             records using this workflow (e.g. a publish request that
             needs a curator's approval). Pass either a request policy
             class or its import path as a string.
+        use_low_level_workflows: Set to ``True`` to silence the warning
+            recommending :func:`configure_workflows` instead, for the
+            (uncommon) cases that genuinely need this low-level,
+            single-workflow API.
 
     Requires the optional ``oarepo_workflows`` (and, for its defaults,
     ``oarepo_requests``) package to be installed.
@@ -98,6 +104,15 @@ def register_workflow(
         )
 
     """
+    if not use_low_level_workflows:
+        warnings.warn(
+            "register_workflow() is a low-level, single-workflow building block. "
+            "configure_workflows(IndividualWorkflow(...), CommunityWorkflow(...)) is a "
+            "simplified solution that should be used instead for the common case. Pass "
+            "use_low_level_workflows=True if you intentionally need the low-level API.",
+            stacklevel=2,
+        )
+
     try:
         from oarepo_requests.services.permissions.workflow_policies import (
             CreatorsFromWorkflowRequestsPermissionPolicy,

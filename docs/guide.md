@@ -78,7 +78,8 @@ call order in `invenio.cfg` is:
 3. `configure_ui()` (extends `APP_DEFAULT_SECURE_HEADERS`, sets
    `REPOSITORY_NAME`)
 4. `configure_oai()` (needs `REPOSITORY_NAME`)
-5. `configure_communities()`, workflow registration, `configure_cron()`,
+5. `configure_communities()`, `configure_workflows()` (or the low-level
+   `register_workflow()`), `configure_cron()`,
    `configure_stats()`, `configure_vocabulary()`,
    `configure_datastreams()`, `configure_jobs()`,
    `configure_einfra_oidc()`, `add_model()` — order among these mostly
@@ -149,7 +150,6 @@ repository), showing most of the functions together:
 ```python
 import oarepo_config as config
 from invenio_i18n import lazy_gettext as _
-from oarepo_app.config import CommunityWorkflow, IndividualWorkflow, configure_workflows
 
 config.initialize_i18n()
 
@@ -176,17 +176,18 @@ config.configure_communities(
     ]
 )
 
-# Higher-level workflow helper from oarepo_app, built on the same
-# WORKFLOWS constant that register_workflow() would populate directly.
-configure_workflows(
-    IndividualWorkflow(
+# Preferred, higher-level workflow helper - builds the same "WORKFLOWS"
+# constant that the low-level register_workflow() would populate directly,
+# from IndividualWorkflow()/CommunityWorkflow() definitions instead.
+config.configure_workflows(
+    config.IndividualWorkflow(
         publish_without_review=False,
         review_required=True,
         self_review_enabled=True,
         draft_creation_roles=["submitter"],
         publish_without_review_roles=["direct-publisher"],
     ),
-    CommunityWorkflow(
+    config.CommunityWorkflow(
         code="community",
         label=_("Default Community Workflow"),
         community_curator_roles=["curator", "owner"],

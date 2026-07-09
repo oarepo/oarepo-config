@@ -163,7 +163,14 @@ same note as above.
 ``oarepo_config.workflows``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+``register_workflow``, ``configure_workflows``, ``CommunityWorkflow``,
+``IndividualWorkflow`` and ``BaseWorkflowSettings`` are already documented
+above under the top-level package; ``:no-index:`` avoids re-registering
+those (Sphinx errors on class descriptions - unlike functions - being
+registered twice) while still showing them here too.
+
 .. automodule:: oarepo_config.workflows
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
