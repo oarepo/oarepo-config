@@ -326,6 +326,17 @@ def variable_anchor(var_name):
     return var_name.lower().replace("_", "-")
 
 
+def default_value_label(var_info):
+    """Return the "Default Value" row label, naming the package family it comes from."""
+    paths = [path for path, _line in var_info.get("sources", [])] or [var_info.get("source")]
+    package_names = {Path(path).parent.name for path in paths if path}
+    if any(name.startswith("oarepo_") for name in package_names):
+        return "OARepo Default Value"
+    if any(name.startswith("invenio_") for name in package_names):
+        return "Invenio RDM Default Value"
+    return "Default Value"
+
+
 def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C901
     """Generate the markdown documentation."""
     lines = []
@@ -445,7 +456,12 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
         # "<a id=...>" anchor instead of relying on that auto id gets duplicated
         # into the "On this page" sidebar, producing invalid nested <a> tags that
         # silently break those links.
-        lines.append(f"| [`{var_name}`](#{variable_anchor(var_name)}) | {var_type} | {ref_names} |\n")
+        # Sphinx hard-codes code spans to "white-space: nowrap" (overridden back
+        # to wrappable in custom.css), and browsers otherwise never treat "_" as
+        # a break opportunity - insert a zero-width space after each one so long
+        # names wrap at underscores instead of overflowing the table.
+        display_name = var_name.replace("_", "_\u200b")
+        lines.append(f"| [`{display_name}`](#{variable_anchor(var_name)}) | {var_type} | {ref_names} |\n")
 
     # Generate detailed sections
     lines.append("\n## Detailed Variable Reference\n")
@@ -485,7 +501,8 @@ def generate_markdown(app, extension_configs, oarepo_function_vars):  # noqa: C9
         # Default Value (if available and not empty)
         if var_info.get("value"):
             value = var_info["value"].replace("|", "\\|")
-            table_rows.append(f"| **Default Value** | `{value}` |")
+            label = default_value_label(var_info)
+            table_rows.append(f"| **{label}** | `{value}` |")
 
         # Type
         if var_info.get("type"):
