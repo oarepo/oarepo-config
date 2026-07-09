@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from oarepo.config.base import get_constant_from_caller, set_constants_in_caller
+from .base import get_constant_from_caller, set_constants_in_caller
 
 
 def configure_oai() -> None:
@@ -32,9 +32,10 @@ def configure_oai() -> None:
       (set by :func:`configure_ui`).
 
     Example:
-    ```python
-    config.configure_oai()
-    ```
+
+    .. code-block:: python
+
+        config.configure_oai()
 
     """
     repo_name = get_constant_from_caller("REPOSITORY_NAME")

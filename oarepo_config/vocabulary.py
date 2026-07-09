@@ -46,25 +46,26 @@ def configure_vocabulary(code: str, **kwargs: Any) -> None:
       earlier calls) are kept.
 
     Example:
-    ```python
-    config.configure_vocabulary(
-        code="languages",
-        name=_("Languages"),
-        description=_(
-            "Language definitions"
-        ),
-        props={
-            "alpha3Code": {
-                "description": _(
-                    "ISO 639-2 standard 3-letter language code"
-                ),
-                "multiple": False,
-                "search": False,
+
+    .. code-block:: python
+
+        config.configure_vocabulary(
+            code="languages",
+            name=_("Languages"),
+            description=_(
+                "Language definitions"
+            ),
+            props={
+                "alpha3Code": {
+                    "description": _(
+                        "ISO 639-2 standard 3-letter language code"
+                    ),
+                    "multiple": False,
+                    "search": False,
+                },
             },
-        },
-        dump_options=True,
-    )
-    ```
+            dump_options=True,
+        )
 
     """
     INVENIO_VOCABULARY_TYPE_METADATA = get_constant_from_caller("INVENIO_VOCABULARY_TYPE_METADATA", {})

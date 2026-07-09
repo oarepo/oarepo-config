@@ -176,14 +176,15 @@ def configure_generic_parameters(  # noqa PLR0915
     attribute change, not a new ``invenio.cfg`` variable.
 
     Example:
-    ```python
-    config.configure_generic_parameters(
-        languages=(
-            ("cs", _("Czech")),
-            ("de", _("German")),
-        ),
-    )
-    ```
+
+    .. code-block:: python
+
+        config.configure_generic_parameters(
+            languages=(
+                ("cs", _("Czech")),
+                ("de", _("German")),
+            ),
+        )
 
     """
     # see https://inveniordm.docs.cern.ch/install/configuration/ for the meaning

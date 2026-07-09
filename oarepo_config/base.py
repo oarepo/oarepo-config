@@ -32,12 +32,20 @@ def set_constants_in_caller(constants: dict[str, Any]) -> None:
     """Set the constants in the caller's globals.
 
     Example:
-    mymodule:
-      import config
-      config.doit()
-      print(MY_CONSTANT)
 
-    config:
+    ``mymodule``:
+
+    .. code-block:: python
+
+        import config
+
+        config.doit()
+        print(MY_CONSTANT)
+
+    ``config``:
+
+    .. code-block:: python
+
         def doit():
             set_constants_in_caller({"MY_CONSTANT": 42})
 
@@ -71,16 +79,23 @@ def get_constant_from_caller(name: str, default: Any = None) -> Any:
     """Get constant from the caller frame and optionally return a default value if not found.
 
     Example:
-    mymodule:
-      import config
 
-      MY_CONSTANT = 42
-      config.doit()
+    ``mymodule``:
 
-    config:
+    .. code-block:: python
+
+        import config
+
+        MY_CONSTANT = 42
+        config.doit()
+
+    ``config``:
+
+    .. code-block:: python
+
         def doit():
             # prints 42
-            print(getet_constant_from_caller("MY_CONSTANT", 20))
+            print(get_constant_from_caller("MY_CONSTANT", 20))
 
     """
     current_frame = inspect.currentframe()

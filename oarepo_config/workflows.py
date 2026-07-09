@@ -80,21 +80,22 @@ def register_workflow(
       ``CreatorsFromWorkflowRequestsPermissionPolicy``.
 
     Example:
-    ```python
-    from oarepo_workflows.services.permissions import (
-        DefaultWorkflowPermissions,
-    )
-    from oarepo_requests.services.permissions.workflow_policies import (
-        CreatorsFromWorkflowRequestsPermissionPolicy,
-    )
 
-    config.register_workflow(
-        workflow_code="default",
-        workflow_name=_("Default workflow"),
-        permissions_policy=DefaultWorkflowPermissions,
-        requests_policy=CreatorsFromWorkflowRequestsPermissionPolicy,
-    )
-    ```
+    .. code-block:: python
+
+        from oarepo_workflows.services.permissions import (
+            DefaultWorkflowPermissions,
+        )
+        from oarepo_requests.services.permissions.workflow_policies import (
+            CreatorsFromWorkflowRequestsPermissionPolicy,
+        )
+
+        config.register_workflow(
+            workflow_code="default",
+            workflow_name=_("Default workflow"),
+            permissions_policy=DefaultWorkflowPermissions,
+            requests_policy=CreatorsFromWorkflowRequestsPermissionPolicy,
+        )
 
     """
     try:

@@ -14,7 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from oarepo.config.base import get_constant_from_caller, set_constants_in_caller
+from .base import get_constant_from_caller, set_constants_in_caller
 
 log = logging.getLogger("config.models")
 
@@ -44,12 +44,13 @@ def add_model(model_package_name: str) -> None:
       calls, or by other packages) are kept.
 
     Example:
-    ```python
-    from datasets import datasets_model
 
-    datasets_model.register()
-    config.add_model("datasets")
-    ```
+    .. code-block:: python
+
+        from datasets import datasets_model
+
+        datasets_model.register()
+        config.add_model("datasets")
 
     """
     GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller("GLOBAL_SEARCH_MODELS", [])  # type: ignore[var-annotated]

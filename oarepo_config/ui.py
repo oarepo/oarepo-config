@@ -74,16 +74,17 @@ def configure_ui(  # noqa PLR0915
     :func:`configure_oai` (which needs the repository name set here).
 
     Example:
-    ```python
-    config.configure_ui(
-        code="myrepo",
-        name=_("My Repository"),
-        description=_(
-            "A repository for my data"
-        ),
-        support_contact="support@example.com",
-    )
-    ```
+
+    .. code-block:: python
+
+        config.configure_ui(
+            code="myrepo",
+            name=_("My Repository"),
+            description=_(
+                "A repository for my data"
+            ),
+            support_contact="support@example.com",
+        )
 
     Invenio configuration variables set, grouped by area:
 

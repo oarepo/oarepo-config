@@ -41,11 +41,12 @@ def configure_stats(
       defaults, regardless of ``enable``.
 
     Example:
-    ```python
-    config.configure_stats()
-    # or on a test instance:
-    config.configure_stats(enable=False)
-    ```
+
+    .. code-block:: python
+
+        config.configure_stats()
+        # or on a test instance:
+        config.configure_stats(enable=False)
 
     """
     STATS_REGISTER_RECEIVERS = enable

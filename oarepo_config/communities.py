@@ -91,45 +91,46 @@ def configure_communities(
     * ``COMMUNITIES_ROLES`` - the list of available roles in communities.
 
     Example:
-    ```python
-    config.configure_communities()
-    # or with custom settings:
 
-    config.configure_communities(
-        communities_roles=[
-            dict(
-                name="owner",
-                title=_("Community owner"),
-                is_owner=True,
-                can_manage=True,
-                can_manage_roles=[
-                    "owner",
-                    "curator",
-                    "member",
-                    "submitter",
-                ],
-            ),
-            dict(
-                name="curator",
-                title=_("Curator"),
-                can_manage=True,
-                can_manage_roles=[
-                    "member",
-                    "submitter",
-                ],
-            ),
-            dict(
-                name="submitter",
-                title=_("Submitter"),
-                can_manage=True,
-            ),
-            dict(
-                name="member",
-                title=_("Member"),
-            ),
-        ]
-    )
-    ```
+    .. code-block:: python
+
+        config.configure_communities()
+        # or with custom settings:
+
+        config.configure_communities(
+            communities_roles=[
+                dict(
+                    name="owner",
+                    title=_("Community owner"),
+                    is_owner=True,
+                    can_manage=True,
+                    can_manage_roles=[
+                        "owner",
+                        "curator",
+                        "member",
+                        "submitter",
+                    ],
+                ),
+                dict(
+                    name="curator",
+                    title=_("Curator"),
+                    can_manage=True,
+                    can_manage_roles=[
+                        "member",
+                        "submitter",
+                    ],
+                ),
+                dict(
+                    name="submitter",
+                    title=_("Submitter"),
+                    can_manage=True,
+                ),
+                dict(
+                    name="member",
+                    title=_("Member"),
+                ),
+            ]
+        )
 
     """
     COMMUNITIES_REGISTER_UI_BLUEPRINT = True

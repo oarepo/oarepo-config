@@ -25,9 +25,10 @@ def initialize_i18n() -> None:
     Marshmallow's error-message machinery in memory.
 
     Example:
-    ```python
-    config.initialize_i18n()
-    ```
+
+    .. code-block:: python
+
+        config.initialize_i18n()
 
     """
     from flask_babel import lazy_gettext as _

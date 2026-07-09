@@ -53,9 +53,10 @@ def configure_einfra_oidc() -> None:
       forced to ``True``.
 
     Example:
-    ```python
-    config.configure_einfra_oidc()
-    ```
+
+    .. code-block:: python
+
+        config.configure_einfra_oidc()
 
     Make sure to set ``INVENIO_REMOTE_AUTH_ENABLED=true`` and provide
     ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``

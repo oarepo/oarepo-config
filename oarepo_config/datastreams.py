@@ -14,7 +14,8 @@ from __future__ import annotations
 from typing import Any
 
 from invenio_base.utils import obj_or_import_string
-from oarepo.config.base import (
+
+from .base import (
     merge_with_caller,
     set_constants_in_caller,
 )
@@ -60,16 +61,17 @@ def configure_datastreams(
       ``transformers`` is given; merged with any existing value.
 
     Example:
-    ```python
-    config.configure_datastreams(
-        readers={
-            "myreader": "my_package:MyReader"
-        },
-        writers={
-            "mywriter": "my_package:MyWriter"
-        },
-    )
-    ```
+
+    .. code-block:: python
+
+        config.configure_datastreams(
+            readers={
+                "myreader": "my_package:MyReader"
+            },
+            writers={
+                "mywriter": "my_package:MyWriter"
+            },
+        )
 
     """
     # can't move into a function cause of constant_from_caller methods

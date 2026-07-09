@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from oarepo.config.base import set_constants_in_caller
+from .base import set_constants_in_caller
 
 
 def configure_jobs(
@@ -40,14 +40,15 @@ def configure_jobs(
     * ``JOBS_LOGGING_LEVEL`` - the ``logging_level`` above.
 
     Example:
-    ```python
-    config.configure_jobs()
-    # or with custom settings:
-    config.configure_jobs(
-        permission_policy="my_package:policies:MyJobPolicy",
-        logging_level="DEBUG",
-    )
-    ```
+
+    .. code-block:: python
+
+        config.configure_jobs()
+        # or with custom settings:
+        config.configure_jobs(
+            permission_policy="my_package:policies:MyJobPolicy",
+            logging_level="DEBUG",
+        )
 
     """
     from invenio_jobs.services.permissions import (
