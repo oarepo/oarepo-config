@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from oarepo_checks.llm_client import BaseLLMClient
 
 
-CHECKS_GENERIC_COMMUNITY = "generic-community"  # slug of the generic community
 OAREPO_CHECKS_DEFAULT_CHAT_EINFRA_CLIENT = "chat_einfra"
 
 
@@ -39,13 +38,8 @@ def configure_llm(  # noqa: PLR0913
     """Configure OARepo checks LLM client constants in invenio.cfg."""
     try:
         from oarepo_checks.llm_client import ChatEInfraClient
-        from oarepo_checks.services.components.register_check_config import (
-            RegisterCheckComponent,
-        )
     except ImportError as e:
         raise ImportError("Please install oarepo-checks to use llm configuration") from e
-
-    CHECKS_COMMUNITIES_SERVICE_COMPONENTS: list[type[ServiceComponent]] = [RegisterCheckComponent]
 
     CHECKS_ENABLED = enabled
     if CHECKS_ENABLED:
