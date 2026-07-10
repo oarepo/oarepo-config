@@ -85,6 +85,7 @@ from .communities import configure_communities
 from .cron import configure_cron
 from .generic_parameters import configure_generic_parameters
 from .i18n import initialize_i18n
+from .llm import configure_llm
 from .models import add_model
 from .oai import configure_oai
 from .stats import configure_stats
@@ -108,6 +109,7 @@ __all__ = (
     "configure_einfra_oidc",
     "configure_generic_parameters",
     "configure_jobs",
+    "configure_llm",
     "configure_oai",
     "configure_stats",
     "configure_ui",
