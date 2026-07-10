@@ -360,8 +360,7 @@ def configure_generic_parameters(  # noqa PLR0915
 
     # default schemes for identifiers
     from invenio_vocabularies import config as vocab_config
-
-    from .initial_rdm_config import is_researcher_id, is_scopus_id, is_vedidk
+    from oarepo.config.initial_rdm_config import is_researcher_id, is_scopus_id, is_vedidk
 
     VOCABULARIES_NAMES_SCHEMES = merge_with_caller(
         "VOCABULARIES_NAMES_SCHEMES",

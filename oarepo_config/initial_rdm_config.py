@@ -11,3 +11,5 @@
 Please see oarepo/initial_rdm_config.py for explanation on how to handle
 the configuration.
 """
+
+from __future__ import annotations
