@@ -130,11 +130,9 @@ It is automatically generated from:
 | [`CELERY_​RESULT_​BACKEND`](#celery-result-backend) | str | `configure_generic_parameters` |
 | [`CELERY_​RESULT_​SERIALIZER`](#celery-result-serializer) | str | - |
 | [`CELERY_​TASK_​SERIALIZER`](#celery-task-serializer) | str | - |
-| [`CELERY_​WORKER_​CONCURRENCY`](#celery-worker-concurrency) | int | - |
-| [`CELERY_​WORKER_​POOL`](#celery-worker-pool) | str | - |
 | [`CHECKS_​COMMUNITIES_​SERVICE_​COMPONENTS`](#checks-communities-service-components) | unknown | - |
-| [`CHECKS_​ENABLED`](#checks-enabled) | bool | - |
-| [`CHECKS_​GENERIC_​COMMUNITY`](#checks-generic-community) | str | - |
+| [`CHECKS_​ENABLED`](#checks-enabled) | bool | `configure_llm` |
+| [`CHECKS_​GENERIC_​COMMUNITY`](#checks-generic-community) | str | `configure_llm` |
 | [`COLLECTIONS_​MAX_​COLLECTIONS_​PER_​TREE`](#collections-max-collections-per-tree) | int | - |
 | [`COLLECTIONS_​MAX_​DEPTH`](#collections-max-depth) | int | - |
 | [`COLLECTIONS_​MAX_​TREES`](#collections-max-trees) | int | - |
@@ -418,14 +416,13 @@ It is automatically generated from:
 | [`OAISERVER_​SEARCH_​CLS`](#oaiserver-search-cls) | str | - |
 | [`OAISERVER_​SET_​RECORDS_​QUERY_​FETCHER`](#oaiserver-set-records-query-fetcher) | str | - |
 | [`OAISERVER_​XSL_​URL`](#oaiserver-xsl-url) | NoneType | - |
-| [`OAREPO_​CHECKS_​DEFAULT_​CHAT_​EINFRA_​CLIENT`](#oarepo-checks-default-chat-einfra-client) | unknown | - |
-| [`OAREPO_​CHECKS_​DEFAULT_​LLM_​CLIENT`](#oarepo-checks-default-llm-client) | unknown | - |
-| [`OAREPO_​CHECKS_​LLM_​CLIENTS`](#oarepo-checks-llm-clients) | unknown | - |
+| [`OAREPO_​CHECKS_​DEFAULT_​CHAT_​EINFRA_​CLIENT`](#oarepo-checks-default-chat-einfra-client) | configured by function | `configure_llm` |
+| [`OAREPO_​CHECKS_​DEFAULT_​LLM_​CLIENT`](#oarepo-checks-default-llm-client) | configured by function | `configure_llm` |
+| [`OAREPO_​CHECKS_​LLM_​CLIENTS`](#oarepo-checks-llm-clients) | configured by function | `configure_llm` |
 | [`OAREPO_​COMMUNITIES_​DEFAULT_​WORKFLOW`](#oarepo-communities-default-workflow) | str | - |
 | [`OAREPO_​MODELS`](#oarepo-models) | dict | - |
 | [`OAREPO_​PERMISSIONS_​PRESETS`](#oarepo-permissions-presets) | dict | - |
 | [`OAREPO_​REQUESTS_​DEFAULT_​RECEIVER`](#oarepo-requests-default-receiver) | str | - |
-| [`OAREPO_​UI_​DRAFT_​ACTIONS`](#oarepo-ui-draft-actions) | dict | - |
 | [`OAREPO_​UI_​JINJAX_​FILTERS`](#oarepo-ui-jinjax-filters) | dict | - |
 | [`OAREPO_​UI_​JINJAX_​GLOBALS`](#oarepo-ui-jinjax-globals) | dict | - |
 | [`OAREPO_​UI_​LESS_​COMPONENTS`](#oarepo-ui-less-components) | list | - |
@@ -1797,6 +1794,10 @@ if Invenio-Theme is installed.
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_collections/alembic'),
                        ('oarepo_requests',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/oarepo_requests/alembic'),
+                       ('invenio_rdm_records',
+                        '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_rdm_records/alembic'),
+                       ('invenio_checks',
+                        '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_checks/alembic'),
                        ('invenio_banners',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_banners/alembic'),
                        ('invenio_oauth2server',
@@ -1805,16 +1806,12 @@ if Invenio-Theme is installed.
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/oarepo_doi/alembic'),
                        ('invenio_records_files',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_records_files/alembic'),
-                       ('invenio_rdm_records',
-                        '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_rdm_records/alembic'),
                        ('invenio_oaiserver',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_oaiserver/alembic'),
                        ('invenio_pidstore',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_pidstore/alembic'),
                        ('invenio_communities',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_communities/alembic'),
-                       ('invenio_checks',
-                        '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_checks/alembic'),
                        ('invenio_accounts',
                         '/Users/m/Workspaces/repositories/feat-convert-old-catchall/oarepo-config/.venv/lib/python3.14/site-packages/invenio_accounts/alembic'),
                        ('invenio_requests',
@@ -2078,7 +2075,7 @@ If the value is callable, its return value will be used for the field
 | **Sources** | [oarepo-rdm](https://github.com/oarepo/oarepo-rdm/blob/master/oarepo_rdm/initial_config.py#L67); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L954) |
 
 ```
-{'publication_date': <function <lambda> at 0x1155dc5c0>}
+{'publication_date': <function <lambda> at 0x111faeb90>}
 ```
 
 ---
@@ -2247,9 +2244,9 @@ Files integrity report subject
 | **Source** | [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L1595) |
 
 ```
-{'is_open': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1115d2650>,
+{'is_open': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10deb0510>,
              'ui': {'field': 'is_open'}},
- 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11096fc50>,
+ 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10de5f750>,
             'ui': {'field': 'status'}}}
 ```
 
@@ -2688,9 +2685,9 @@ Feature flag. Disabled by default.
 | **Source** | [invenio-audit-logs](https://github.com/inveniosoftware/invenio-audit-logs/blob/master/invenio_audit_logs/config.py#L24) |
 
 ```
-{'action_name': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112008bb0>,
+{'action_name': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e77fc70>,
                  'ui': {'field': 'action'}},
- 'resource': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112010f30>,
+ 'resource': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e802a50>,
               'ui': {'field': 'resource.type'}}}
 ```
 
@@ -3072,30 +3069,20 @@ The default serialization method to use. Default is ``msgpack``.
 
 ---
 
-(celery-worker-concurrency)=
-### CELERY_WORKER_CONCURRENCY
-| **Default Value** | `16` |
-|--------------|-----------|
-| **Type** | int |
-| **Source** | unknown |
-
----
-
-(celery-worker-pool)=
-### CELERY_WORKER_POOL
-| **Default Value** | `'threads'` |
-|--------------|-----------|
-| **Type** | str |
-| **Source** | unknown |
-
----
-
 (checks-communities-service-components)=
 ### CHECKS_COMMUNITIES_SERVICE_COMPONENTS
+
+```{eval-rst}
+Extra components that are registered to COMMUNITIES_SERVICE_COMPONENTS.
+
+The default (RegisterCheckComponent) will create a LLM configuration for a community
+whenever it is added/modified.
+```
+
 | **OARepo Default Value** | `<list>` |
 |--------------|-----------|
 | **Type** | unknown |
-| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L26) |
+| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L20) |
 
 ```
 [
@@ -3106,25 +3093,32 @@ The default serialization method to use. Default is ``msgpack``.
 ---
 
 (checks-enabled)=
-### CHECKS_ENABLED
+### ***CHECKS_ENABLED**
 
 ```{eval-rst}
 Enable checks.
 ```
 
-| **OARepo Default Value** | `False` |
+| **Invenio RDM Default Value** | `False` |
 |--------------|-----------|
 | **Type** | bool |
-| **Sources** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L42); [invenio-checks](https://github.com/inveniosoftware/invenio-checks/blob/master/invenio_checks/config.py#L10) |
+| **Source** | [invenio-checks](https://github.com/inveniosoftware/invenio-checks/blob/master/invenio_checks/config.py#L6) |
+| **Set by** | {py:func}`~oarepo_config.configure_llm` |
 
 ---
 
 (checks-generic-community)=
-### CHECKS_GENERIC_COMMUNITY
+### ***CHECKS_GENERIC_COMMUNITY**
+
+```{eval-rst}
+A slug of community that is used for LLM prompt when record does not belong to a community.
+```
+
 | **OARepo Default Value** | `'generic-community'` |
 |--------------|-----------|
 | **Type** | str |
-| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L46) |
+| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L17) |
+| **Set by** | {py:func}`~oarepo_config.configure_llm` |
 
 ---
 
@@ -3305,8 +3299,8 @@ For example:
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L283) |
 
 ```
-[<oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x116569a90>,
- <oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x116d90a50>]
+[<oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x112ef6ba0>,
+ <oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x112f40e10>]
 ```
 
 ---
@@ -3419,9 +3413,9 @@ Default value of record submission policy community access setting.
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L52) |
 
 ```
-{'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111cf1910>,
+{'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e4df2f0>,
           'ui': {'field': 'type'}},
- 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111c1e470>,
+ 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e518e20>,
                 'ui': {'field': 'visibility'}}}
 ```
 
@@ -3534,9 +3528,9 @@ Default amount of time before a membership request expires.
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L245) |
 
 ```
-{'role': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111c1fdf0>,
+{'role': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e51a7a0>,
           'ui': {'field': 'role'}},
- 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11096fc50>,
+ 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10de5f750>,
             'ui': {'field': 'role'}}}
 ```
 
@@ -3563,9 +3557,9 @@ Default amount of time before a membership request expires.
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L194) |
 
 ```
-{'role': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111c1fdf0>,
+{'role': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e51a7a0>,
           'ui': {'field': 'role'}},
- 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111d17250>,
+ 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e59e950>,
                 'ui': {'field': 'visible'}}}
 ```
 
@@ -3853,9 +3847,9 @@ Sort communities by 'verified' first.
 | **Source** | [invenio-communities](https://github.com/inveniosoftware/invenio-communities/blob/master/invenio_communities/config.py#L69) |
 
 ```
-{'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111cf1910>,
+{'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e4df2f0>,
           'ui': {'field': 'type'}},
- 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x111c1e470>,
+ 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10e518e20>,
                 'ui': {'field': 'visibility'}}}
 ```
 
@@ -4433,8 +4427,8 @@ Switches off incept of redirects by Flask-DebugToolbar.
 | **Source** | unknown |
 
 ```
-[<oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x116569a90>,
- <oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x116d90a50>]
+[<oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x112ef6ba0>,
+ <oarepo_communities.services.custom_fields.workflow.WorkflowCF object at 0x112f40e10>]
 ```
 
 ---
@@ -4471,8 +4465,8 @@ Switches off incept of redirects by Flask-DebugToolbar.
 | **Source** | unknown |
 
 ```
-{'C': WorkflowEvent(submitters=[<invenio_records_permissions.generators.IfConfig object at 0x10f5d5f90>]),
- 'L': WorkflowEvent(submitters=[<invenio_records_permissions.generators.IfConfig object at 0x10f5d5f90>])}
+{'C': WorkflowEvent(submitters=[<invenio_records_permissions.generators.IfConfig object at 0x10de5e5d0>]),
+ 'L': WorkflowEvent(submitters=[<invenio_records_permissions.generators.IfConfig object at 0x10de5e5d0>])}
 ```
 
 ---
@@ -4512,9 +4506,9 @@ Switches off incept of redirects by Flask-DebugToolbar.
 | **Source** | [oarepo-doi](https://github.com/oarepo/oarepo-doi/blob/master/oarepo_doi/config.py#L73) |
 
 ```
-{'community_slug': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x115e54f30>,
+{'community_slug': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1127fa7b0>,
                     'ui': {'field': 'community_slug'}},
- 'prefix': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x115e55010>,
+ 'prefix': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1127fa890>,
             'ui': {'field': 'prefix'}}}
 ```
 
@@ -6778,7 +6772,7 @@ Notification backends.
 | **Sources** | [invenio-notifications](https://github.com/inveniosoftware/invenio-notifications/blob/master/invenio_notifications/config.py#L12); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L1426) |
 
 ```
-{'email': <invenio_notifications.backends.email.EmailNotificationBackend object at 0x114f55d30>}
+{'email': <invenio_notifications.backends.email.EmailNotificationBackend object at 0x111655010>}
 ```
 
 ---
@@ -6880,13 +6874,13 @@ List of entity resolvers used by notification builders.
 | **Sources** | [invenio-notifications](https://github.com/inveniosoftware/invenio-notifications/blob/master/invenio_notifications/config.py#L40); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L1485) |
 
 ```
-[<invenio_rdm_records.requests.entity_resolvers.EmailResolver object at 0x114f55e80>,
- <invenio_rdm_records.requests.entity_resolvers.RDMRecordServiceResultResolver object at 0x114f56120>,
- <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x114f56270>,
- <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x114f9d1d0>,
- <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x114f9d450>,
- <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x114f135c0>,
- <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x114f136f0>]
+[<invenio_rdm_records.requests.entity_resolvers.EmailResolver object at 0x111655160>,
+ <invenio_rdm_records.requests.entity_resolvers.RDMRecordServiceResultResolver object at 0x111655400>,
+ <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x111655550>,
+ <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x1116ac550>,
+ <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x1116ac690>,
+ <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x1116dc180>,
+ <invenio_records_resources.references.entity_resolvers.results.ServiceResultResolver object at 0x1116dc2b0>]
 ```
 
 ---
@@ -6939,10 +6933,10 @@ this module does not have knowledge of the settings view.
 | **Source** | unknown |
 
 ```
-{'action_need': <function <lambda> at 0x1160ea610>,
- 'group': <function <lambda> at 0x1157ae560>,
- 'multiple': <function <lambda> at 0x1157ae400>,
- 'user': <function <lambda> at 0x1157ae2a0>}
+{'action_need': <function <lambda> at 0x112b099b0>,
+ 'group': <function <lambda> at 0x1121c05c0>,
+ 'multiple': <function <lambda> at 0x1121c0460>,
+ 'user': <function <lambda> at 0x1121c0300>}
 ```
 
 ---
@@ -7163,7 +7157,7 @@ OAI ID fetcher function.
 The prefix that will be applied to the generated OAI-PMH ids.
 ```
 
-| **Invenio RDM Default Value** | `'oai:eduroam-tlh19.cesnet.cz:'` |
+| **Invenio RDM Default Value** | `'oai:tlha144.cesnet.cz:'` |
 |--------------|-----------|
 | **Type** | str |
 | **Sources** | [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L633); [invenio-oaiserver](https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py#L24) |
@@ -7187,7 +7181,7 @@ Record update key.
 
 (oaiserver-metadata-formats)=
 ### OAISERVER_METADATA_FORMATS
-| **OARepo Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x115579550>` |
+| **OARepo Default Value** | `<oarepo_rdm.oai.config.OAIServerMetadataFormats object at 0x111f1a3c0>` |
 |--------------|-----------|
 | **Type** | OAIServerMetadataFormats |
 | **Sources** | [oarepo-rdm](https://github.com/oarepo/oarepo-rdm/blob/master/oarepo_rdm/initial_config.py#L53); [invenio-app-rdm](https://github.com/inveniosoftware/invenio-app-rdm/blob/master/invenio_app_rdm/config.py#L642); [invenio-oaiserver](https://github.com/inveniosoftware/invenio-oaiserver/blob/master/invenio_oaiserver/config.py#L70) |
@@ -7451,29 +7445,29 @@ repository
 ---
 
 (oarepo-checks-default-chat-einfra-client)=
-### OAREPO_CHECKS_DEFAULT_CHAT_EINFRA_CLIENT
-| **OARepo Default Value** | `'chat_einfra'` |
+### ***OAREPO_CHECKS_DEFAULT_CHAT_EINFRA_CLIENT**
+| **Type** | configured by function |
 |--------------|-----------|
-| **Type** | unknown |
-| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L27) |
+| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/llm.py#L18) |
+| **Set by** | {py:func}`~oarepo_config.configure_llm` |
 
 ---
 
 (oarepo-checks-default-llm-client)=
-### OAREPO_CHECKS_DEFAULT_LLM_CLIENT
-| **OARepo Default Value** | `next(iter(OAREPO_CHECKS_LLM_CLIENTS))` |
+### ***OAREPO_CHECKS_DEFAULT_LLM_CLIENT**
+| **Type** | configured by function |
 |--------------|-----------|
-| **Type** | unknown |
-| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L56) |
+| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/llm.py#L18) |
+| **Set by** | {py:func}`~oarepo_config.configure_llm` |
 
 ---
 
 (oarepo-checks-llm-clients)=
-### OAREPO_CHECKS_LLM_CLIENTS
-| **OARepo Default Value** | `dict(llm_clients or {})` |
+### ***OAREPO_CHECKS_LLM_CLIENTS**
+| **Type** | configured by function |
 |--------------|-----------|
-| **Type** | unknown |
-| **Source** | [oarepo-checks](https://github.com/oarepo/oarepo-checks/blob/master/oarepo_checks/config.py#L44) |
+| **Source** | [oarepo-config](https://github.com/oarepo/oarepo-config/blob/master/oarepo_config/llm.py#L18) |
+| **Set by** | {py:func}`~oarepo_config.configure_llm` |
 
 ---
 
@@ -7494,12 +7488,12 @@ repository
 | **Source** | unknown |
 
 ```
-{'affiliations': <oarepo_runtime.api.Model object at 0x111e7ce10>,
- 'awards': <oarepo_runtime.api.Model object at 0x111e809d0>,
- 'funders': <oarepo_runtime.api.Model object at 0x111e7ca50>,
- 'names': <oarepo_runtime.api.Model object at 0x111e80b00>,
- 'subjects': <oarepo_runtime.api.Model object at 0x111e69b50>,
- 'vocabularies': <oarepo_runtime.api.Model object at 0x111ec4050>}
+{'affiliations': <oarepo_runtime.api.Model object at 0x1116afd90>,
+ 'awards': <oarepo_runtime.api.Model object at 0x11179e2c0>,
+ 'funders': <oarepo_runtime.api.Model object at 0x1116ace10>,
+ 'names': <oarepo_runtime.api.Model object at 0x11179e3f0>,
+ 'subjects': <oarepo_runtime.api.Model object at 0x1117b68d0>,
+ 'vocabularies': <oarepo_runtime.api.Model object at 0x11177f620>}
 ```
 
 ---
@@ -7523,28 +7517,6 @@ repository
 |--------------|-----------|
 | **Type** | str |
 | **Source** | unknown |
-
----
-
-(oarepo-ui-draft-actions)=
-### OAREPO_UI_DRAFT_ACTIONS
-| **OARepo Default Value** | `<dict>` |
-|--------------|-----------|
-| **Type** | dict |
-| **Source** | [oarepo-ui](https://github.com/oarepo/oarepo-ui/blob/master/oarepo_ui/config.py#L74) |
-
-```
-{'delete_draft': 'delete',
- 'draft_read_deleted_files': 'read_deleted_files',
- 'draft_read_files': 'read_files',
- 'draft_update_files': 'update_files',
- 'manage': 'manage',
- 'manage_files': 'manage_files',
- 'manage_record_access': 'manage_record_access',
- 'publish': 'publish',
- 'read_draft': 'read',
- 'update_draft': 'update'}
-```
 
 ---
 
@@ -7604,7 +7576,7 @@ repository
 | **OARepo Default Value** | `<list>` |
 |--------------|-----------|
 | **Type** | list |
-| **Source** | [oarepo-ui](https://github.com/oarepo/oarepo-ui/blob/master/oarepo_ui/config.py#L95) |
+| **Source** | [oarepo-ui](https://github.com/oarepo/oarepo-ui/blob/master/oarepo_ui/config.py#L90) |
 
 ```
 [{'text': 'English', 'value': 'en'}, {'text': 'Czech', 'value': 'cs'}]
@@ -7620,7 +7592,10 @@ repository
 | **Source** | unknown |
 
 ```
-{UIComponentOverride(endpoint='invenio_app_rdm_communities.communities_detail',
+{UIComponentOverride(endpoint='invenio_search_ui.search',
+                     overridable_id='InvenioAppRdm.Search.ResultsList.item',
+                     component=UIComponent(DynamicResultsListItem <@js/oarepo_ui/search/DynamicResultsListItem>, UIComponentImportMode.DEFAULT import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_communities.communities_detail',
                      overridable_id='InvenioCommunities.DetailsSearch.ResultsList.item',
                      component=UIComponent(DynamicResultsListItem <@js/oarepo_ui/search/DynamicResultsListItem>, UIComponentImportMode.DEFAULT import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_communities.communities_detail',
@@ -7630,16 +7605,13 @@ repository
                      overridable_id='InvenioCommunities.CommunityProfileForm.GridRow.DangerZone',
                      component=UIComponent(Disabled <@js/oarepo_ui/components/Disabled>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.invitations',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerEmptyResults.InvitationsModal.container',
-                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.members',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerMembersResultsContainer.InvitationsModal.container',
-                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.invitations',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsSearchLayout.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.members',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerEmptyResults.InvitationsModal.container',
+                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.invitations',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerSearchLayout.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='RequestTypeLabel.layout.publish_draft',
@@ -7648,7 +7620,13 @@ repository
                      overridable_id='RequestTypeLabel.layout.new_version',
                      component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.invitations',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerSearchLayout.InvitationsModal.container',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerEmptyResults.InvitationsModal.container',
+                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.members',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerMembersResultsContainer.InvitationsModal.container',
+                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.members',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsResultsContainer.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='RequestTypeLabel.layout.edit_published_record',
@@ -7656,14 +7634,17 @@ repository
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='RequestTypeLabel.layout.delete_published_record',
                      component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.members',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsResultsContainer.InvitationsModal.container',
-                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.invitations',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsResultsContainer.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.members',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsSearchLayout.InvitationsModal.container',
+                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.members',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerSearchLayout.InvitationsModal.container',
+                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.invitations',
+                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerMembersResultsContainer.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.members',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsEmptyResults.InvitationsModal.container',
@@ -7671,39 +7652,24 @@ repository
  UIComponentOverride(endpoint='invenio_communities.invitations',
                      overridable_id='InvenioCommunities.CommunityMembersSearch.InvitationsEmptyResults.InvitationsModal.container',
                      component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.invitations',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerMembersResultsContainer.InvitationsModal.container',
-                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.members',
-                     overridable_id='InvenioCommunities.CommunityMembersSearch.ManagerSearchLayout.InvitationsModal.container',
-                     component=UIComponent(CommunityInvitationsModal <@js/oarepo_communities/components/CommunityInvitationsModal>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
                      component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
+                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
+                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
+                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
+                     overridable_id='RequestTypeLabel.layout.publish_new_version',
+                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
                      component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.delete_published_record',
                      component=UIComponent(IconTypeDeletePublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
-                     overridable_id='RequestTypeLabel.layout.publish_new_version',
-                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
-                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
-                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
-                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.publish_draft',
-                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
-                     component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='RequestTypeLabel.layout.publish_new_version',
-                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
                      component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
@@ -7713,108 +7679,45 @@ repository
  UIComponentOverride(endpoint='invenio_communities.communities_requests',
                      overridable_id='RequestTypeLabel.layout.new_version',
                      component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.new_version',
-                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
-                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
-                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='RequestTypeLabel.layout.delete_published_record',
-                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='RequestTypeLabel.layout.edit_published_record',
-                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
-                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
-                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
-                     component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
-                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
                      overridable_id='RequestTypeLabel.layout.publish_new_version',
                      component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_communities.communities_requests',
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
+                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.delete_published_record',
                      component=UIComponent(IconTypeDeletePublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
-                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
                      component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.delete_published_record',
-                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.delete_published_record',
-                     component=UIComponent(IconTypeDeletePublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
                      component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.publish_draft',
-                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.edit_published_record',
-                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
-                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
-                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.new_version',
-                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
                      overridable_id='RequestTypeLabel.layout.publish_new_version',
                      component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
                      overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
                      component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.delete_published_record',
-                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='RequestTypeLabel.layout.edit_published_record',
-                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
-                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
-                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
                      component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
-                     component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
+                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.delete_published_record',
                      component=UIComponent(IconTypeDeletePublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
+                     component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
                      component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
-                     overridable_id='RequestTypeLabel.layout.publish_draft',
-                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
-                     overridable_id='RequestTypeLabel.layout.new_version',
-                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
-                     overridable_id='RequestTypeLabel.layout.publish_new_version',
-                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.edit_published_record',
+                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
                      overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
                      component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
@@ -7824,6 +7727,15 @@ repository
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
                      overridable_id='RequestTypeLabel.layout.edit_published_record',
                      component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
+                     overridable_id='RequestTypeLabel.layout.publish_draft',
+                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
+                     overridable_id='RequestTypeLabel.layout.new_version',
+                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
+                     overridable_id='RequestTypeLabel.layout.publish_new_version',
+                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_invitation_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
                      component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
@@ -7854,9 +7766,72 @@ repository
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_membership_request_view',
                      overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
                      component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.publish_draft',
+                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_membership_request_view',
                      overridable_id='RequestTypeLabel.layout.delete_published_record',
                      component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='RequestTypeLabel.layout.delete_published_record',
+                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='RequestTypeLabel.layout.edit_published_record',
+                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
+                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
+                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
+                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.delete_published_record',
+                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_changed_metadata',
+                     component=UIComponent(IconTypePublishChangedMetadata <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
+                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.new_version',
+                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.publish_changed_metadata',
+                     component=UIComponent(LabelTypePublishChangedMetadata <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.edit_published_record',
+                     component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.delete_published_record',
+                     component=UIComponent(LabelTypeDeletePublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_draft',
+                     component=UIComponent(IconTypePublishDraft <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.new_version',
+                     component=UIComponent(IconTypeNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
+                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.delete_published_record',
+                     component=UIComponent(IconTypeDeletePublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_communities.communities_requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
+                     component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.publish_draft',
+                     component=UIComponent(LabelTypePublishDraft <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.new_version',
+                     component=UIComponent(LabelTypeNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_requests.user_dashboard_request_view',
+                     overridable_id='RequestTypeLabel.layout.publish_new_version',
+                     component=UIComponent(LabelTypePublishNewVersion <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_membership_request_view',
                      overridable_id='RequestTypeLabel.layout.edit_published_record',
                      component=UIComponent(LabelTypeEditPublishedRecord <@js/oarepo_requests/components/labels>, UIComponentImportMode.NAMED import)>)),
@@ -7878,21 +7853,18 @@ repository
  UIComponentOverride(endpoint='invenio_app_rdm_requests.community_dashboard_membership_request_view',
                      overridable_id='InvenioRequests.RequestTypeIcon.layout.edit_published_record',
                      component=UIComponent(IconTypeEditPublishedRecord <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_search_ui.search',
-                     overridable_id='InvenioAppRdm.Search.ResultsList.item',
-                     component=UIComponent(DynamicResultsListItem <@js/oarepo_ui/search/DynamicResultsListItem>, UIComponentImportMode.DEFAULT import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm.index',
                      overridable_id='InvenioAppRDM.RecordsList.layout',
                      component=UIComponent(RecordsList <@js/oarepo_ui/search/RecordsList>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_search_ui.search',
                      overridable_id='InvenioAppRdm.Search.SearchBar.element',
                      component=UIComponent(ClearableSearchbarElement <@js/oarepo_ui/search/ClearableSearchbarElement>, UIComponentImportMode.NAMED import)>)),
- UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
-                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
-                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>)),
  UIComponentOverride(endpoint='invenio_app_rdm_users.uploads',
                      overridable_id='InvenioAppRdm.DashboardUploads.ResultsList.item',
-                     component=UIComponent(DynamicResultsListItem <@js/oarepo_ui/search/DynamicResultsListItem>, UIComponentImportMode.DEFAULT import)>))}
+                     component=UIComponent(DynamicResultsListItem <@js/oarepo_ui/search/DynamicResultsListItem>, UIComponentImportMode.DEFAULT import)>)),
+ UIComponentOverride(endpoint='invenio_app_rdm_users.requests',
+                     overridable_id='InvenioRequests.RequestTypeIcon.layout.publish_new_version',
+                     component=UIComponent(IconTypePublishNewVersion <@js/oarepo_requests/components/icons>, UIComponentImportMode.NAMED import)>))}
 ```
 
 ---
@@ -7907,18 +7879,26 @@ repository
 ```
 {'create',
  'delete',
+ 'delete_draft',
+ 'draft_read_deleted_files',
+ 'draft_read_files',
+ 'draft_update_files',
  'edit',
  'manage',
  'manage_files',
  'manage_record_access',
+ 'media_read_files',
+ 'moderate',
  'new_version',
  'publish',
  'read',
  'read_deleted_files',
+ 'read_draft',
  'read_files',
  'review',
  'search',
  'update',
+ 'update_draft',
  'update_files',
  'view'}
 ```
@@ -7933,10 +7913,10 @@ repository
 | **Source** | unknown |
 
 ```
-[<function _register_main_search_result_item at 0x11582a820>,
- <function _register_home_page_search_result_item at 0x11582b320>,
- <function _register_community_uploads_result_item at 0x1176befb0>,
- <function _register_dashboard_uploads_result_item at 0x1177207d0>]
+[<function _register_main_search_result_item at 0x112e989e0>,
+ <function _register_home_page_search_result_item at 0x112e994e0>,
+ <function _register_community_uploads_result_item at 0x114018eb0>,
+ <function _register_dashboard_uploads_result_item at 0x114019dd0>]
 ```
 
 ---
@@ -8055,7 +8035,7 @@ repository
 | **Source** | [invenio-oauth2server](https://github.com/inveniosoftware/invenio-oauth2server/blob/master/invenio_oauth2server/config.py#L40) |
 
 ```
-{'code', 'token'}
+{'token', 'code'}
 ```
 
 ---
@@ -9351,7 +9331,7 @@ Default citation style
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L863) |
 
 ```
-[<invenio_rdm_records.services.communities.moderation.UserModerationHandler object at 0x11497c2f0>]
+[<invenio_rdm_records.services.communities.moderation.UserModerationHandler object at 0x1111bbb60>]
 ```
 
 ---
@@ -9406,7 +9386,7 @@ Request type for community submission requests.
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L858) |
 
 ```
-[<invenio_rdm_records.services.components.verified.UserModerationHandler object at 0x11497c1a0>]
+[<invenio_rdm_records.services.components.verified.UserModerationHandler object at 0x1111bba10>]
 ```
 
 ---
@@ -9778,7 +9758,7 @@ will apply.
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L244) |
 
 ```
-[<invenio_rdm_records.services.request_policies.FileModificationAdminPolicy object at 0x1149570e0>]
+[<invenio_rdm_records.services.request_policies.FileModificationAdminPolicy object at 0x1111baa50>]
 ```
 
 ---
@@ -9918,7 +9898,7 @@ will apply.
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L185) |
 
 ```
-[<invenio_rdm_records.services.request_policies.GracePeriodPolicy object at 0x114956e40>]
+[<invenio_rdm_records.services.request_policies.GracePeriodPolicy object at 0x1111ba7b0>]
 ```
 
 ---
@@ -10092,7 +10072,7 @@ Check the signature of validate_optional_doi for more information.
 | **Sources** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L633); [oarepo-doi](https://github.com/oarepo/oarepo-doi/blob/master/oarepo_doi/config.py#L44) |
 
 ```
-[<oarepo_doi.services.providers.provider.DataCiteRecordAwareProvider object at 0x115dda850>]
+[<invenio_rdm_records.services.pids.providers.datacite.DataCitePIDProvider object at 0x1111e8cd0>]
 ```
 
 ---
@@ -10135,9 +10115,12 @@ Override the default record permission policy.
 | **Sources** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L561); [oarepo-doi](https://github.com/oarepo/oarepo-doi/blob/master/oarepo_doi/config.py#L23) |
 
 ```
-[<oarepo_doi.services.providers.provider.DataCiteRecordAwareProvider object at 0x115d33620>,
- <invenio_rdm_records.services.pids.providers.oai.OAIPIDProvider object at 0x11620efd0>,
- <invenio_rdm_records.services.pids.providers.oai.OAIPIDProvider object at 0x11620efd0>]
+[<invenio_rdm_records.services.pids.providers.datacite.DataCitePIDProvider object at 0x1111baf90>,
+ <invenio_rdm_records.services.pids.providers.crossref.CrossrefPIDProvider object at 0x1111bb230>,
+ <invenio_rdm_records.services.pids.providers.external.ExternalPIDProvider object at 0x1111bb770>,
+ <invenio_rdm_records.services.pids.providers.oai.OAIPIDProvider object at 0x1111bb8c0>,
+ <invenio_rdm_records.services.pids.providers.oai.OAIPIDProvider object at 0x112be6fd0>,
+ <invenio_rdm_records.services.pids.providers.oai.OAIPIDProvider object at 0x112be6fd0>]
 ```
 
 ---
@@ -10234,40 +10217,40 @@ Experimental, this config can later be removed.
 | **Source** | [oarepo-rdm](https://github.com/oarepo/oarepo-rdm/blob/master/oarepo_rdm/initial_config.py#L56) |
 
 ```
-{<class 'json.decoder.JSONDecodeError'>: <function create_error_handler.<locals>.error_handler at 0x1110f3110>,
- <class 'sqlalchemy.exc.NoResultFound'>: <function create_error_handler.<locals>.error_handler at 0x1110f2c40>,
- <class 'marshmallow.exceptions.ValidationError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2350>,
- <class 'opensearchpy.exceptions.RequestError'>: <function create_error_handler.<locals>.error_handler at 0x1110f33d0>,
- <class 'invenio_records.systemfields.relations.errors.InvalidRelationValue'>: <function create_error_handler.<locals>.error_handler at 0x1141c80f0>,
- <class 'invenio_records.systemfields.relations.errors.InvalidCheckValue'>: <function create_error_handler.<locals>.error_handler at 0x1110f3270>,
- <class 'invenio_records_resources.services.errors.RecordPermissionDeniedError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2820>,
- <class 'invenio_records_resources.services.errors.PermissionDeniedError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2770>,
- <class 'invenio_records_resources.services.errors.RevisionIdMismatchError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2610>,
- <class 'invenio_records_resources.services.errors.QuerystringValidationError'>: <function create_error_handler.<locals>.error_handler at 0x1110f26c0>,
- <class 'invenio_records_resources.services.errors.ValidationErrorGroup'>: <function create_error_handler.<locals>.error_handler at 0x1110f24b0>,
- <class 'invenio_records_resources.services.errors.ArchiveDownloadTooLargeException'>: <function create_error_handler.<locals>.error_handler at 0x1110f3060>,
- <class 'invenio_records_resources.services.errors.FacetNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2da0>,
- <class 'invenio_records_resources.services.errors.FileKeyNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2f00>,
- <class 'invenio_records_resources.services.errors.FailedFileUploadException'>: <function create_error_handler.<locals>.error_handler at 0x1110f3480>,
- <class 'invenio_records_resources.services.errors.FilesCountExceededException'>: <function create_error_handler.<locals>.error_handler at 0x1110f3530>,
- <class 'invenio_pidstore.errors.PIDDoesNotExistError'>: <function create_error_handler.<locals>.error_handler at 0x1110f2a30>,
- <class 'invenio_pidstore.errors.PIDAlreadyExists'>: <function create_error_handler.<locals>.error_handler at 0x1110f2980>,
- <class 'invenio_pidstore.errors.PIDDeletedError'>: <function create_error_handler.<locals>.error_handler at 0x1110f28d0>,
- <class 'invenio_pidstore.errors.PIDUnregistered'>: <function create_error_handler.<locals>.error_handler at 0x1110f2ae0>,
- <class 'invenio_pidstore.errors.PIDRedirectedError'>: <function create_pid_redirected_error_handler.<locals>.pid_redirected_error_handler at 0x1110f2b90>,
- <class 'invenio_rdm_records.services.errors.RecordDeletedException'>: <function create_error_handler.<locals>.error_handler at 0x1141bfab0>,
- <class 'invenio_rdm_records.services.errors.DeletionStatusException'>: <function create_error_handler.<locals>.error_handler at 0x1141bfb60>,
- <class 'invenio_rdm_records.services.errors.ReviewNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x1141c8880>,
- <class 'invenio_rdm_records.services.errors.ReviewStateError'>: <function create_error_handler.<locals>.error_handler at 0x1141c8510>,
- <class 'invenio_rdm_records.services.errors.ReviewExistsError'>: <function create_error_handler.<locals>.error_handler at 0x1141c85c0>,
- <class 'invenio_rdm_records.services.errors.InvalidAccessRestrictions'>: <function create_error_handler.<locals>.error_handler at 0x1141c81a0>,
- <class 'invenio_rdm_records.services.errors.ValidationErrorWithMessageAsList'>: <function create_error_handler.<locals>.error_handler at 0x1141c8250>,
- <class 'invenio_rdm_records.services.errors.AccessRequestExistsError'>: <function create_error_handler.<locals>.error_handler at 0x1141bfe20>,
- <class 'invenio_rdm_records.services.errors.RecordSubmissionClosedCommunityError'>: <function create_error_handler.<locals>.error_handler at 0x1141bf7f0>,
- <class 'invenio_rdm_records.services.errors.CommunityRequiredError'>: <function create_error_handler.<locals>.error_handler at 0x1141bfc10>,
- <class 'citeproc_styles.errors.StyleNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x1141c8bf0>,
- <class 'invenio_rdm_records.resources.deserializers.errors.DeserializerError'>: <function create_error_handler.<locals>.error_handler at 0x1141d2ae0>,
- <class 'oarepo_rdm.errors.UndefinedModelError'>: <function create_error_handler.<locals>.error_handler at 0x1155dc300>}
+{<class 'oarepo_rdm.errors.UndefinedModelError'>: <function create_error_handler.<locals>.error_handler at 0x111fae8d0>,
+ <class 'invenio_rdm_records.services.errors.RecordDeletedException'>: <function create_error_handler.<locals>.error_handler at 0x110a266c0>,
+ <class 'invenio_rdm_records.services.errors.DeletionStatusException'>: <function create_error_handler.<locals>.error_handler at 0x110a26770>,
+ <class 'invenio_rdm_records.services.errors.ReviewNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x110a273d0>,
+ <class 'invenio_rdm_records.services.errors.ReviewStateError'>: <function create_error_handler.<locals>.error_handler at 0x110a27060>,
+ <class 'invenio_rdm_records.services.errors.ReviewExistsError'>: <function create_error_handler.<locals>.error_handler at 0x110a27110>,
+ <class 'invenio_rdm_records.services.errors.InvalidAccessRestrictions'>: <function create_error_handler.<locals>.error_handler at 0x110a26e50>,
+ <class 'invenio_rdm_records.services.errors.ValidationErrorWithMessageAsList'>: <function create_error_handler.<locals>.error_handler at 0x110a26ae0>,
+ <class 'invenio_rdm_records.services.errors.AccessRequestExistsError'>: <function create_error_handler.<locals>.error_handler at 0x110a26b90>,
+ <class 'invenio_rdm_records.services.errors.RecordSubmissionClosedCommunityError'>: <function create_error_handler.<locals>.error_handler at 0x110a26400>,
+ <class 'invenio_rdm_records.services.errors.CommunityRequiredError'>: <function create_error_handler.<locals>.error_handler at 0x110a26820>,
+ <class 'citeproc_styles.errors.StyleNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x110a278a0>,
+ <class 'invenio_rdm_records.resources.deserializers.errors.DeserializerError'>: <function create_error_handler.<locals>.error_handler at 0x110a3cb40>,
+ <class 'invenio_records.systemfields.relations.errors.InvalidRelationValue'>: <function create_error_handler.<locals>.error_handler at 0x110a26da0>,
+ <class 'invenio_records.systemfields.relations.errors.InvalidCheckValue'>: <function create_error_handler.<locals>.error_handler at 0x10dae5f30>,
+ <class 'invenio_records_resources.services.errors.RecordPermissionDeniedError'>: <function create_error_handler.<locals>.error_handler at 0x10dae54e0>,
+ <class 'invenio_records_resources.services.errors.PermissionDeniedError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5430>,
+ <class 'invenio_records_resources.services.errors.RevisionIdMismatchError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5220>,
+ <class 'invenio_records_resources.services.errors.QuerystringValidationError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5380>,
+ <class 'invenio_records_resources.services.errors.ValidationErrorGroup'>: <function create_error_handler.<locals>.error_handler at 0x10dae50c0>,
+ <class 'invenio_records_resources.services.errors.ArchiveDownloadTooLargeException'>: <function create_error_handler.<locals>.error_handler at 0x10dae5d20>,
+ <class 'invenio_records_resources.services.errors.FacetNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5a60>,
+ <class 'invenio_records_resources.services.errors.FileKeyNotFoundError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5bc0>,
+ <class 'invenio_records_resources.services.errors.FailedFileUploadException'>: <function create_error_handler.<locals>.error_handler at 0x10dae6140>,
+ <class 'invenio_records_resources.services.errors.FilesCountExceededException'>: <function create_error_handler.<locals>.error_handler at 0x10dae61f0>,
+ <class 'invenio_pidstore.errors.PIDAlreadyExists'>: <function create_error_handler.<locals>.error_handler at 0x10dae5640>,
+ <class 'invenio_pidstore.errors.PIDDoesNotExistError'>: <function create_error_handler.<locals>.error_handler at 0x10dae56f0>,
+ <class 'invenio_pidstore.errors.PIDDeletedError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5590>,
+ <class 'invenio_pidstore.errors.PIDUnregistered'>: <function create_error_handler.<locals>.error_handler at 0x10dae57a0>,
+ <class 'invenio_pidstore.errors.PIDRedirectedError'>: <function create_pid_redirected_error_handler.<locals>.pid_redirected_error_handler at 0x10dae5850>,
+ <class 'marshmallow.exceptions.ValidationError'>: <function create_error_handler.<locals>.error_handler at 0x10dae4f60>,
+ <class 'opensearchpy.exceptions.RequestError'>: <function create_error_handler.<locals>.error_handler at 0x10dae6090>,
+ <class 'sqlalchemy.exc.NoResultFound'>: <function create_error_handler.<locals>.error_handler at 0x10dae5900>,
+ <class 'json.decoder.JSONDecodeError'>: <function create_error_handler.<locals>.error_handler at 0x10dae5dd0>}
 ```
 
 ---
@@ -10282,82 +10265,82 @@ Experimental, this config can later be removed.
 ```
 {'ads': {'datacite': 'bibcode',
          'label': l'Bibcode',
-         'validator': <function is_ads at 0x11176f270>},
+         'validator': <function is_ads at 0x10b453e20>},
  'ark': {'datacite': 'ARK',
          'label': l'ARK',
-         'validator': <function is_ark at 0x11176ef00>},
+         'validator': <function is_ark at 0x10b453ab0>},
  'arxiv': {'datacite': 'arXiv',
            'label': l'arXiv',
-           'validator': <function is_arxiv at 0x11176f480>},
+           'validator': <function is_arxiv at 0x10b4ac0f0>},
  'crossreffunderid': {'datacite': 'Crossref Funder ID',
                       'label': l'Crossref Funder ID',
-                      'validator': <function always_valid at 0x111ff5640>},
+                      'validator': <function always_valid at 0x10e7df7f0>},
  'cstr': {'datacite': 'CSTR',
           'label': l'CSTR',
-          'validator': <function is_cstr at 0x1117dc670>},
+          'validator': <function is_cstr at 0x10b4ad220>},
  'doi': {'datacite': 'DOI',
          'label': l'DOI',
-         'validator': <function is_doi at 0x11176e400>},
+         'validator': <function is_doi at 0x10ae30b40>},
  'ean13': {'datacite': 'EAN13',
            'label': l'EAN13',
-           'validator': <function is_ean13 at 0x11176ec40>},
+           'validator': <function is_ean13 at 0x10b4537f0>},
  'eissn': {'datacite': 'EISSN',
            'label': l'EISSN',
-           'validator': <function is_issn at 0x11168be20>},
+           'validator': <function is_issn at 0x10ae307d0>},
  'grid': {'datacite': 'GRID',
           'label': l'GRID',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'handle': {'datacite': 'Handle',
             'label': l'Handle',
-            'validator': <function is_handle at 0x11176eae0>},
+            'validator': <function is_handle at 0x10b452fb0>},
  'igsn': {'datacite': 'IGSN',
           'label': l'IGSN',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'isbn': {'datacite': 'ISBN',
           'label': l'ISBN',
-          'validator': <function is_isbn at 0x11168bc10>},
+          'validator': <function is_isbn at 0x10ae305c0>},
  'isni': {'datacite': 'ISNI',
           'label': l'ISNI',
-          'validator': <function is_isni at 0x11176eda0>},
+          'validator': <function is_isni at 0x10b453950>},
  'issn': {'datacite': 'ISSN',
           'label': l'ISSN',
-          'validator': <function is_issn at 0x11168be20>},
+          'validator': <function is_issn at 0x10ae307d0>},
  'istc': {'datacite': 'ISTC',
           'label': l'ISTC',
-          'validator': <function is_istc at 0x1116e4250>},
+          'validator': <function is_istc at 0x10ae30a90>},
  'lissn': {'datacite': 'LISSN',
            'label': l'LISSN',
-           'validator': <function is_issn at 0x11168be20>},
+           'validator': <function is_issn at 0x10ae307d0>},
  'lsid': {'datacite': 'LSID',
           'label': l'LSID',
-          'validator': <function is_lsid at 0x11176f110>},
+          'validator': <function is_lsid at 0x10b453cc0>},
  'other': {'datacite': 'Other',
            'label': l'Other',
-           'validator': <function always_valid at 0x111ff5640>},
+           'validator': <function always_valid at 0x10e7df7f0>},
  'pmid': {'datacite': 'PMID',
           'label': l'PMID',
-          'validator': <function is_pmid at 0x11176f5e0>},
+          'validator': <function is_pmid at 0x10b4ac250>},
  'purl': {'datacite': 'PURL',
           'label': l'PURL',
-          'validator': <function is_purl at 0x11176efb0>},
+          'validator': <function is_purl at 0x10b453b60>},
  'rrid': {'datacite': 'RRID',
           'label': l'RRID',
-          'validator': <function is_rrid at 0x1117dc720>},
+          'validator': <function is_rrid at 0x10b4ad2d0>},
  'upc': {'datacite': 'UPC',
          'label': l'UPC',
-         'validator': <function always_valid at 0x111ff5640>},
+         'validator': <function always_valid at 0x10e7df7f0>},
  'url': {'datacite': 'URL',
          'label': l'URL',
-         'validator': <function is_url at 0x11176f060>},
+         'validator': <function is_url at 0x10b453c10>},
  'urn': {'datacite': 'URN',
          'label': l'URN',
-         'validator': <function is_urn at 0x11176f1c0>},
+         'validator': <function is_urn at 0x10b453d70>},
  'w3id': {'datacite': 'w3id',
           'label': l'W3ID',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'wikidata': {'datacite': 'Other',
               'label': l'Wikidata',
-              'validator': <function is_wikidata at 0x1117dc510>}}
+              'validator': <function is_wikidata at 0x10b4ad0c0>}}
 ```
 
 ---
@@ -10371,8 +10354,8 @@ Experimental, this config can later be removed.
 
 ```
 {'geonames': {'label': l'GeoNames',
-              'validator': <function always_valid at 0x111ff5640>},
- 'wikidata': {'label': l'Wikidata', 'validator': <function is_wikidata at 0x1117dc510>}}
+              'validator': <function always_valid at 0x10e7df7f0>},
+ 'wikidata': {'label': l'Wikidata', 'validator': <function is_wikidata at 0x10b4ad0c0>}}
 ```
 
 ---
@@ -10414,34 +10397,34 @@ Max amount of media files allowed to upload in the deposit form.
 
 ```
 {'czenasautid': {'label': l'CzenasAutID',
-                 'validator': <function <lambda> at 0x114fc7110>},
+                 'validator': <function <lambda> at 0x1116f0670>},
  'doi': {'datacite': 'DOI',
          'label': l'DOI',
-         'validator': <function is_doi at 0x11176e400>},
+         'validator': <function is_doi at 0x10ae30b40>},
  'gnd': {'datacite': 'GND',
          'label': l'GND',
-         'validator': <function is_gnd at 0x11176f740>},
- 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x114fc73d0>},
- 'ico': {'label': l'ICO', 'validator': <function <lambda> at 0x114fc7270>},
+         'validator': <function is_gnd at 0x10b4ac3b0>},
+ 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x1116f0930>},
+ 'ico': {'label': l'ICO', 'validator': <function <lambda> at 0x1116f07d0>},
  'institutionalid': {'label': l'InstitutionalID',
-                     'validator': <function <lambda> at 0x114fc71c0>},
+                     'validator': <function <lambda> at 0x1116f0720>},
  'isni': {'datacite': 'ISNI',
           'label': l'ISNI',
-          'validator': <function is_isni at 0x11176eda0>},
+          'validator': <function is_isni at 0x10b453950>},
  'orcid': {'datacite': 'ORCID',
            'label': l'ORCID',
-           'validator': <function is_orcid at 0x11176ee50>},
+           'validator': <function is_orcid at 0x10b453a00>},
  'researcherid': {'datacite': 'ResearcherID',
                   'label': l'Researcher ID',
-                  'validator': <function is_researcher_id at 0x114fc6da0>},
+                  'validator': <function is_researcher_id at 0x1116f0300>},
  'ror': {'datacite': 'ROR',
          'label': l'ROR',
-         'validator': <function is_ror at 0x1117dc250>},
+         'validator': <function is_ror at 0x10b4ace00>},
  'scopusid': {'datacite': 'Scopus Author ID',
               'label': l'Scopus Author ID',
-              'validator': <function is_scopus_id at 0x114fc7060>},
- 'url': {'label': l'URL', 'validator': <function <lambda> at 0x114fc7320>},
- 'vedidk': {'label': l'vedIDK', 'validator': <function is_vedidk at 0x114fc6f00>}}
+              'validator': <function is_scopus_id at 0x1116f05c0>},
+ 'url': {'label': l'URL', 'validator': <function <lambda> at 0x1116f0880>},
+ 'vedidk': {'label': l'vedIDK', 'validator': <function is_vedidk at 0x1116f0460>}}
 ```
 
 ---
@@ -10470,82 +10453,82 @@ This variable is used to separate related identifiers.
 ```
 {'ads': {'datacite': 'bibcode',
          'label': l'Bibcode',
-         'validator': <function is_ads at 0x11176f270>},
+         'validator': <function is_ads at 0x10b453e20>},
  'ark': {'datacite': 'ARK',
          'label': l'ARK',
-         'validator': <function is_ark at 0x11176ef00>},
+         'validator': <function is_ark at 0x10b453ab0>},
  'arxiv': {'datacite': 'arXiv',
            'label': l'arXiv',
-           'validator': <function is_arxiv at 0x11176f480>},
+           'validator': <function is_arxiv at 0x10b4ac0f0>},
  'crossreffunderid': {'datacite': 'Crossref Funder ID',
                       'label': l'Crossref Funder ID',
-                      'validator': <function always_valid at 0x111ff5640>},
+                      'validator': <function always_valid at 0x10e7df7f0>},
  'cstr': {'datacite': 'CSTR',
           'label': l'CSTR',
-          'validator': <function is_cstr at 0x1117dc670>},
+          'validator': <function is_cstr at 0x10b4ad220>},
  'doi': {'datacite': 'DOI',
          'label': l'DOI',
-         'validator': <function is_doi at 0x11176e400>},
+         'validator': <function is_doi at 0x10ae30b40>},
  'ean13': {'datacite': 'EAN13',
            'label': l'EAN13',
-           'validator': <function is_ean13 at 0x11176ec40>},
+           'validator': <function is_ean13 at 0x10b4537f0>},
  'eissn': {'datacite': 'EISSN',
            'label': l'EISSN',
-           'validator': <function is_issn at 0x11168be20>},
+           'validator': <function is_issn at 0x10ae307d0>},
  'grid': {'datacite': 'GRID',
           'label': l'GRID',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'handle': {'datacite': 'Handle',
             'label': l'Handle',
-            'validator': <function is_handle at 0x11176eae0>},
+            'validator': <function is_handle at 0x10b452fb0>},
  'igsn': {'datacite': 'IGSN',
           'label': l'IGSN',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'isbn': {'datacite': 'ISBN',
           'label': l'ISBN',
-          'validator': <function is_isbn at 0x11168bc10>},
+          'validator': <function is_isbn at 0x10ae305c0>},
  'isni': {'datacite': 'ISNI',
           'label': l'ISNI',
-          'validator': <function is_isni at 0x11176eda0>},
+          'validator': <function is_isni at 0x10b453950>},
  'issn': {'datacite': 'ISSN',
           'label': l'ISSN',
-          'validator': <function is_issn at 0x11168be20>},
+          'validator': <function is_issn at 0x10ae307d0>},
  'istc': {'datacite': 'ISTC',
           'label': l'ISTC',
-          'validator': <function is_istc at 0x1116e4250>},
+          'validator': <function is_istc at 0x10ae30a90>},
  'lissn': {'datacite': 'LISSN',
            'label': l'LISSN',
-           'validator': <function is_issn at 0x11168be20>},
+           'validator': <function is_issn at 0x10ae307d0>},
  'lsid': {'datacite': 'LSID',
           'label': l'LSID',
-          'validator': <function is_lsid at 0x11176f110>},
+          'validator': <function is_lsid at 0x10b453cc0>},
  'other': {'datacite': 'Other',
            'label': l'Other',
-           'validator': <function always_valid at 0x111ff5640>},
+           'validator': <function always_valid at 0x10e7df7f0>},
  'pmid': {'datacite': 'PMID',
           'label': l'PMID',
-          'validator': <function is_pmid at 0x11176f5e0>},
+          'validator': <function is_pmid at 0x10b4ac250>},
  'purl': {'datacite': 'PURL',
           'label': l'PURL',
-          'validator': <function is_purl at 0x11176efb0>},
+          'validator': <function is_purl at 0x10b453b60>},
  'rrid': {'datacite': 'RRID',
           'label': l'RRID',
-          'validator': <function is_rrid at 0x1117dc720>},
+          'validator': <function is_rrid at 0x10b4ad2d0>},
  'upc': {'datacite': 'UPC',
          'label': l'UPC',
-         'validator': <function always_valid at 0x111ff5640>},
+         'validator': <function always_valid at 0x10e7df7f0>},
  'url': {'datacite': 'URL',
          'label': l'URL',
-         'validator': <function is_url at 0x11176f060>},
+         'validator': <function is_url at 0x10b453c10>},
  'urn': {'datacite': 'URN',
          'label': l'URN',
-         'validator': <function is_urn at 0x11176f1c0>},
+         'validator': <function is_urn at 0x10b453d70>},
  'w3id': {'datacite': 'w3id',
           'label': l'W3ID',
-          'validator': <function always_valid at 0x111ff5640>},
+          'validator': <function always_valid at 0x10e7df7f0>},
  'wikidata': {'datacite': 'Other',
               'label': l'Wikidata',
-              'validator': <function is_wikidata at 0x1117dc510>}}
+              'validator': <function is_wikidata at 0x10b4ad0c0>}}
 ```
 
 ---
@@ -10745,7 +10728,7 @@ Policy class which evaluates whether a record can be deleted by a user.
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L960) |
 
 ```
-[<invenio_records_resources.services.files.extractors.zip.ZipExtractor object at 0x11495bed0>]
+[<invenio_records_resources.services.files.extractors.zip.ZipExtractor object at 0x1111e8e10>]
 ```
 
 ---
@@ -10811,7 +10794,7 @@ List of policies for record deletion requests.
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L229) |
 
 ```
-[<invenio_rdm_records.services.request_policies.RequestDeletionPolicy object at 0x114956f90>]
+[<invenio_rdm_records.services.request_policies.RequestDeletionPolicy object at 0x1111ba900>]
 ```
 
 ---
@@ -11895,8 +11878,8 @@ Registered resolvers for resolving/creating references in request metadata.
 | **Source** | [invenio-requests](https://github.com/inveniosoftware/invenio-requests/blob/master/invenio_requests/config.py#L37) |
 
 ```
-[<invenio_users_resources.entity_resolvers.UserResolver object at 0x11162a7b0>,
- <invenio_users_resources.entity_resolvers.GroupResolver object at 0x11162a900>]
+[<invenio_users_resources.entity_resolvers.UserResolver object at 0x10de73620>,
+ <invenio_users_resources.entity_resolvers.GroupResolver object at 0x10de73770>]
 ```
 
 ---
@@ -11939,9 +11922,9 @@ Registered resolvers for resolving/creating references in request metadata.
 | **Source** | [invenio-requests](https://github.com/inveniosoftware/invenio-requests/blob/master/invenio_requests/config.py#L75) |
 
 ```
-{'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11096fc50>,
+{'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10de5f750>,
             'ui': {'field': 'status'}},
- 'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11096ce10>,
+ 'type': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10de5f610>,
           'ui': {'field': 'type'}}}
 ```
 
@@ -12178,9 +12161,9 @@ Amount of items per page on the request details timeline
 | **Source** | [invenio-requests](https://github.com/inveniosoftware/invenio-requests/blob/master/invenio_requests/config.py#L124) |
 
 ```
-{'is_open': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1115d2650>,
+{'is_open': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10deb0510>,
              'ui': {'field': 'is_open'}},
- 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11096fc50>,
+ 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10de5f750>,
             'ui': {'field': 'status'}}}
 ```
 
@@ -13269,7 +13252,7 @@ Default template for password recovery (asking for email).
 
 (security-i18n-domain)=
 ### SECURITY_I18N_DOMAIN
-| **Default Value** | `'flask_security'` |
+| **Default Value** | `'messages'` |
 |--------------|-----------|
 | **Type** | str |
 | **Source** | unknown |
@@ -14430,7 +14413,7 @@ Sets cookie with the secure flag by default.
 
 (session-random-source)=
 ### SESSION_RANDOM_SOURCE
-| **Default Value** | `<random.SystemRandom object at 0xb3eec4c20>` |
+| **Default Value** | `<random.SystemRandom object at 0x83dc07020>` |
 |--------------|-----------|
 | **Type** | SystemRandom |
 | **Source** | unknown |
@@ -15518,15 +15501,15 @@ Domains organisation schema config.
 | **Source** | [invenio-users-resources](https://github.com/inveniosoftware/invenio-users-resources/blob/master/invenio_users_resources/config.py#L215) |
 
 ```
-{'category': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fc830>,
+{'category': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1121271c0>,
               'ui': {'field': 'category'}},
- 'flagged': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x115751050>,
+ 'flagged': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11217d7d0>,
              'ui': {'field': 'flagged'}},
- 'organisation': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fc8a0>,
+ 'organisation': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1121263c0>,
                   'ui': {'field': 'organisation'}},
- 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1157512d0>,
+ 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11217e3d0>,
             'ui': {'field': 'status'}},
- 'tld': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fc980>,
+ 'tld': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1121265f0>,
          'ui': {'field': 'tld'}}}
 ```
 
@@ -15563,7 +15546,7 @@ Domains organisation schema config.
 | **Source** | [invenio-users-resources](https://github.com/inveniosoftware/invenio-users-resources/blob/master/invenio_users_resources/config.py#L279) |
 
 ```
-{'is_managed': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x11139dbe0>,
+{'is_managed': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x10dd95e80>,
                 'ui': {'field': 'is_managed'}}}
 ```
 
@@ -15677,18 +15660,18 @@ Renewal timeout, in seconds, to increase the lock time for a user when moderatin
 | **Source** | [invenio-users-resources](https://github.com/inveniosoftware/invenio-users-resources/blob/master/invenio_users_resources/config.py#L99) |
 
 ```
-{'affiliations': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fcad0>,
+{'affiliations': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112126740>,
                   'ui': {'field': 'profile.affiliations.keyword'}},
- 'domain': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fc9f0>,
+ 'domain': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112126660>,
             'ui': {'field': 'domain'}},
- 'domain_status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fca60>,
+ 'domain_status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1121266d0>,
                    'ui': {'field': 'domain_status'}},
- 'roles': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fcc20>,
+ 'roles': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112126580>,
            'facet_options': {'size': 100},
            'ui': {'field': 'roles'}},
- 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fcb40>,
+ 'status': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1121272a0>,
             'ui': {'field': 'status'}},
- 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x1156fcbb0>,
+ 'visibility': {'facet': <invenio_records_resources.services.records.facets.facets.TermsFacet object at 0x112127380>,
                 'ui': {'field': 'visibility'}}}
 ```
 
@@ -15821,12 +15804,12 @@ Overrides for "dashboard" menu.
 | **Set by** | {py:func}`~oarepo_config.configure_generic_parameters` |
 
 ```
-{'edmo': {'label': l'EDMO', 'validator': <function is_edmo at 0x111bab690>},
- 'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x11176f740>},
- 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x1117c09e0>},
- 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x11176eda0>},
- 'pic': {'label': l'PIC', 'validator': <function is_pic at 0x111bab1c0>},
- 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x1117dc250>}}
+{'edmo': {'label': l'EDMO', 'validator': <function is_edmo at 0x10e4217a0>},
+ 'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x10b4ac3b0>},
+ 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x10df5e350>},
+ 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x10b453950>},
+ 'pic': {'label': l'PIC', 'validator': <function is_pic at 0x10e4212d0>},
+ 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x10b4ace00>}}
 ```
 
 ---
@@ -15927,8 +15910,8 @@ ROR ID for EC funder.
 | **Source** | [invenio-vocabularies](https://github.com/inveniosoftware/invenio-vocabularies/blob/master/invenio_vocabularies/config.py#L82) |
 
 ```
-{'doi': {'label': l'DOI', 'validator': <function is_doi at 0x11176e400>},
- 'url': {'label': l'URL', 'validator': <function is_url at 0x11176f060>}}
+{'doi': {'label': l'DOI', 'validator': <function is_doi at 0x10ae30b40>},
+ 'url': {'label': l'URL', 'validator': <function is_url at 0x10b453c10>}}
 ```
 
 ---
@@ -16055,11 +16038,11 @@ DOI prefix for the identifier formed with the FundRef id.
 | **Set by** | {py:func}`~oarepo_config.configure_generic_parameters` |
 
 ```
-{'doi': {'label': l'DOI', 'validator': <function is_doi at 0x11176e400>},
- 'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x11176f740>},
- 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x1117c09e0>},
- 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x11176eda0>},
- 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x1117dc250>}}
+{'doi': {'label': l'DOI', 'validator': <function is_doi at 0x10ae30b40>},
+ 'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x10b4ac3b0>},
+ 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x10df5e350>},
+ 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x10b453950>},
+ 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x10b4ace00>}}
 ```
 
 ---
@@ -16072,10 +16055,10 @@ DOI prefix for the identifier formed with the FundRef id.
 | **Source** | [invenio-vocabularies](https://github.com/inveniosoftware/invenio-vocabularies/blob/master/invenio_vocabularies/config.py#L43) |
 
 ```
-{'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x11176f740>},
- 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x1117c09e0>},
- 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x11176eda0>},
- 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x1117dc250>}}
+{'gnd': {'label': l'GND', 'validator': <function is_gnd at 0x10b4ac3b0>},
+ 'grid': {'label': l'GRID', 'validator': <function <lambda> at 0x10df5e350>},
+ 'isni': {'label': l'ISNI', 'validator': <function is_isni at 0x10b453950>},
+ 'ror': {'label': l'ROR', 'validator': <function is_ror at 0x10b4ace00>}}
 ```
 
 ---
@@ -16091,13 +16074,13 @@ DOI prefix for the identifier formed with the FundRef id.
 ```
 {'gnd': {'datacite': 'GND',
          'label': l'GND',
-         'validator': <function is_gnd at 0x11176f740>},
+         'validator': <function is_gnd at 0x10b4ac3b0>},
  'isni': {'datacite': 'ISNI',
           'label': l'ISNI',
-          'validator': <function is_isni at 0x11176eda0>},
+          'validator': <function is_isni at 0x10b453950>},
  'orcid': {'datacite': 'ORCID',
            'label': l'ORCID',
-           'validator': <function is_orcid at 0x11176ee50>}}
+           'validator': <function is_orcid at 0x10b453a00>}}
 ```
 
 ---
@@ -16271,8 +16254,8 @@ Subject NVS-P02 file download link.
 ```
 {'gnd': {'datacite': 'GND',
          'label': l'GND',
-         'validator': <function is_gnd at 0x11176f740>},
- 'url': {'label': l'URL', 'validator': <function is_url at 0x11176f060>}}
+         'validator': <function is_gnd at 0x10b4ac3b0>},
+ 'url': {'label': l'URL', 'validator': <function is_url at 0x10b453c10>}}
 ```
 
 ---

@@ -82,8 +82,8 @@ call order in `invenio.cfg` is:
    `register_workflow()`), `configure_cron()`,
    `configure_stats()`, `configure_vocabulary()`,
    `configure_datastreams()`, `configure_jobs()`,
-   `configure_einfra_oidc()`, `add_model()` — order among these mostly
-   doesn't matter, except that anything relying on
+   `configure_einfra_oidc()`, `configure_llm()`, `add_model()` — order
+   among these mostly doesn't matter, except that anything relying on
    `VOCABULARIES_DATASTREAM_*` defaults should still come after step 2.
 6. Any plain `CONSTANT = value` overrides, and `override_configuration()`
    if used, last — so they win over everything above.
@@ -205,6 +205,11 @@ datasets_model.register()
 env = config.load_configuration_variables()
 if env.get("INVENIO_REMOTE_AUTH_ENABLED", "no").lower() in ("true", "yes", "1"):
     config.configure_einfra_oidc()
+
+# AI-assisted record validation (oarepo-checks), optional - only configured
+# if a token is available
+if env.get("INVENIO_LLM_API_TOKEN"):
+    config.configure_llm(api_token=env["INVENIO_LLM_API_TOKEN"])
 
 # plain overrides after all config.* calls
 RDM_RECORDS_MAX_FILES_COUNT = 100

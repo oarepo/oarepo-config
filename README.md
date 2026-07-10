@@ -80,6 +80,7 @@ of Invenio config variables it sets.
 | [`configure_jobs(permission_policy=None, logging_level=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_jobs) | Who can view "Jobs" admin logs, and how verbose they are. |
 | [`configure_oai()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_oai) | OAI-PMH repository name. Call after `configure_ui()`. |
 | [`configure_einfra_oidc()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_einfra_oidc) | "Log in with e-INFRA" (CESNET/Perun) single sign-on. |
+| [`configure_llm(api_token=None, ...)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_llm) | LLM client(s) for oarepo-checks' AI-assisted record validation (optional dependency). |
 | [`add_model(model_package_name)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.add_model) | Register a data model for global/cross-model search. |
 | [`load_configuration_variables()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.load_configuration_variables) | Read the deployment's `INVENIO_...` configuration values. |
 | [`override_configuration(env=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.override_configuration) | Set arbitrary config constants straight from `INVENIO_<X>` env vars. |
