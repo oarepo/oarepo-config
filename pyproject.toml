@@ -47,8 +47,8 @@ docs = [
 ]
 
 [project.entry-points."invenio_config.module"]
-oarepo = "oarepo_config.initial_configuration"
-invenio_app_rdm = "oarepo_config.initial_rdm_config"
+0001-invenio_app_rdm = "oarepo_config.initial_rdm_config"
+0002-oarepo = "oarepo_config.initial_configuration"
 
 [tool.hatch.build.targets.sdist]
 include = [
