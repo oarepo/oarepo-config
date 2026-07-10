@@ -12,8 +12,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from oarepo.config.base import set_constants_in_caller
-
+from ...base import set_constants_in_caller
 from .base import BaseWorkflowSettings, add_if_in_state
 
 if TYPE_CHECKING:
