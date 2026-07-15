@@ -12,7 +12,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from .base import get_constant_from_caller, set_constants_in_caller
 
@@ -53,16 +52,11 @@ def add_model(model_package_name: str) -> None:
         config.add_model("datasets")
 
     """
-    GLOBAL_SEARCH_MODELS: list[Any] = get_constant_from_caller("GLOBAL_SEARCH_MODELS", [])  # type: ignore[var-annotated]
+    from invenio_base.utils import obj_or_import_string
 
-    try:
-        from invenio_base.utils import obj_or_import_string
-
-        model_definition = obj_or_import_string(model_package_name + ":" + "MODEL_DEFINITION")
-        GLOBAL_SEARCH_MODELS.append(model_definition)
-    except ImportError:
-        log.exception(
-            "Could not import model definition from package: %s. Has the model been compiled?",
-            model_package_name,
+    model = obj_or_import_string(f"runtime_models_{model_package_name}")
+    if hasattr(model, "record_error_handlers"):
+        RDM_RECORDS_ERROR_HANDLERS = (
+            get_constant_from_caller("RDM_RECORDS_ERROR_HANDLERS") | model.record_error_handlers  # type: ignore[reportOptionalMemberAccess]
         )
-    set_constants_in_caller(locals())
+        set_constants_in_caller({"RDM_RECORDS_ERROR_HANDLERS": RDM_RECORDS_ERROR_HANDLERS})
