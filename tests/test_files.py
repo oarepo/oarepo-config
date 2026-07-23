@@ -14,7 +14,7 @@ from oarepo_config.files import configure_files
 
 
 def test_configure_files_defaults():
-    """Default quotas and metadata-only toggle are written to globals."""
+    """Default quotas and file-related toggles are written to globals."""
     configure_files()
 
     assert RDM_FILES_DEFAULT_MAX_FILE_SIZE == 10 * 10**9  # noqa: F821
@@ -27,6 +27,7 @@ def test_configure_files_defaults():
         "maxStorage": 10 * 10**9,
     }
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
+    assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
 
 
 def test_configure_files_custom_values():
@@ -48,3 +49,15 @@ def test_configure_files_custom_values():
         "maxStorage": 5 * 10**9,
     }
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is False  # noqa: F821
+    assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is False  # noqa: F821
+
+
+def test_configure_files_allow_empty_files_override():
+    """Empty files can be allowed even when metadata-only records are not."""
+    configure_files(
+        allow_metadata_only_records=False,
+        allow_empty_files=True,
+    )
+
+    assert RDM_ALLOW_METADATA_ONLY_RECORDS is False  # noqa: F821
+    assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821

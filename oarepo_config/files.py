@@ -18,13 +18,14 @@ def configure_files(
     max_files_count: int = 100,
     max_total_size: int = 10 * 10**9,
     allow_metadata_only_records: bool = True,
+    allow_empty_files: bool | None = None,
 ) -> None:
-    """Set up file upload quotas and the metadata-only records toggle.
+    """Set up file upload quotas and file-related toggles.
 
     Controls how many files users may attach to a record deposition, how
     large each individual file may be, the total storage budget for the
-    deposition, and whether a deposition can be published without any
-    files at all.
+    deposition, whether a deposition can be published without any files
+    at all, and whether uploaded files may have zero bytes.
 
     Args:
         max_file_size: Maximum size of a single uploaded file in bytes.
@@ -38,6 +39,11 @@ def configure_files(
             at least one file before they can publish a record
             deposition. When ``True`` (the default), metadata-only
             records are allowed.
+        allow_empty_files: When ``False``, zero-byte files are rejected.
+            When ``True``, they are allowed. Defaults to the value of
+            ``allow_metadata_only_records`` so that requiring files also
+            prevents users from satisfying the requirement with an empty
+            file.
 
     Invenio configuration variables set:
 
@@ -49,6 +55,8 @@ def configure_files(
       files per record.
     * ``RDM_ALLOW_METADATA_ONLY_RECORDS`` - whether metadata-only
       records are allowed.
+    * ``RECORDS_RESOURCES_ALLOW_EMPTY_FILES`` - whether zero-byte files
+      may be uploaded.
     * ``APP_RDM_DEPOSIT_FORM_QUOTA`` - deposit-form UI quota object with
       ``maxFiles`` and ``maxStorage``.
     * ``FILES_REST_DEFAULT_MAX_FILE_SIZE`` and
@@ -83,5 +91,10 @@ def configure_files(
     }
 
     RDM_ALLOW_METADATA_ONLY_RECORDS = allow_metadata_only_records
+    RECORDS_RESOURCES_ALLOW_EMPTY_FILES = (
+        allow_empty_files
+        if allow_empty_files is not None
+        else allow_metadata_only_records
+    )
 
     set_constants_in_caller(locals())
