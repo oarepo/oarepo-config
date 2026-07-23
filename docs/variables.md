@@ -11175,6 +11175,7 @@ Allow empty files to be uploaded.
 |--------------|-----------|
 | **Type** | bool |
 | **Source** | [invenio-records-resources](https://github.com/inveniosoftware/invenio-records-resources/blob/master/invenio_records_resources/config.py#L26) |
+| **Set by** | {py:func}`~oarepo_config.configure_files` |
 
 ---
 
