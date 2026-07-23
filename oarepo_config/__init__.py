@@ -51,6 +51,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from .datastreams import configure_datastreams
 from .einfra import configure_einfra_oidc
+from .files import configure_files
 from .jobs import configure_jobs
 
 try:
@@ -107,6 +108,7 @@ __all__ = (
     "configure_cron",
     "configure_datastreams",
     "configure_einfra_oidc",
+    "configure_files",
     "configure_generic_parameters",
     "configure_jobs",
     "configure_llm",
