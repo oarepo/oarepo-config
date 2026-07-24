@@ -67,13 +67,14 @@ def configure_files(
 
     .. code-block:: python
 
-        # Require at least one file per record, with a 5 GB total budget
-        # and files no larger than 1 GB each.
+        # Use the default file quotas and toggles. All parameters below
+        # match the helper's built-in defaults and are shown explicitly
+        # for reference; they can be omitted when calling the helper.
         config.configure_files(
-            max_file_size=1 * 10**9,
-            max_files_count=20,
-            max_total_size=5 * 10**9,
-            allow_metadata_only_records=False,
+            max_file_size=10 * 10**9,
+            max_files_count=100,
+            max_total_size=10 * 10**9,
+            allow_metadata_only_records=True,
         )
 
     """
