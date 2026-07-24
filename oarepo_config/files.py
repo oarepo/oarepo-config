@@ -14,9 +14,9 @@ from .base import set_constants_in_caller
 
 
 def configure_files(
-    max_file_size: int = 10 * 10**9,
+    max_file_size: int = 1 * 10**9,
     max_files_count: int = 100,
-    max_total_size: int = 10 * 10**9,
+    max_total_size: int = 5 * 10**9,
     allow_metadata_only_records: bool = True,
     allow_empty_files: bool | None = None,
 ) -> None:
@@ -29,12 +29,12 @@ def configure_files(
 
     Args:
         max_file_size: Maximum size of a single uploaded file in bytes.
-            Defaults to 10 GB (``10 * 10**9``).
+            Defaults to 1 GB (``1 * 10**9``).
         max_files_count: Maximum number of files allowed per record
             deposition. Defaults to ``100``.
         max_total_size: Maximum combined size of all files in a single
-            record deposition, in bytes. Defaults to 10 GB
-            (``10 * 10**9``).
+            record deposition, in bytes. Defaults to 5 GB
+            (``5 * 10**9``).
         allow_metadata_only_records: When ``False``, users must upload
             at least one file before they can publish a record
             deposition. When ``True`` (the default), metadata-only
@@ -71,9 +71,9 @@ def configure_files(
         # match the helper's built-in defaults and are shown explicitly
         # for reference; they can be omitted when calling the helper.
         config.configure_files(
-            max_file_size=10 * 10**9,
+            max_file_size=1 * 10**9,
             max_files_count=100,
-            max_total_size=10 * 10**9,
+            max_total_size=5 * 10**9,
             allow_metadata_only_records=True,
         )
 
