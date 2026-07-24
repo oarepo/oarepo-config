@@ -17,14 +17,14 @@ def test_configure_files_defaults():
     """Default quotas and file-related toggles are written to globals."""
     configure_files()
 
-    assert RDM_FILES_DEFAULT_MAX_FILE_SIZE == 10 * 10**9  # noqa: F821
-    assert FILES_REST_DEFAULT_MAX_FILE_SIZE == 10 * 10**9  # noqa: F821
-    assert RDM_FILES_DEFAULT_QUOTA_SIZE == 10 * 10**9  # noqa: F821
-    assert FILES_REST_DEFAULT_QUOTA_SIZE == 10 * 10**9  # noqa: F821
+    assert RDM_FILES_DEFAULT_MAX_FILE_SIZE == 1 * 10**9  # noqa: F821
+    assert FILES_REST_DEFAULT_MAX_FILE_SIZE == 1 * 10**9  # noqa: F821
+    assert RDM_FILES_DEFAULT_QUOTA_SIZE == 5 * 10**9  # noqa: F821
+    assert FILES_REST_DEFAULT_QUOTA_SIZE == 5 * 10**9  # noqa: F821
     assert RDM_RECORDS_MAX_FILES_COUNT == 100  # noqa: F821
     assert APP_RDM_DEPOSIT_FORM_QUOTA == {  # noqa: F821
         "maxFiles": 100,
-        "maxStorage": 10 * 10**9,
+        "maxStorage": 5 * 10**9,
     }
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
