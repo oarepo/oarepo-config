@@ -93,9 +93,7 @@ def configure_files(
 
     RDM_ALLOW_METADATA_ONLY_RECORDS = allow_metadata_only_records
     RECORDS_RESOURCES_ALLOW_EMPTY_FILES = (
-        allow_empty_files
-        if allow_empty_files is not None
-        else allow_metadata_only_records
+        allow_empty_files if allow_empty_files is not None else allow_metadata_only_records
     )
 
     set_constants_in_caller(locals())

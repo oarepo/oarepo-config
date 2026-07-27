@@ -165,13 +165,22 @@ config.configure_ui(
 
 config.configure_communities(
     communities_roles=[
-        dict(name="owner", title=_("Community owner"), is_owner=True,
-             can_manage=True, can_curate=True,
-             can_manage_roles=["owner", "curator", "member", "submitter"]),
-        dict(name="curator", title=_("Curator"), can_manage=True,
-             can_curate=True, can_manage_roles=["member", "submitter"]),
-        dict(name="submitter", title=_("Submitter"), can_manage=True,
-             can_manage_roles=[]),
+        dict(
+            name="owner",
+            title=_("Community owner"),
+            is_owner=True,
+            can_manage=True,
+            can_curate=True,
+            can_manage_roles=["owner", "curator", "member", "submitter"],
+        ),
+        dict(
+            name="curator",
+            title=_("Curator"),
+            can_manage=True,
+            can_curate=True,
+            can_manage_roles=["member", "submitter"],
+        ),
+        dict(name="submitter", title=_("Submitter"), can_manage=True, can_manage_roles=[]),
         dict(name="member", title=_("Member")),
     ]
 )
@@ -199,6 +208,7 @@ config.configure_stats()
 
 # custom model, registered separately from GLOBAL_SEARCH_MODELS
 from datasets import datasets_model
+
 datasets_model.register()
 
 # e-INFRA OIDC login, toggled by INVENIO_REMOTE_AUTH_ENABLED
