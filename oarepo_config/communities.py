@@ -123,7 +123,7 @@ def configure_communities(
                 dict(
                     name="submitter",
                     title=_("Submitter"),
-                    can_manage=True,
+                    can_manage=False,
                 ),
                 dict(
                     name="member",
