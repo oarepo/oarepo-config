@@ -180,7 +180,7 @@ config.configure_communities(
             can_curate=True,
             can_manage_roles=["member", "submitter"],
         ),
-        dict(name="submitter", title=_("Submitter"), can_manage=True, can_manage_roles=[]),
+        dict(name="submitter", title=_("Submitter"), can_manage=False),
         dict(name="member", title=_("Member")),
     ]
 )
