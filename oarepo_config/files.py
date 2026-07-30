@@ -10,15 +10,18 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 from .base import set_constants_in_caller
 
 
-def configure_files(
+def configure_files(  # noqa: PLR0913, PLR0917
     max_file_size: int = 1 * 10**9,
     max_files_count: int = 100,
     max_total_size: int = 5 * 10**9,
     allow_metadata_only_records: bool = True,
     allow_empty_files: bool | None = None,
+    file_modification_grace_period: timedelta = timedelta(days=45),
 ) -> None:
     """Set up file upload quotas and file-related toggles.
 
@@ -44,6 +47,10 @@ def configure_files(
             ``allow_metadata_only_records`` so that requiring files also
             prevents users from satisfying the requirement with an empty
             file.
+        file_modification_grace_period: Grace period after a record is
+            published during which its files can still be modified without
+            creating a new version. Checked at publish time. Defaults to
+            45 days (``timedelta(days=45)``).
 
     Invenio configuration variables set:
 
@@ -57,6 +64,8 @@ def configure_files(
       records are allowed.
     * ``RECORDS_RESOURCES_ALLOW_EMPTY_FILES`` - whether zero-byte files
       may be uploaded.
+    * ``RDM_FILE_MODIFICATION_PERIOD`` - time window after record
+      creation during which modified files may be published.
     * ``APP_RDM_DEPOSIT_FORM_QUOTA`` - deposit-form UI quota object with
       ``maxFiles`` and ``maxStorage``.
     * ``FILES_REST_DEFAULT_MAX_FILE_SIZE`` and
@@ -95,5 +104,7 @@ def configure_files(
     RECORDS_RESOURCES_ALLOW_EMPTY_FILES = (
         allow_empty_files if allow_empty_files is not None else allow_metadata_only_records
     )
+
+    RDM_FILE_MODIFICATION_PERIOD = file_modification_grace_period
 
     set_constants_in_caller(locals())

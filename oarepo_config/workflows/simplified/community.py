@@ -14,6 +14,8 @@ import dataclasses
 from typing import TYPE_CHECKING
 
 from invenio_rdm_records.requests.community_submission import CommunitySubmission
+from invenio_rdm_records.requests.file_modification import FileModification
+from invenio_rdm_records.requests.quota_increase import QuotaIncrease
 from invenio_rdm_records.services.generators import (
     IfNewRecord,
     RecordCommunitiesAction,
@@ -30,8 +32,12 @@ from oarepo_requests.types import (
     PublishNewVersionRequestType,
 )
 from oarepo_workflows.requests import WorkflowRequest, WorkflowTransitions
+from oarepo_workflows.requests.generators.record_owners import RecordOwnersForRecipients
 from oarepo_workflows.services.permissions import IfInState, IfRDMRecordPassed
-from oarepo_workflows.services.permissions.composite import BooleanPermissionPolicyMixin, RequireAll
+from oarepo_workflows.services.permissions.composite import (
+    BooleanPermissionPolicyMixin,
+    RequireAll,
+)
 
 if TYPE_CHECKING:
     from invenio_records_permissions.generators import Generator
@@ -224,6 +230,24 @@ class CommunityWorkflow(BaseWorkflowSettings):
         ]
 
         requests = {
+            # File modification requests let record owners unlock a published
+            # record's files (grace-period feature). Created and accepted by
+            # invenio's file_modification service (owner submits, system accepts),
+            # so no reviewer and no record state transition.
+            FileModification.type_id: WorkflowRequest(
+                requesters=[RecordOwners()],
+                recipients=[RecordOwnersForRecipients()],
+                transitions=WorkflowTransitions(),
+            ),
+            # Quota increase requests let record owners raise a draft's storage
+            # quota from their additional allowance. Created and accepted by
+            # invenio's quota_increase service (owner submits, system accepts),
+            # so no reviewer and no record state transition.
+            QuotaIncrease.type_id: WorkflowRequest(
+                requesters=[RecordOwners()],
+                recipients=[RecordOwnersForRecipients()],
+                transitions=WorkflowTransitions(),
+            ),
             CommunitySubmission.type_id: WorkflowRequest(
                 requesters=[
                     IfNewRecord(
