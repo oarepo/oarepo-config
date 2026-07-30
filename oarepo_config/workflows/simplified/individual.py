@@ -15,6 +15,8 @@ from typing import TYPE_CHECKING
 
 from invenio_i18n import LazyString
 from invenio_i18n import lazy_gettext as _
+from invenio_rdm_records.requests.file_modification import FileModification
+from invenio_rdm_records.requests.quota_increase import QuotaIncrease
 from invenio_rdm_records.services.generators import RecordOwners
 from invenio_requests.customizations import CommentEventType
 from oarepo_requests.services.permissions.generators import RequestActive
@@ -173,8 +175,29 @@ class IndividualWorkflow(BaseWorkflowSettings):
         return tuple(publish_generators)
 
     def _build_request_policy(self) -> type[WorkflowRequestPolicy]:
+        # File modification requests let record owners unlock a published record's
+        # files (grace-period feature). Available regardless of review, since it is
+        # created and accepted by invenio's file_modification service (owner submits,
+        # system accepts) -- no reviewer and no record state transition.
+        base_requests = {
+            FileModification.type_id: WorkflowRequest(
+                requesters=[RecordOwners()],
+                recipients=[RecordOwnersForRecipients()],
+                transitions=WorkflowTransitions(),
+            ),
+            # Quota increase requests let record owners raise a draft's storage
+            # quota from their additional allowance. Created and accepted by
+            # invenio's quota_increase service (owner submits, system accepts),
+            # so no reviewer and no record state transition.
+            QuotaIncrease.type_id: WorkflowRequest(
+                requesters=[RecordOwners()],
+                recipients=[RecordOwnersForRecipients()],
+                transitions=WorkflowTransitions(),
+            ),
+        }
+
         if not self.review_required:
-            return self.base_request_policy
+            return self._create_request_policy("IndividualRequestPolicy", base_requests)
 
         reviewer_generators: list[UserWithRole | HasActionNeed] = []
         if self.reviewer_roles:
@@ -193,6 +216,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
             requestors.extend(self.record_owners_with_correct_roles(RecordOwners()))  # type: ignore[arg-type]
 
         requests = {
+            **base_requests,
             PublishDraftRequestType.type_id: WorkflowRequest(
                 requesters=[
                     IfInState(

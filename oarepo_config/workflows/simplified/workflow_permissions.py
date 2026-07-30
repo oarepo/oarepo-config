@@ -285,7 +285,7 @@ class DefaultRDMWorkflowPermissions(BaseWorkflowPermissionPolicy):
     can_update = (
         IfInState(["draft", "submitted"], [SameAs("can_rdm_review")]),
         IfInState("revision_requested", [SameAs("can_rdm_review")]),
-        # IfInState(["approved", "published"], [Disable()]), # noqa: ERA001 # keeping as a reminder
+        # IfInState(["approved", "published"], [Disable()]), # keeping as a reminder #noqa: ERA001
     )
     # the update draft for whatever reason is used as the source of truth for the "share" button
     # - so even if it does not make sense to have this on a published record, we need to have
@@ -310,7 +310,13 @@ class DefaultRDMWorkflowPermissions(BaseWorkflowPermissionPolicy):
     can_create = (AuthenticatedUser(),)
     # Publishing is only possible from the approved state (review workflow).
     can_publish = (IfInState("approved", [SameAs("can_rdm_review")]),)
-    can_new_version = (IfInState("published", [SameAs("can_rdm_curate")]),)
+    # NOTE(testing): dropped the IfInState("published") gate so new_version is
+    # evaluated by "who" (curators) regardless of state. This makes the New Version
+    # button consistent between the record detail page (evaluated against the
+    # published record) and the deposit edit form (evaluated against the draft).
+    # State applicability is still enforced by the frontend (button only shown for
+    # published records) and by service.new_version() (requires a published version).
+    can_new_version = (SameAs("can_rdm_curate"),)
     # Editing (draft-from-record) is only possible for published, non-deleted records.
     can_edit = (
         IfDeleted(
@@ -318,7 +324,7 @@ class DefaultRDMWorkflowPermissions(BaseWorkflowPermissionPolicy):
             # Note: RDM calls can_edit both on the published and draft versions of a record.
             # that is why we can not use IfInState("published"), because then the "Edit" button
             # will be visible but clicking on it will end up with an error.
-            # else_=[IfInState("published", [SameAs("can_rdm_curate")])],  # noqa: ERA001 # keeping as a reminder
+            # else_=[IfInState("published", [SameAs("can_rdm_curate")])],  # keeping as a reminder  #noqa: ERA001
             else_=[SameAs("can_rdm_curate")],
         ),
     )
