@@ -10,9 +10,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from ...base import set_constants_in_caller
+from ...base import get_constant_from_caller, set_constants_in_caller
+from ...requests import RequestsPermissionPolicy
 from .base import BaseWorkflowSettings, add_if_in_state
 
 if TYPE_CHECKING:
@@ -97,18 +98,30 @@ def configure_workflows(
     if len(workflow_definitions) != len({workflow.code for workflow in workflow_definitions}):
         raise ValueError("Duplicate workflow codes found in workflow definitions")
 
+    constants: dict[str, Any] = {
+        "WORKFLOWS": built_workflows,
+        "WORKFLOWS_DEFAULT_WORKFLOW": default_individual_workflow,
+        "OAREPO_COMMUNITIES_DEFAULT_WORKFLOW": default_community_workflow,
+    }
+
+    # Default the requests permission policy to the one that also allows creating
+    # community-topic request types (membership / invitation / sub-community), which
+    # otherwise cannot resolve a workflow and are always denied. Respect an explicit
+    # REQUESTS_PERMISSION_POLICY set by the caller.
+    if RequestsPermissionPolicy is not None:
+        if context:
+            constants["REQUESTS_PERMISSION_POLICY"] = context.get(
+                "REQUESTS_PERMISSION_POLICY", RequestsPermissionPolicy
+            )
+        else:
+            constants["REQUESTS_PERMISSION_POLICY"] = get_constant_from_caller(
+                "REQUESTS_PERMISSION_POLICY", RequestsPermissionPolicy
+            )
+
     if context:
-        context["WORKFLOWS"] = built_workflows
-        context["WORKFLOWS_DEFAULT_WORKFLOW"] = default_individual_workflow
-        context["OAREPO_COMMUNITIES_DEFAULT_WORKFLOW"] = default_community_workflow
+        context.update(constants)
     else:
-        set_constants_in_caller(
-            {
-                "WORKFLOWS": built_workflows,
-                "WORKFLOWS_DEFAULT_WORKFLOW": default_individual_workflow,
-                "OAREPO_COMMUNITIES_DEFAULT_WORKFLOW": default_community_workflow,
-            }
-        )
+        set_constants_in_caller(constants)
     return built_workflows
 
 
