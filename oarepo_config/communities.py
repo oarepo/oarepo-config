@@ -13,7 +13,9 @@ from __future__ import annotations
 
 from invenio_administration.generators import Administration
 from invenio_communities.generators import (
+    AuthenticatedUserButNotCommunityMember,  # type: ignore[reportAttributeAccessIssue]
     CommunityManagersForRole,
+    IfCommunityAllowsMembershipRequests,  # type: ignore[reportAttributeAccessIssue]
 )
 from invenio_communities.permissions import CommunityPermissionPolicy
 from invenio_i18n import lazy_gettext as _
@@ -52,7 +54,15 @@ try:
             SystemProcess(),
         )
         can_members_delete = can_members_update
-        can_request_membership = (Disable(),)
+        # Match invenio core: any authenticated non-member may request membership,
+        # but only when the feature flag is on and the community's member policy is
+        # "open" (otherwise nobody, not even a superuser).
+        can_request_membership = (
+            IfCommunityAllowsMembershipRequests(
+                then_=[AuthenticatedUserButNotCommunityMember()],
+                else_=[Disable()],
+            ),
+        )
 
 except ImportError:
     from invenio_communities.permissions import CommunityPermissionPolicy

@@ -82,8 +82,8 @@ def register_workflow(
     * ``WORKFLOWS`` - the new workflow is appended; workflows already
       registered (by earlier calls) are kept.
     * ``REQUESTS_PERMISSION_POLICY`` - only if not already set by an
-      earlier call; defaults to
-      ``CreatorsFromWorkflowRequestsPermissionPolicy``.
+      earlier call; defaults to :class:`oarepo_config.requests.RequestsPermissionPolicy`
+      (workflow-based, plus creation of community-topic request types).
 
     Example:
 
@@ -114,9 +114,6 @@ def register_workflow(
         )
 
     try:
-        from oarepo_requests.services.permissions.workflow_policies import (
-            CreatorsFromWorkflowRequestsPermissionPolicy,
-        )
         from oarepo_workflows import Workflow, WorkflowRequestPolicy
         from oarepo_workflows.services.permissions import DefaultWorkflowPermissions
     except ImportError as e:
@@ -139,7 +136,7 @@ def register_workflow(
             request_policy_cls=requests_policy_cls,
         )
     )
-    REQUESTS_PERMISSION_POLICY = get_constant_from_caller(
-        "REQUESTS_PERMISSION_POLICY", CreatorsFromWorkflowRequestsPermissionPolicy
-    )
+    from ..requests import RequestsPermissionPolicy
+
+    REQUESTS_PERMISSION_POLICY = get_constant_from_caller("REQUESTS_PERMISSION_POLICY", RequestsPermissionPolicy)
     set_constants_in_caller(locals())
