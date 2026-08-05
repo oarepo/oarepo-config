@@ -10,6 +10,15 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
+from invenio_rdm_records.services.request_policies import (
+    FileModificationAdminPolicy,
+    FileModificationGracePeriodPolicy,
+    QuotaIncreaseAdminPolicy,
+    QuotaIncreasePolicy,
+)
+
 from oarepo_config.files import configure_files
 
 
@@ -28,6 +37,42 @@ def test_configure_files_defaults():
     }
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
+    assert timedelta(days=45) == RDM_FILE_MODIFICATION_PERIOD  # noqa: F821
+
+    assert RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED is True  # noqa: F821
+    file_policies = RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES  # noqa: F821
+    assert [type(p) for p in file_policies] == [
+        FileModificationGracePeriodPolicy,
+        FileModificationAdminPolicy,
+    ]
+    assert file_policies[0].grace_period == timedelta(days=45)
+
+    assert RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED is True  # noqa: F821
+    assert [type(p) for p in RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES] == [  # noqa: F821
+        QuotaIncreasePolicy,
+        QuotaIncreaseAdminPolicy,
+    ]
+
+
+def test_configure_files_immediate_features_disabled():
+    """Disabling the features turns off the ENABLED flags and skips the policies."""
+    # configure_files injects into this module's globals, which persist across
+    # tests, so clear any policy lists a previous test may have set first.
+    for name in (
+        "RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES",
+        "RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES",
+    ):
+        globals().pop(name, None)
+
+    configure_files(
+        allow_immediate_file_modification=False,
+        allow_immediate_quota_increase=False,
+    )
+
+    assert RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED is False  # noqa: F821
+    assert RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED is False  # noqa: F821
+    assert "RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES" not in globals()
+    assert "RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES" not in globals()
 
 
 def test_configure_files_custom_values():
