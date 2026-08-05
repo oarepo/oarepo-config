@@ -12,6 +12,13 @@ from __future__ import annotations
 
 from datetime import timedelta
 
+from invenio_rdm_records.services.request_policies import (  # type: ignore[reportMissingImports]
+    FileModificationAdminPolicy,
+    FileModificationGracePeriodPolicy,
+    QuotaIncreaseAdminPolicy,
+    QuotaIncreasePolicy,
+)
+
 from .base import set_constants_in_caller
 
 
@@ -22,6 +29,8 @@ def configure_files(  # noqa: PLR0913, PLR0917
     allow_metadata_only_records: bool = True,
     allow_empty_files: bool | None = None,
     file_modification_grace_period: timedelta = timedelta(days=45),
+    allow_immediate_file_modification: bool = True,
+    allow_immediate_quota_increase: bool = True,
 ) -> None:
     """Set up file upload quotas and file-related toggles.
 
@@ -51,6 +60,17 @@ def configure_files(  # noqa: PLR0913, PLR0917
             published during which its files can still be modified without
             creating a new version. Checked at publish time. Defaults to
             45 days (``timedelta(days=45)``).
+        allow_immediate_file_modification: When ``True`` (the default),
+            record owners may unlock and edit their published files
+            themselves within ``file_modification_grace_period``, while
+            admins and system processes may do so at any time. When
+            ``False``, the default Invenio policy (admin-only) is left in
+            place.
+        allow_immediate_quota_increase: When ``True`` (the default), users
+            may immediately raise a draft's storage quota from their
+            additional allowance (this surfaces the "Manage storage" UI in
+            the file uploader); admins may do so for any record. When
+            ``False``, immediate quota increases stay disabled.
 
     Invenio configuration variables set:
 
@@ -66,6 +86,18 @@ def configure_files(  # noqa: PLR0913, PLR0917
       may be uploaded.
     * ``RDM_FILE_MODIFICATION_PERIOD`` - time window after record
       creation during which modified files may be published.
+    * ``RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED`` - whether published
+      files may be edited immediately; set to
+      ``allow_immediate_file_modification``.
+    * ``RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES`` - ordered list of
+      policies deciding who may edit published files immediately (only
+      set when ``allow_immediate_file_modification`` is ``True``).
+    * ``RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED`` - whether users may
+      immediately raise a draft's quota; set to
+      ``allow_immediate_quota_increase``.
+    * ``RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES`` - ordered list of policies
+      deciding who may raise a draft's quota (only set when
+      ``allow_immediate_quota_increase`` is ``True``).
     * ``APP_RDM_DEPOSIT_FORM_QUOTA`` - deposit-form UI quota object with
       ``maxFiles`` and ``maxStorage``.
     * ``FILES_REST_DEFAULT_MAX_FILE_SIZE`` and
@@ -106,5 +138,24 @@ def configure_files(  # noqa: PLR0913, PLR0917
     )
 
     RDM_FILE_MODIFICATION_PERIOD = file_modification_grace_period
+
+    RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED = allow_immediate_file_modification
+    if allow_immediate_file_modification:
+        # Let record owners unlock/edit their published files themselves within
+        # the grace period; admins/system may do so at any time. Policies are
+        # evaluated in order, most to least specific.
+        RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES = [
+            FileModificationGracePeriodPolicy(grace_period=file_modification_grace_period),
+            FileModificationAdminPolicy(),
+        ]
+
+    RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED = allow_immediate_quota_increase
+    if allow_immediate_quota_increase:
+        # Let users raise a draft's quota from their additional allowance
+        # immediately (surfaces the "Manage storage" UI); admins for any record.
+        RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES = [
+            QuotaIncreasePolicy(),
+            QuotaIncreaseAdminPolicy(),
+        ]
 
     set_constants_in_caller(locals())
