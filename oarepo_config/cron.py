@@ -92,6 +92,10 @@ def configure_cron(**extra_cron_items: Any) -> None:
                 "task": "invenio_rdm_records.requests.access.tasks.clean_expired_request_access_tokens",
                 "schedule": crontab(minute="4", hour="0"),
             },
+            "lift_embargos": {
+                "task": "invenio_rdm_records.services.tasks.update_expired_embargos",
+                "schedule": crontab(minute=0, hour=0),
+            },
             **extra_cron_items,
         },
     )
