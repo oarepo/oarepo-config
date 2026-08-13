@@ -11,6 +11,7 @@
 
 from __future__ import annotations
 
+import ast
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -81,7 +82,7 @@ def configure_generic_parameters(  # noqa PLR0915
     Invenio configuration variables set, grouped by area:
 
     Public URLs & security headers
-        * ``APP_ALLOWED_HOSTS``
+        * ``TRUSTED_HOSTS``
         * ``SITE_UI_URL``, ``SITE_API_URL``
         * ``APP_DEFAULT_SECURE_HEADERS``
 
@@ -194,7 +195,10 @@ def configure_generic_parameters(  # noqa PLR0915
     configure_global_logging()
 
     # generic
-    APP_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]  # noqa S104
+    trusted_hosts = env.get("INVENIO_TRUSTED_HOSTS", None)
+    if isinstance(trusted_hosts, str):
+        trusted_hosts = ast.literal_eval(trusted_hosts)
+    TRUSTED_HOSTS = trusted_hosts or ["0.0.0.0", "localhost", "127.0.0.1"]  # noqa S104
     SITE_UI_URL = env.get("INVENIO_SITE_UI_URL", None) or f"https://{env.INVENIO_UI_HOST}:{env.INVENIO_UI_PORT}"
     SITE_API_URL = env.get("INVENIO_SITE_API_URL", None) or f"https://{env.INVENIO_API_HOST}:{env.INVENIO_API_PORT}/api"
 
@@ -288,7 +292,10 @@ def configure_generic_parameters(  # noqa PLR0915
 
     # search
     SEARCH_INDEX_PREFIX = env.INVENIO_SEARCH_INDEX_PREFIX
-    SEARCH_HOSTS = [
+    search_hosts = env.get("INVENIO_SEARCH_HOSTS", None)
+    if isinstance(search_hosts, str):
+        search_hosts = ast.literal_eval(search_hosts)
+    SEARCH_HOSTS = search_hosts or [
         {"host": env.INVENIO_OPENSEARCH_HOST, "port": env.INVENIO_OPENSEARCH_PORT},
     ]
     SEARCH_CLIENT_CONFIG = {
