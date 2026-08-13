@@ -14,7 +14,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 from flask import current_app
 from invenio_oauthclient.views.client import auto_redirect_login
@@ -308,13 +308,34 @@ def configure_generic_parameters(  # noqa PLR0915
 
     # caches
     INVENIO_CACHE_TYPE = "redis"
-    CACHE_REDIS_URL = env.get("INVENIO_CACHE_REDIS_URL", None) or (
+
+    def _redis_url_with_db(redis_url: str, db: str) -> str:
+        # swap only the path (db number), keeping scheme/auth/host/port/query intact
+        return urlunparse(urlparse(redis_url)._replace(path=f"/{db}"))
+
+    # generic cache
+    external_redis_cache_url = env.get("INVENIO_CACHE_REDIS_URL", None)
+    CACHE_REDIS_URL = external_redis_cache_url or (
         f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_CACHE_DB}"
     )
-    ACCOUNTS_SESSION_REDIS_URL = env.get("INVENIO_ACCOUNTS_SESSION_REDIS_URL", None) or (
+
+    # user session cache
+    external_redis_accounts_url = env.get("INVENIO_ACCOUNTS_SESSION_REDIS_URL", None)
+    if external_redis_accounts_url is None and external_redis_cache_url is not None:
+        # use the same host but replace the db
+        external_redis_accounts_url = _redis_url_with_db(external_redis_cache_url, env.INVENIO_REDIS_SESSION_DB)
+    ACCOUNTS_SESSION_REDIS_URL = external_redis_accounts_url or (
         f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_SESSION_DB}"
     )
-    COMMUNITIES_IDENTITIES_CACHE_REDIS_URL = env.get("INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL", None) or (
+
+    # communities cache
+    external_redis_communities_url = env.get("INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL", None)
+    if external_redis_communities_url is None and external_redis_cache_url is not None:
+        # use the same host but replace the db
+        external_redis_communities_url = _redis_url_with_db(
+            external_redis_cache_url, env.INVENIO_REDIS_COMMUNITIES_CACHE_DB
+        )
+    COMMUNITIES_IDENTITIES_CACHE_REDIS_URL = external_redis_communities_url or (
         f"redis://{env.INVENIO_REDIS_HOST}:{env.INVENIO_REDIS_PORT}/{env.INVENIO_REDIS_COMMUNITIES_CACHE_DB}"
     )
 
