@@ -483,6 +483,9 @@ def configure_generic_parameters(  # noqa PLR0915
     # Flask-Collect configured to not use symlinks, as they can break the build due to duplicate static assets.
     COLLECT_STORAGE = "flask_collect.storage.file"
 
+    # AUDIT LOGS
+    AUDIT_LOGS_ENABLED = True
+
     import os
     import platform
 
