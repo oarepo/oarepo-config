@@ -109,6 +109,7 @@ def configure_workflows(
     # otherwise cannot resolve a workflow and are always denied. Respect an explicit
     # REQUESTS_PERMISSION_POLICY set by the caller.
     if RequestsPermissionPolicy is not None:
+        # skipped if oarepo-workflows are not available
         if context:
             constants["REQUESTS_PERMISSION_POLICY"] = context.get(
                 "REQUESTS_PERMISSION_POLICY", RequestsPermissionPolicy
