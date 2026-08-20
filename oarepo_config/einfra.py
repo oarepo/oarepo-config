@@ -105,6 +105,6 @@ def configure_einfra_oidc(entitlements_parser: EntitlementsParser | None = None)
         OAUTHCLIENT_REMOTE_APPS = merge_with_caller("OAUTHCLIENT_REMOTE_APPS", {})
 
     if entitlements_parser is not None:
-        EINFRA_ENTITLEMENTS_EXTRACTOR = entitlements_parser
+        EINFRA_ENTITLEMENTS_PARSER = entitlements_parser
 
     set_constants_in_caller(locals())
