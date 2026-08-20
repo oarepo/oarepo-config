@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import TYPE_CHECKING
 
 from .base import (
     load_configuration_variables,
@@ -20,9 +21,20 @@ from .base import (
     set_constants_in_caller,
 )
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
-def configure_einfra_oidc() -> None:
+    try:
+        from oarepo_oidc_einfra.perun.entitlements import EntitlementsParser  # type: ignore[reportMissingImports]
+    except ImportError:
+        type EntitlementsParser = Callable  # type: ignore[no-redef]
+
+
+def configure_einfra_oidc(entitlements_parser: EntitlementsParser | None = None) -> None:
     """Set up "Log in with e-INFRA" (CESNET/Perun) for the repository.
+
+    Args:
+        entitlements_parser: A callable that parses the user's entitlements.
 
     This enables single sign-on through the CESNET e-INFRA identity
     provider, so users can log in with their e-INFRA/Perun account
@@ -91,4 +103,8 @@ def configure_einfra_oidc() -> None:
         USERPROFILES_READ_ONLY = True
     else:
         OAUTHCLIENT_REMOTE_APPS = merge_with_caller("OAUTHCLIENT_REMOTE_APPS", {})
+
+    if entitlements_parser is not None:
+        EINFRA_ENTITLEMENTS_PARSER = entitlements_parser
+
     set_constants_in_caller(locals())
