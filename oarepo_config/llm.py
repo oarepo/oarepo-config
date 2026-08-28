@@ -21,7 +21,7 @@ def configure_llm(  # noqa: PLR0913
     enabled: bool = True,
     client_name: str = OAREPO_CHECKS_DEFAULT_CHAT_EINFRA_CLIENT,
     api_url: str = "https://llm.ai.e-infra.cz/v1/chat/completions",
-    model: str = "mini",
+    model: str = "nrp",
     fallback_community: str | None = None,
     as_default: bool = True,
 ) -> None:
