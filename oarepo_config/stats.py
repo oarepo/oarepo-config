@@ -51,4 +51,19 @@ def configure_stats(
     """
     STATS_REGISTER_RECEIVERS = enable
 
-    set_constants_in_caller(locals())
+    from invenio_app_rdm.config import (
+        STATS_AGGREGATIONS,
+        STATS_EVENTS,
+        STATS_PERMISSION_FACTORY,
+        STATS_QUERIES,
+    )
+
+    set_constants_in_caller(
+        {
+            "STATS_REGISTER_RECEIVERS": STATS_REGISTER_RECEIVERS,
+            "STATS_EVENTS": STATS_EVENTS,
+            "STATS_AGGREGATIONS": STATS_AGGREGATIONS,
+            "STATS_QUERIES": STATS_QUERIES,
+            "STATS_PERMISSION_FACTORY": STATS_PERMISSION_FACTORY,
+        }
+    )
