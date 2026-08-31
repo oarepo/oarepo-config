@@ -15,9 +15,11 @@ from typing import TYPE_CHECKING
 
 from invenio_i18n import LazyString
 from invenio_i18n import lazy_gettext as _
+from invenio_rdm_records.requests.access.requests import UserAccessRequest
 from invenio_rdm_records.requests.file_modification import FileModification
 from invenio_rdm_records.requests.quota_increase import QuotaIncrease
 from invenio_rdm_records.services.generators import RecordOwners
+from invenio_records_permissions.generators import AuthenticatedUser
 from invenio_requests.customizations import CommentEventType
 from oarepo_requests.services.permissions.generators import RequestActive
 from oarepo_requests.types import (
@@ -261,6 +263,10 @@ class IndividualWorkflow(BaseWorkflowSettings):
                     accepted="published",
                     declined="revision_requested",
                 ),
+            ),
+            UserAccessRequest.type_id: WorkflowRequest(
+                requesters=[AuthenticatedUser()],
+                recipients=[RecordOwnersForRecipients()],
             ),
         }
 
