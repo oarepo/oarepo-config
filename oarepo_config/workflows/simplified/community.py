@@ -13,6 +13,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING
 
+from invenio_rdm_records.requests.access.requests import UserAccessRequest
 from invenio_rdm_records.requests.community_submission import CommunitySubmission
 from invenio_rdm_records.requests.file_modification import FileModification
 from invenio_rdm_records.requests.quota_increase import QuotaIncrease
@@ -21,6 +22,7 @@ from invenio_rdm_records.services.generators import (
     RecordCommunitiesAction,
     RecordOwners,
 )
+from invenio_records_permissions.generators import AuthenticatedUser
 from oarepo_communities.services.permissions.generators import (
     CommunityRole,
     InAnyCommunity,
@@ -311,6 +313,12 @@ class CommunityWorkflow(BaseWorkflowSettings):
                     accepted="published",
                     declined="revision_requested",
                 ),
+            ),
+            # note: we need to patch https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/services/access/service.py#L784,
+            # this will not work without the patch
+            UserAccessRequest.type_id: WorkflowRequest(
+                requesters=[AuthenticatedUser()],
+                recipients=curator_generators,
             ),
         }
 
