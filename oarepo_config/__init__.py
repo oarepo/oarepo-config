@@ -90,7 +90,7 @@ from .llm import configure_llm
 from .models import add_model
 from .oai import configure_oai
 from .stats import configure_stats
-from .ui import configure_ui
+from .ui import CSP, configure_ui
 from .vocabulary import configure_vocabulary
 from .workflows import CommunityWorkflow, IndividualWorkflow, configure_workflows, register_workflow
 
@@ -100,6 +100,7 @@ except PackageNotFoundError:
     __version__ = "0.0.0dev0+unknown"
 
 __all__ = (
+    "CSP",
     "CommunityWorkflow",
     "IndividualWorkflow",
     "__version__",

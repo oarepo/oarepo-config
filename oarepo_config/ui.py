@@ -11,7 +11,8 @@
 
 from __future__ import annotations
 
-from typing import Any
+import dataclasses
+from typing import Any, ClassVar
 
 from invenio_i18n import lazy_gettext as _
 
@@ -20,6 +21,193 @@ from .base import (
     load_configuration_variables,
     set_constants_in_caller,
 )
+
+
+@dataclasses.dataclass
+class CSP:
+    """Content Security Policy configuration."""
+
+    default_src: list[str] = dataclasses.field(default_factory=list)
+    """Fallback for any directive below that is left unset."""
+
+    script_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for JavaScript."""
+
+    script_src_elem: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for ``<script>`` elements. Falls back to :attr:`script_src`."""
+
+    script_src_attr: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for inline event handler attributes. Falls back to :attr:`script_src`."""
+
+    style_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for CSS."""
+
+    style_src_elem: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for ``<style>`` elements. Falls back to :attr:`style_src`."""
+
+    style_src_attr: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for inline style attributes. Falls back to :attr:`style_src`."""
+
+    img_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for images."""
+
+    font_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for fonts."""
+
+    connect_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for fetch/XHR/WebSocket/EventSource calls (e.g. REST API endpoints)."""
+
+    object_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for ``<object>``, ``<embed>`` and ``<applet>`` plugins."""
+
+    media_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for ``<audio>``, ``<video>`` and ``<embed>`` media."""
+
+    frame_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for nested browsing contexts (``<iframe>``)."""
+
+    frame_ancestors: list[str] = dataclasses.field(default_factory=list)
+    """Sources allowed to embed this page; the modern replacement for ``X-Frame-Options``."""
+
+    child_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for nested browsing contexts and workers."""
+
+    worker_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for Web Workers."""
+
+    manifest_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for the application manifest."""
+
+    prefetch_src: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources that may be prefetched."""
+
+    form_action: list[str] = dataclasses.field(default_factory=list)
+    """Valid targets for ``<form>`` submissions."""
+
+    base_uri: list[str] = dataclasses.field(default_factory=list)
+    """Valid sources for the document's ``<base>`` element."""
+
+    report_to: list[str] = dataclasses.field(default_factory=list)
+    """``Report-To`` group name(s) to send CSP reports to; the modern replacement for :attr:`report_uri`."""
+
+    report_uri: str | None = None
+    """URL to send CSP violation reports to."""
+
+    report_only: bool = False
+    """Report violations without enforcing the policy. Requires :attr:`report_uri`."""
+
+    nonce_in: list[str] = dataclasses.field(default_factory=list)
+    """Directives (e.g. ``["script-src"]``) that receive a per-request nonce, exposed as ``csp_nonce()``."""
+
+    #: Fields that map to Talisman's standalone CSP options rather than to a
+    #: directive inside the ``content_security_policy`` dict.
+    _NON_DIRECTIVE_FIELDS: ClassVar[frozenset[str]] = frozenset({"report_uri", "report_only", "nonce_in"})
+
+    #: Directives that CSP does not let ``default-src`` stand in for.
+    _NO_DEFAULT_SRC: ClassVar[frozenset[str]] = frozenset({"base-uri", "form-action", "frame-ancestors", "report-to"})
+
+    #: Directives that CSP resolves through a more specific directive before
+    #: it ever considers ``default-src``.
+    _FALLBACK_PARENT: ClassVar[dict[str, str]] = {
+        "script-src-elem": "script-src",
+        "script-src-attr": "script-src",
+        "style-src-elem": "style-src",
+        "style-src-attr": "style-src",
+        "worker-src": "child-src",
+        "frame-src": "child-src",
+    }
+
+    def apply_defaults(self, headers: dict[str, Any]) -> dict[str, Any]:
+        """Resolve this policy against the ``content_security_policy`` already in *headers*.
+
+        Directives set here are merged with the sources already configured for
+        them (or, lacking those, with the sources of the directive they'd fall
+        back to, e.g. ``default-src`` for ``connect_src``), so that setting one
+        directive doesn't silently drop defaults the app still needs. Unset
+        directives keep the configured value as-is. Same for ``report_uri``,
+        ``report_only`` and ``nonce_in``.
+
+        The result replaces the CSP keys in *headers* rather than merging into
+        them: ``headers.update(csp.apply_defaults(headers))``.
+
+        Raises:
+            ValueError: If report-only mode ends up enabled without any
+                ``report_uri``, which Flask-Talisman rejects.
+
+        """
+        existing = self._existing_policy(headers)
+        resolved = self._resolve_policy(existing)
+
+        options: dict[str, Any] = {}
+        if resolved:
+            options["content_security_policy"] = resolved
+
+        report_uri = self.report_uri or headers.get("content_security_policy_report_uri")
+        report_only = self.report_only or bool(headers.get("content_security_policy_report_only"))
+        nonce_in = list(self.nonce_in or headers.get("content_security_policy_nonce_in") or [])
+
+        if report_only and not report_uri:
+            raise ValueError(
+                "report_only requires a report_uri, set on the CSP or already configured in APP_DEFAULT_SECURE_HEADERS."
+            )
+        if report_uri:
+            options["content_security_policy_report_uri"] = report_uri
+        if report_only:
+            options["content_security_policy_report_only"] = True
+        if nonce_in:
+            options["content_security_policy_nonce_in"] = nonce_in
+
+        return options
+
+    def _resolve_policy(self, existing: dict[str, list[str]]) -> dict[str, list[str]]:
+        """Combine the configured sources with the ones set on this policy."""
+        resolved: dict[str, list[str]] = {}
+        for field in dataclasses.fields(self):
+            if field.name in self._NON_DIRECTIVE_FIELDS:
+                continue
+            directive = field.name.replace("_", "-")
+            configured = existing.get(directive, [])
+            own = getattr(self, field.name)
+            if own:
+                # an explicit directive overrides the fallback it would
+                # otherwise inherit, so bring those sources back into it
+                defaults = configured or self._inherited_sources(directive, existing)
+                sources = list(dict.fromkeys([*own, *defaults]))
+            else:
+                sources = configured
+            if sources:
+                resolved[directive] = sources
+
+        # keep directives Talisman understands but this class does not model,
+        # including the source-less ones such as 'upgrade-insecure-requests'
+        for directive, sources in existing.items():
+            resolved.setdefault(directive, list(sources))
+
+        return resolved
+
+    def _inherited_sources(self, directive: str, existing: dict[str, list[str]]) -> list[str]:
+        """Return the sources of the first directive *directive* falls back to."""
+        if directive in self._NO_DEFAULT_SRC:
+            return []
+        seen = {directive}
+        current = self._FALLBACK_PARENT.get(directive, "default-src")
+        while current not in seen:
+            seen.add(current)
+            if existing.get(current):
+                return existing[current]
+            current = self._FALLBACK_PARENT.get(current, "default-src")
+        return []
+
+    @staticmethod
+    def _existing_policy(headers: dict[str, Any]) -> dict[str, list[str]]:
+        """Read the configured policy from *headers*, normalised to source lists."""
+        policy = headers.get("content_security_policy") or {}
+        if isinstance(policy, str):
+            raise TypeError("only dict policies are supported, got str")
+        return {
+            directive: sources.split() if isinstance(sources, str) else list(sources)
+            for directive, sources in policy.items()
+        }
 
 
 def configure_ui(  # noqa PLR0915
@@ -33,6 +221,7 @@ def configure_ui(  # noqa PLR0915
     show_frontpage_intro: bool = True,
     analytics: str | bool = False,
     languages: tuple[tuple[str, str], ...] = (("en", "English"),),
+    csp: CSP | None = None,
 ) -> None:
     """Set up the repository's branding, name and general look-and-feel.
 
@@ -68,6 +257,10 @@ def configure_ui(  # noqa PLR0915
             available and does not need to be listed. This should
             normally match what was passed to
             :func:`configure_generic_parameters`.
+        csp: Content Security Policy configuration. Only the sources passed
+            here are recorded; the ones the deployment already allows (set up
+            by :func:`configure_generic_parameters`) are added on top of them
+            by :meth:`CSP.apply_defaults`.
 
     Should be called after :func:`configure_generic_parameters` (it
     builds on settings that function prepares) and before
@@ -84,6 +277,14 @@ def configure_ui(  # noqa PLR0915
                 "A repository for my data"
             ),
             support_contact="support@example.com",
+            csp=CSP(
+                # where the UI's JavaScript may fetch data from,
+                # e.g. an external REST API
+                connect_src=[
+                    "'self'",
+                    "https://api.example.com",
+                ],
+            ),
         )
 
     Invenio configuration variables set, grouped by area:
@@ -225,5 +426,8 @@ def configure_ui(  # noqa PLR0915
 
     THEME_SEARCH_ENDPOINT = theme_config.THEME_SEARCH_ENDPOINT
     SEARCH_UI_SEARCH_VIEW = search_ui_config.SEARCH_UI_SEARCH_VIEW
+
+    if csp is not None:
+        APP_DEFAULT_SECURE_HEADERS.update(csp.apply_defaults(APP_DEFAULT_SECURE_HEADERS))
 
     set_constants_in_caller(locals())
