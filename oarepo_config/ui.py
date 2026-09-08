@@ -96,12 +96,9 @@ class CSP:
     report_only: bool = False
     """Report violations without enforcing the policy. Requires :attr:`report_uri`."""
 
-    nonce_in: list[str] = dataclasses.field(default_factory=list)
-    """Directives (e.g. ``["script-src"]``) that receive a per-request nonce, exposed as ``csp_nonce()``."""
-
     #: Fields that map to Talisman's standalone CSP options rather than to a
     #: directive inside the ``content_security_policy`` dict.
-    _NON_DIRECTIVE_FIELDS: ClassVar[frozenset[str]] = frozenset({"report_uri", "report_only", "nonce_in"})
+    _NON_DIRECTIVE_FIELDS: ClassVar[frozenset[str]] = frozenset({"report_uri", "report_only"})
 
     #: Directives that CSP does not let ``default-src`` stand in for.
     _NO_DEFAULT_SRC: ClassVar[frozenset[str]] = frozenset({"base-uri", "form-action", "frame-ancestors", "report-to"})
@@ -125,7 +122,7 @@ class CSP:
         back to, e.g. ``default-src`` for ``connect_src``), so that setting one
         directive doesn't silently drop defaults the app still needs. Unset
         directives keep the configured value as-is. Same for ``report_uri``,
-        ``report_only`` and ``nonce_in``.
+        ``report_only``.
 
         The result replaces the CSP keys in *headers* rather than merging into
         them: ``headers.update(csp.apply_defaults(headers))``.
@@ -144,7 +141,6 @@ class CSP:
 
         report_uri = self.report_uri or headers.get("content_security_policy_report_uri")
         report_only = self.report_only or bool(headers.get("content_security_policy_report_only"))
-        nonce_in = list(self.nonce_in or headers.get("content_security_policy_nonce_in") or [])
 
         if report_only and not report_uri:
             raise ValueError(
@@ -154,8 +150,6 @@ class CSP:
             options["content_security_policy_report_uri"] = report_uri
         if report_only:
             options["content_security_policy_report_only"] = True
-        if nonce_in:
-            options["content_security_policy_nonce_in"] = nonce_in
 
         return options
 
