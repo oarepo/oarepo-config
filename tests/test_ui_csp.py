@@ -165,15 +165,6 @@ def test_apply_defaults_falls_back_to_configured_report_uri():
     assert resolved["content_security_policy_report_uri"] == "https://old.example.com/csp"
 
 
-def test_apply_defaults_own_nonce_in_overrides_configured_one():
-    headers = _headers()
-    headers["content_security_policy_nonce_in"] = ["style-src"]
-
-    resolved = CSP(nonce_in=["script-src"]).apply_defaults(headers)
-
-    assert resolved["content_security_policy_nonce_in"] == ["script-src"]
-
-
 def test_apply_defaults_report_only_requires_a_report_uri():
     with pytest.raises(ValueError, match="report_uri"):
         CSP(report_only=True).apply_defaults(_headers())

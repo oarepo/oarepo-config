@@ -88,6 +88,45 @@ call order in `invenio.cfg` is:
 6. Any plain `CONSTANT = value` overrides, and `override_configuration()`
    if used, last — so they win over everything above.
 
+## Content Security Policy (CSP)
+
+`configure_generic_parameters()` seeds
+`APP_DEFAULT_SECURE_HEADERS["content_security_policy"]` with the
+`default-src`/`script-src` sources Invenio's own UI needs. Pass
+`csp=CSP(...)` to `configure_ui()` to add repository-specific sources (an
+external API, a CDN, ...) on top of those defaults, instead of hand-editing
+`APP_DEFAULT_SECURE_HEADERS` yourself.
+
+`CSP` is a dataclass with one field per CSP directive (`connect_src`,
+`frame_ancestors`, `script_src_elem`, ...), plus `report_uri`, `report_only`
+and `nonce_in` for Flask-Talisman's reporting options. Only the sources you
+pass in are recorded on the `CSP` instance; `configure_ui()` resolves them
+against whatever `configure_generic_parameters()` already configured,
+following CSP's own fallback rules:
+
+* A directive you set is merged with the sources already configured for it,
+  or — if none are configured — with the sources of the directive it would
+  fall back to (`script-src` for `script_src_elem`, `child-src` for
+  `frame_src`/`worker_src`, otherwise `default-src`). This is what lets
+  `csp=CSP(connect_src=["https://api.example.com"])` add to the app's
+  `default-src` sources instead of replacing them.
+* `base_uri`, `form_action`, `frame_ancestors` and `report_to` never inherit
+  `default-src`, matching the CSP spec — setting one of these only ever adds
+  the sources you pass in.
+* A directive you leave unset keeps whatever was already configured,
+  unchanged.
+
+```python
+config.configure_ui(
+    code="myrepo",
+    name=_("My Repository"),
+    csp=config.CSP(
+        connect_src=["https://api.example.com"],
+        frame_ancestors=["'self'"],
+    ),
+)
+```
+
 ## Environment variables
 
 Consumed via `load_configuration_variables()` (see loading order above).
