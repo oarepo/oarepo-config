@@ -154,7 +154,6 @@ def configure_ui(  # noqa PLR0915
     COVER_TEMPLATE = "invenio_app_rdm/page_cover.html"
     THEME_CSS_TEMPLATE = "css.html"
     THEME_JAVASCRIPT_TEMPLATE = "javascript.html"
-    HEADER_TEMPLATE = "header.html"
     THEME_HEADER_TEMPLATE = "header.html"
     THEME_HEADER_LOGIN_TEMPLATE = "invenio_app_rdm/header_login.html"
     THEME_FOOTER_TEMPLATE = "footer.html"
@@ -179,7 +178,6 @@ def configure_ui(  # noqa PLR0915
 
     # UI Branding & copywriting
     THEME_FRONTPAGE = use_default_frontpage
-    THEME_LOGO = "images/invenio-rdm.svg"
     THEME_FRONTPAGE_LOGO = None
     THEME_SITENAME = _(name)
     THEME_FRONTPAGE_TITLE = name
@@ -203,10 +201,8 @@ def configure_ui(  # noqa PLR0915
     # UPPY uploader is default for us
     APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED = True
 
-    WEBPACKEXT_NPM_PKG_CLS = "pynpm:PNPMPackage"
     DASHBOARD_RECORD_CREATE_URL = "/uploads/new"
 
-    # TODO: consult using app_rdm ones @mirekys
     APP_RDM_DETAIL_SIDE_BAR_TEMPLATES = [
         "invenio_app_rdm/records/details/side_bar/external_resources.html",
         "invenio_app_rdm/records/details/side_bar/keywords_subjects.html",

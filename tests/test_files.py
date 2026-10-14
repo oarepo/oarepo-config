@@ -35,6 +35,7 @@ def test_configure_files_defaults():
         "maxFiles": 100,
         "maxStorage": 5 * 10**9,
     }
+    assert RDM_FILES_DEFAULT_MAX_ADDITIONAL_QUOTA_SIZE == 0
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
     assert timedelta(days=45) == RDM_FILE_MODIFICATION_PERIOD  # noqa: F821

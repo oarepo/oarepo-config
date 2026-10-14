@@ -31,6 +31,7 @@ def configure_files(  # noqa: PLR0913, PLR0917
     file_modification_grace_period: timedelta = timedelta(days=45),
     allow_immediate_file_modification: bool = True,
     allow_immediate_quota_increase: bool = True,
+    max_additional_quota_size: int = 0,
 ) -> None:
     """Set up file upload quotas and file-related toggles.
 
@@ -71,6 +72,8 @@ def configure_files(  # noqa: PLR0913, PLR0917
             additional allowance (this surfaces the "Manage storage" UI in
             the file uploader); admins may do so for any record. When
             ``False``, immediate quota increases stay disabled.
+        max_additional_quota_size: Additional quota users/admins may grant
+            on top of the default record quota. Defaults to 0.
 
     Invenio configuration variables set:
 
@@ -126,6 +129,8 @@ def configure_files(  # noqa: PLR0913, PLR0917
     FILES_REST_DEFAULT_QUOTA_SIZE = max_total_size
 
     RDM_RECORDS_MAX_FILES_COUNT = max_files_count
+
+    RDM_FILES_DEFAULT_MAX_ADDITIONAL_QUOTA_SIZE = max_additional_quota_size
 
     APP_RDM_DEPOSIT_FORM_QUOTA = {
         "maxFiles": max_files_count,

@@ -63,9 +63,6 @@ docs = [
     "sphinx-autobuild>=2024.10.3",
 ]
 
-[project.entry-points."invenio_config.module"]
-0001-invenio_app_rdm = "oarepo_config.initial_rdm_config"
-0002-oarepo = "oarepo_config.initial_configuration"
 
 [tool.hatch.build.targets.sdist]
 include = [
