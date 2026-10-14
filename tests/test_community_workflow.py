@@ -25,7 +25,7 @@ from oarepo_requests.types import (
 from oarepo_config.workflows.simplified.community import CommunityWorkflow
 
 
-def test_community_workflow_create_generators_use_configured_roles():
+def test_create():
     """Draft creation gets one community constraint for each configured role."""
     workflow = CommunityWorkflow(
         authenticated_draft_creation=True,
@@ -39,7 +39,7 @@ def test_community_workflow_create_generators_use_configured_roles():
     assert all(isinstance(generator, InAnyCommunity) for generator in generators[1:])
 
 
-def test_community_workflow_replaces_generic_community_permissions():
+def test_replace():
     """Only the configured roles replace broad community access."""
     workflow = CommunityWorkflow()
 
@@ -53,7 +53,7 @@ def test_community_workflow_replaces_generic_community_permissions():
     assert [type(generator) for generator in permissions[1:]] == [CommunityRole, CommunityRole]
 
 
-def test_community_workflow_uses_separate_roles_for_rdm_actions():
+def test_roles():
     """View, preview and manage actions each use their own role settings."""
     workflow = CommunityWorkflow(
         read_restricted_community_roles=["reader"],
@@ -75,7 +75,7 @@ def test_community_workflow_uses_separate_roles_for_rdm_actions():
     ]
 
 
-def test_community_workflow_builds_all_request_definitions():
+def test_requests():
     """The generated request policy exposes all supported workflow requests."""
     workflow = CommunityWorkflow()
 
@@ -99,7 +99,7 @@ def test_community_workflow_builds_all_request_definitions():
     assert submission.transitions.declined == "review_requested"
 
 
-def test_community_workflow_builds_permission_policy_and_workflow():
+def test_workflow():
     """The public builder combines generated policies into a workflow."""
     workflow_settings = CommunityWorkflow(code="community-review")
 
