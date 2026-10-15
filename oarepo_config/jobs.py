@@ -54,7 +54,7 @@ def configure_jobs(
     class JobLogsPermissionPolicy(InvenioJobLogsPermissionPolicy):
         """Permission policy for job logs."""
 
-        can_read: tuple[Any] = (AdministrationWithQueryFilter(),)
+        can_read: tuple[Any] = (AdministrationWithQueryFilter(),)  # type: ignore[invalid-mutable-override]
 
     # invenio-jobs configuration
     APP_LOGS_PERMISSION_POLICY = permission_policy or JobLogsPermissionPolicy
