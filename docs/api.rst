@@ -88,30 +88,6 @@ function is built on top of.
    :undoc-members:
    :show-inheritance:
 
-``oarepo_config.initial_configuration``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Plain module-level settings, not a ``configure_*()`` function - see the
-"``initial_configuration.py`` / ``initial_rdm_config.py``" section of the
-`README <index.html>`_ for how (and whether) this currently gets loaded
-automatically.
-
-.. automodule:: oarepo_config.initial_configuration
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-``oarepo_config.initial_rdm_config``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Plain module-level settings, not a ``configure_*()`` function - see the
-same note as above.
-
-.. automodule:: oarepo_config.initial_rdm_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 ``oarepo_config.jobs``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
