@@ -6,9 +6,12 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
 from .base import set_constants_in_caller
+
+if TYPE_CHECKING:
+    from invenio_records_permissions.generators import Generator
 
 
 def configure_jobs(
@@ -54,7 +57,7 @@ def configure_jobs(
     class JobLogsPermissionPolicy(InvenioJobLogsPermissionPolicy):
         """Permission policy for job logs."""
 
-        can_read: tuple[Any] = (AdministrationWithQueryFilter(),)  # ty: ignore[invalid-mutable-override]
+        can_read: tuple[Generator, ...] = (AdministrationWithQueryFilter(),)
 
     # invenio-jobs configuration
     APP_LOGS_PERMISSION_POLICY = permission_policy or JobLogsPermissionPolicy

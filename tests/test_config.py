@@ -40,7 +40,7 @@ def test_cron():
 
 def test_datastreams():
     """Custom datastream implementations are merged into existing ones."""
-    assert globals()["VOCABULARIES_DATASTREAM_READERS"] == {"old": str}
+    globals()["VOCABULARIES_DATASTREAM_READERS"] = {"old": str}
 
     configure_datastreams(readers={"new": int}, writers={"write": list}, transformers={"transform": dict})
 
@@ -59,11 +59,11 @@ def test_jobs():
 
 def test_oai():
     """OAI uses the configured repository name."""
-    assert globals()["OAISERVER_REPOSITORY_NAME"] == "Repository"
+    globals()["REPOSITORY_NAME"] = "Repository"
 
     configure_oai()
 
-    assert OAISERVER_REPOSITORY_NAME == "Repository"  # noqa: F821
+    assert globals()["OAISERVER_REPOSITORY_NAME"] == "Repository"
 
 
 def test_vocabulary():
