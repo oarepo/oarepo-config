@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
-#
-# Copyright (c) 2026 CESNET z.s.p.o.
-#
-# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
-#
-# oarepo-config is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-#
+# SPDX-FileCopyrightText: 2026 CESNET z.s.p.o
+# SPDX-License-Identifier: MIT
+
 """Generic configuration parameters for oarepo-config."""
 
 from __future__ import annotations
@@ -256,7 +251,6 @@ def configure_generic_parameters(  # noqa PLR0915
     RATELIMIT_AUTHENTICATED_USER = "20000 per hour;2000 per minute"
     OAUTHCLIENT_REMOTE_APPS: dict[str, Any] = {}  # configure external login providers
     ACCOUNTS_LOGIN_VIEW_FUNCTION = auto_redirect_login  # autoredirect to external login if enabled
-    OAUTHCLIENT_AUTO_REDIRECT_TO_EXTERNAL_LOGIN = True  # autoredirect to external login
 
     # database
     SQLALCHEMY_DATABASE_URI = env.get("INVENIO_SQLALCHEMY_DATABASE_URI", None) or (
@@ -423,13 +417,6 @@ def configure_generic_parameters(  # noqa PLR0915
     )
 
     from invenio_app_rdm import config as app_rdm_config
-
-    FILES_REST_DEFAULT_QUOTA_SIZE = 10**10
-
-    APP_RDM_DEPOSIT_FORM_QUOTA = {
-        "maxFiles": 10,
-        "maxStorage": FILES_REST_DEFAULT_QUOTA_SIZE,
-    }
 
     APP_RDM_IDENTIFIER_SCHEMES_UI = {
         "orcid": {

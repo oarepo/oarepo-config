@@ -1,11 +1,6 @@
-#
-# Copyright (c) 2026 CESNET z.s.p.o.
-#
-# This file is a part of oarepo-app (see https://github.com/oarepo/oarepo-app).
-#
-# oarepo-app is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-#
+# SPDX-FileCopyrightText: 2026 CESNET z.s.p.o
+# SPDX-License-Identifier: MIT
+
 """Individual (non-community) workflow configuration for OARepo."""
 
 from __future__ import annotations
@@ -127,7 +122,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
     """
 
     def _build_permission_policy(self) -> type[BasePermissionPolicy]:
-        class PermissionPolicy(BooleanPermissionPolicyMixin, self.base_permission_policy):  # type: ignore[name-defined]
+        class PermissionPolicy(BooleanPermissionPolicyMixin, self.base_permission_policy):  # type: ignore[unsupported-base]
             """A permission policy for the workflow."""
 
             can_create = self._build_record_create_generators()
@@ -201,7 +196,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
         if not self.review_required:
             return self._create_request_policy("IndividualRequestPolicy", base_requests)
 
-        reviewer_generators: list[UserWithRole | HasActionNeed] = []
+        reviewer_generators: list[Generator] = []
         if self.reviewer_roles:
             reviewer_generators = [UserWithRole(role) for role in self.reviewer_roles]
         if self.reviewer_needs:

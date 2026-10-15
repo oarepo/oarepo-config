@@ -1,11 +1,6 @@
-#
-# Copyright (c) 2026 CESNET z.s.p.o.
-#
-# This file is a part of oarepo-app (see https://github.com/oarepo/oarepo-app).
-#
-# oarepo-app is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-#
+# SPDX-FileCopyrightText: 2026 CESNET z.s.p.o
+# SPDX-License-Identifier: MIT
+
 """Community workflow configuration for OARepo."""
 
 from __future__ import annotations
@@ -132,7 +127,6 @@ class CommunityWorkflow(BaseWorkflowSettings):
         """
         create_generators = list(super()._build_record_create_generators())
         for role in self.draft_creation_community_roles:
-            # TODO: this needs optimisation - cost grows with the number of communities
             create_generators += [InAnyCommunity(PrimaryCommunityRole(role))]
         return tuple(create_generators)
 

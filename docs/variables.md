@@ -9632,6 +9632,7 @@ Default additional quota size for a bucket in bytes for files.
 |--------------|-----------|
 | **Type** | int |
 | **Source** | [invenio-rdm-records](https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/config.py#L890) |
+| **Set by** | {py:func}`~oarepo_config.configure_files` |
 
 ---
 
@@ -16382,4 +16383,3 @@ Subject NVS-P02 file download link.
 | **Source** | unknown |
 
 ---
-

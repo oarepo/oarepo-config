@@ -1,11 +1,6 @@
-#
-# Copyright (c) 2026 CESNET z.s.p.o.
-#
-# This file is a part of oarepo-config (see https://github.com/oarepo/oarepo-config).
-#
-# oarepo-config is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-#
+# SPDX-FileCopyrightText: 2026 CESNET z.s.p.o
+# SPDX-License-Identifier: MIT
+
 """Tests for file quota configuration."""
 
 from __future__ import annotations
@@ -35,6 +30,7 @@ def test_configure_files_defaults():
         "maxFiles": 100,
         "maxStorage": 5 * 10**9,
     }
+    assert RDM_FILES_DEFAULT_MAX_ADDITIONAL_QUOTA_SIZE == 0  # noqa: F821
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
     assert timedelta(days=45) == RDM_FILE_MODIFICATION_PERIOD  # noqa: F821
