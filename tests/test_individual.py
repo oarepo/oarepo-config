@@ -18,7 +18,9 @@ from oarepo_config.workflows.simplified.individual import IndividualWorkflow
 
 def test_publish():
     """Direct publishing supports owner, role and need variants."""
-    assert isinstance(IndividualWorkflow(publish_without_review=True)._build_record_publish_generators()[0], RecordOwners)
+    assert isinstance(
+        IndividualWorkflow(publish_without_review=True)._build_record_publish_generators()[0], RecordOwners
+    )
 
     generators = IndividualWorkflow(
         publish_without_review_roles=["editor"],

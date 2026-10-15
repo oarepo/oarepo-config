@@ -7,11 +7,11 @@ from __future__ import annotations
 
 import sys
 
+from oarepo_config import generic_parameters, ui
+from oarepo_config.base import DictWithGetAttr
 from oarepo_config.communities import configure_communities
 from oarepo_config.cron import configure_cron
 from oarepo_config.datastreams import configure_datastreams
-from oarepo_config import generic_parameters, ui
-from oarepo_config.base import DictWithGetAttr
 from oarepo_config.i18n import initialize_i18n
 from oarepo_config.jobs import configure_jobs
 from oarepo_config.llm import configure_llm
@@ -40,14 +40,13 @@ def test_cron():
 
 def test_datastreams():
     """Custom datastream implementations are merged into existing ones."""
-    global VOCABULARIES_DATASTREAM_READERS
-    VOCABULARIES_DATASTREAM_READERS = {"old": str}
+    assert globals()["VOCABULARIES_DATASTREAM_READERS"] == {"old": str}
 
     configure_datastreams(readers={"new": int}, writers={"write": list}, transformers={"transform": dict})
 
-    assert VOCABULARIES_DATASTREAM_READERS == {"old": str, "new": int}  # noqa: F821
-    assert VOCABULARIES_DATASTREAM_WRITERS == {"write": list}  # noqa: F821
-    assert VOCABULARIES_DATASTREAM_TRANSFORMERS == {"transform": dict}  # noqa: F821
+    assert {"old": str, "new": int} == globals()["VOCABULARIES_DATASTREAM_READERS"]
+    assert {"write": list} == VOCABULARIES_DATASTREAM_WRITERS  # noqa: F821
+    assert {"transform": dict} == VOCABULARIES_DATASTREAM_TRANSFORMERS  # noqa: F821
 
 
 def test_jobs():
@@ -60,8 +59,7 @@ def test_jobs():
 
 def test_oai():
     """OAI uses the configured repository name."""
-    global REPOSITORY_NAME
-    REPOSITORY_NAME = "Repository"
+    assert globals()["OAISERVER_REPOSITORY_NAME"] == "Repository"
 
     configure_oai()
 
@@ -70,13 +68,10 @@ def test_oai():
 
 def test_vocabulary():
     """Several vocabulary definitions are retained."""
-    global INVENIO_VOCABULARY_TYPE_METADATA
-    INVENIO_VOCABULARY_TYPE_METADATA = {}
-
     configure_vocabulary("subjects", name="Subjects")
     configure_vocabulary("funders", name="Funders")
 
-    assert INVENIO_VOCABULARY_TYPE_METADATA == {  # noqa: F821
+    assert globals()["INVENIO_VOCABULARY_TYPE_METADATA"] == {
         "subjects": {"name": "Subjects"},
         "funders": {"name": "Funders"},
     }
@@ -96,7 +91,7 @@ def test_generic(monkeypatch):
         INVENIO_SECURITY_CONFIRMABLE=False,
         INVENIO_SECURITY_LOGIN_WITHOUT_CONFIRMATION=True,
         INVENIO_DATABASE_USER="user",
-        INVENIO_DATABASE_PASSWORD="password",
+        INVENIO_DATABASE_PASSWORD="password",  # noqa: S106
         INVENIO_DATABASE_HOST="db",
         INVENIO_DATABASE_PORT=5432,
         INVENIO_DATABASE_DBNAME="repo",
@@ -104,7 +99,7 @@ def test_generic(monkeypatch):
         INVENIO_S3_HOST="s3",
         INVENIO_S3_PORT=9000,
         INVENIO_S3_ACCESS_KEY="access",
-        INVENIO_S3_SECRET_KEY="secret",
+        INVENIO_S3_SECRET_KEY="secret",  # noqa: S106
         INVENIO_SEARCH_INDEX_PREFIX="repo",
         INVENIO_OPENSEARCH_HOST="search",
         INVENIO_OPENSEARCH_PORT=9200,
@@ -119,10 +114,10 @@ def test_generic(monkeypatch):
         INVENIO_REDIS_COMMUNITIES_CACHE_DB=2,
         INVENIO_REDIS_CELERY_RESULT_DB=3,
         INVENIO_RABBIT_USER="guest",
-        INVENIO_RABBIT_PASSWORD="guest",
+        INVENIO_RABBIT_PASSWORD="guest",  # noqa: S106
         INVENIO_RABBIT_HOST="rabbit",
         INVENIO_RABBIT_PORT=5672,
-        INVENIO_SECRET_KEY="secret",
+        INVENIO_SECRET_KEY="secret",  # noqa: S106
     )
     monkeypatch.setattr(generic_parameters, "load_configuration_variables", lambda: env)
 
@@ -136,7 +131,7 @@ def test_generic(monkeypatch):
 
 def test_ui(monkeypatch):
     """UI configuration stores the supplied branding values."""
-    global APP_DEFAULT_SECURE_HEADERS
+    global APP_DEFAULT_SECURE_HEADERS  # noqa: PLW0603
     APP_DEFAULT_SECURE_HEADERS = {"content_security_policy": {"default-src": []}}
     monkeypatch.setattr(
         ui,
@@ -159,15 +154,15 @@ def test_i18n():
 
 def test_llm():
     """LLM setup records the configured client without calling it."""
-    global OAREPO_CHECKS_LLM_CLIENTS
+    global OAREPO_CHECKS_LLM_CLIENTS  # noqa: PLW0603
     OAREPO_CHECKS_LLM_CLIENTS = {}
 
-    configure_llm(api_token="token", client_name="test", fallback_community="checks")
+    configure_llm(api_token="token", client_name="test", fallback_community="checks")  # noqa: S106
 
     assert CHECKS_ENABLED is True  # noqa: F821
     assert OAREPO_CHECKS_DEFAULT_LLM_CLIENT == "test"  # noqa: F821
     assert CHECKS_GENERIC_COMMUNITY == "checks"  # noqa: F821
-    assert "test" in OAREPO_CHECKS_LLM_CLIENTS  # noqa: F821
+    assert "test" in OAREPO_CHECKS_LLM_CLIENTS
 
 
 def test_model(tmp_path, monkeypatch):
@@ -175,9 +170,9 @@ def test_model(tmp_path, monkeypatch):
     (tmp_path / "runtime_models_demo.py").write_text("record_error_handlers = {'demo'}\n")
     monkeypatch.syspath_prepend(str(tmp_path))
     sys.modules.pop("runtime_models_demo", None)
-    global RDM_RECORDS_ERROR_HANDLERS
+    global RDM_RECORDS_ERROR_HANDLERS  # noqa: PLW0603
     RDM_RECORDS_ERROR_HANDLERS = {"existing"}
 
     add_model("demo")
 
-    assert RDM_RECORDS_ERROR_HANDLERS == {"existing", "demo"}  # noqa: F821
+    assert {"existing", "demo"} == RDM_RECORDS_ERROR_HANDLERS

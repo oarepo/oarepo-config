@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import abc
 import dataclasses
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from invenio_i18n import LazyString
 from invenio_i18n import lazy_gettext as _
@@ -62,7 +62,7 @@ class BaseWorkflowSettings:
     label: LazyString = _("Undefined policy")  # noqa: RUF009
     """The label of the workflow type."""
 
-    base_permission_policy: type[BasePermissionPolicy] = DefaultRDMWorkflowPermissions
+    base_permission_policy: type[Any] = DefaultRDMWorkflowPermissions
     """The base permission policy class for this workflow that will be configured."""
 
     base_request_policy: type[WorkflowRequestPolicy] = WorkflowRequestPolicy
@@ -140,7 +140,7 @@ class BaseWorkflowSettings:
         return Workflow(
             code=self.code,
             label=self.label,
-            permission_policy_cls=permissions,
+            permission_policy_cls=cast("Any", permissions),
             request_policy_cls=request_policy,
         )
 
