@@ -68,6 +68,7 @@ def test_unnamed_template_is_named_by_path():
     ("kwargs", "message"),
     [
         ({"order": ["nope", "..."]}, "Unknown sidebar box 'nope'"),
+        ({"move": ["ark after details"]}, "call configure_ark first"),
         ({"move": ["details behind licenses"]}, "Cannot parse sidebar move"),
         ({"move": ["details after details"]}, "relative to itself"),
         ({"remove": ["metrics"]}, "Unknown sidebar box 'metrics'"),

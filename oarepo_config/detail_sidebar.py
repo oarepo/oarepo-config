@@ -26,6 +26,7 @@ DETAIL_SIDEBAR_TEMPLATES: dict[str, str] = {
     "export": "oarepo_ui/record_detail/side_bar/export.html",
     "technical_metadata": "invenio_app_rdm/records/details/side_bar/technical_metadata.html",
     "metrics": "invenio_app_rdm/records/details/side_bar/metrics.html",
+    "ark": "oarepo_ark/ark_identifier.html",
 }
 """Symbolic names of the known sidebar boxes and their templates."""
 
@@ -93,7 +94,8 @@ def _name_boxes(current: Sequence[str], known: Mapping[str, str]) -> dict[str, s
 def _check_box(boxes: Mapping[str, str], name: str) -> None:
     """Raise if `name` is not a box of the sidebar."""
     if name not in boxes:
-        raise ValueError(f"Unknown sidebar box '{name}'. Known boxes: {', '.join(boxes)}")
+        hint = ", call configure_ark first" if name == "ark" else ""
+        raise ValueError(f"Unknown sidebar box '{name}'{hint}. Known boxes: {', '.join(boxes)}")
 
 
 def _reorder(boxes: Mapping[str, str], order: Sequence[str]) -> dict[str, str]:
@@ -146,13 +148,15 @@ def configure_detail_sidebar(
     [`DETAIL_SIDEBAR_TEMPLATES`][oarepo_config.detail_sidebar.DETAIL_SIDEBAR_TEMPLATES]):
     `manage_menu`, `versions`, `external_resources`, `communities`,
     `keywords_subjects`, `details`, `locations`, `licenses`,
-    `citations`, `export`, `technical_metadata`, `metrics`. A box
+    `citations`, `export`, `technical_metadata`, `metrics` and `ark`
+    (added by [`configure_ark`][oarepo_config.configure_ark]). A box
     registered via `templates` is referred to by its new name.
 
     The changes are applied to the current sidebar, in this order:
     `templates`, `order`, `move`, `remove`. Must be called *after*
     [`configure_ui`][oarepo_config.configure_ui] and any other `configure_*`
-    function that adds a box. Can be called multiple times.
+    function that adds a box (e.g. [`configure_ark`][oarepo_config.configure_ark]).
+    Can be called multiple times.
 
     Args:
         templates: Box name -> template. An existing box gets the new
