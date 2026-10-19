@@ -15,6 +15,7 @@ from .base import (
     load_configuration_variables,
     set_constants_in_caller,
 )
+from .detail_sidebar import DEFAULT_DETAIL_SIDEBAR, DETAIL_SIDEBAR_TEMPLATES
 
 
 @dataclasses.dataclass
@@ -391,16 +392,8 @@ def configure_ui(  # noqa PLR0915
 
     DASHBOARD_RECORD_CREATE_URL = "/uploads/new"
 
-    APP_RDM_DETAIL_SIDE_BAR_TEMPLATES = [
-        "invenio_app_rdm/records/details/side_bar/external_resources.html",
-        "invenio_app_rdm/records/details/side_bar/keywords_subjects.html",
-        "invenio_app_rdm/records/details/side_bar/details.html",
-        "invenio_app_rdm/records/details/side_bar/licenses.html",
-        "oarepo_ui/record_detail/side_bar/export.html",
-        "invenio_app_rdm/records/details/side_bar/citations.html",
-        "invenio_app_rdm/records/details/side_bar/manage_menu.html",
-        "invenio_app_rdm/records/details/side_bar/technical_metadata.html",
-    ]
+    # change via configure_detail_sidebar
+    APP_RDM_DETAIL_SIDE_BAR_TEMPLATES = [DETAIL_SIDEBAR_TEMPLATES[name] for name in DEFAULT_DETAIL_SIDEBAR]
 
     from invenio_search_ui import config as search_ui_config
     from invenio_theme import config as theme_config
