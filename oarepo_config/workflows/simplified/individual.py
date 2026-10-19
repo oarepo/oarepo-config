@@ -56,31 +56,31 @@ class IndividualWorkflow(BaseWorkflowSettings):
     authenticated_draft_creation: bool = True
     """Allow authenticated users to create drafts in this workflow.
 
-    Overrides the base-class default of ``False``; any authenticated user can
+    Overrides the base-class default of `False`; any authenticated user can
     create a draft unless more-specific role or need restrictions are configured
-    via :attr:`~BaseWorkflowSettings.draft_creation_roles` or
-    :attr:`~BaseWorkflowSettings.draft_creation_needs`.
+    via `draft_creation_roles` or
+    `draft_creation_needs`.
     """
 
     publish_without_review: bool = False
     """Allow draft owners to publish without submitting a review request.
 
     When enabled, draft owners can publish directly, subject to
-    :attr:`publish_without_review_states`.
+    `publish_without_review_states`.
     """
 
     publish_without_review_roles: list[str] = dataclasses.field(default_factory=list)
     """Roles that allow a draft owner to publish without a review request.
 
     Users must still be owners of the draft record. If the list is non-empty,
-    :attr:`publish_without_review` is ignored.
+    `publish_without_review` is ignored.
     """
 
     publish_without_review_needs: list[str] = dataclasses.field(default_factory=list)
     """Permission needs that allow a draft owner to publish without a review request.
 
     Users must still be owners of the draft record. If the list is non-empty,
-    :attr:`publish_without_review` is ignored.
+    `publish_without_review` is ignored.
     """
 
     publish_without_review_states: list[str] = dataclasses.field(default_factory=lambda: ["draft"])
@@ -89,8 +89,8 @@ class IndividualWorkflow(BaseWorkflowSettings):
     review_required: bool = False
     """Require a review request before publication.
 
-    If :attr:`publish_without_review` is ``False`` and :attr:`review_required`
-    is ``False``, records can only be published through a community workflow.
+    If `publish_without_review` is `False` and `review_required`
+    is `False`, records can only be published through a community workflow.
     """
 
     reviewer_roles: list[str] = dataclasses.field(default_factory=list)
@@ -109,15 +109,15 @@ class IndividualWorkflow(BaseWorkflowSettings):
     """Allow the record owner to approve their own review request.
 
     Normally, submitting a record for review prevents the owner from approving it
-    themselves. When set to ``True``, the review request is still created on
+    themselves. When set to `True`, the review request is still created on
     submission, but the owner is permitted to accept it.
 
-    This is primarily useful when ``invenio-checks`` is active: checks are tied
+    This is primarily useful when `invenio-checks` is active: checks are tied
     to an open request, so the request must exist even when no external reviewer
     is needed. With this option the owner can see and act on the check results
     without waiting for a curator.
 
-    Has no effect when :attr:`publish_without_review` is ``True``, because in
+    Has no effect when `publish_without_review` is `True`, because in
     that case user can bypass the review request and publish the record directly.
     """
 
@@ -142,20 +142,20 @@ class IndividualWorkflow(BaseWorkflowSettings):
 
         Applies the following priority order:
 
-        1. **Role-based** - :attr:`publish_without_review_roles`: owners who also
+        1. **Role-based** - `publish_without_review_roles`: owners who also
            hold any of these roles may publish directly.
-        2. **Need-based** - :attr:`publish_without_review_needs`: owners who also
+        2. **Need-based** - `publish_without_review_needs`: owners who also
            possess any of these permission needs may publish directly.
         3. **Owner fallback** - when neither (1) nor (2) are set and
-           :attr:`publish_without_review` is ``True``, the draft owner may publish
+           `publish_without_review` is `True`, the draft owner may publish
            directly.
 
         Note:
-            ``SystemProcess`` is added automatically by the base policy; it does
+            `SystemProcess` is added automatically by the base policy; it does
             not need to be included here.
 
         Returns:
-            A tuple of permission generators for the ``can_publish`` policy action.
+            A tuple of permission generators for the `can_publish` policy action.
 
         """
         publish_generators: list[Generator] = []

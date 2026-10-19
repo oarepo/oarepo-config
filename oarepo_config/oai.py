@@ -15,22 +15,21 @@ def configure_oai() -> None:
     OAI-PMH is a standard way for external services (e.g. national
     aggregators, other repositories) to regularly fetch a list of
     published records. This announces the repository's name over that
-    protocol, using the name already set via :func:`configure_ui`.
+    protocol, using the name already set via [`configure_ui`][oarepo_config.configure_ui].
 
-    Takes no parameters. Must be called *after* :func:`configure_ui`,
+    Takes no parameters. Must be called *after* [`configure_ui`][oarepo_config.configure_ui],
     since it needs the repository name that function sets up; calling it
     earlier raises an error explaining this.
 
     Invenio configuration variables set:
 
-    * ``OAISERVER_REPOSITORY_NAME`` - copied from ``REPOSITORY_NAME``
-      (set by :func:`configure_ui`).
+    * `OAISERVER_REPOSITORY_NAME` - copied from `REPOSITORY_NAME`
+      (set by [`configure_ui`][oarepo_config.configure_ui]).
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_oai()
+        ```
 
     """
     repo_name = get_constant_from_caller("REPOSITORY_NAME")

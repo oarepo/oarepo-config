@@ -37,37 +37,36 @@ def configure_einfra_oidc(entitlements_parser: EntitlementsParser | None = None)
     also makes user profile information (name, e-mail, ...) read-only
     locally, since it is then managed by e-INFRA instead.
 
-    Requires the optional ``oarepo-oidc-einfra`` package to be
+    Requires the optional `oarepo-oidc-einfra` package to be
     installed - if it is missing, this function prints a message and
     stops the application from starting.
 
     Whether e-INFRA login is actually turned on is controlled by the
-    ``INVENIO_REMOTE_AUTH_ENABLED`` setting (``true``/``yes``/``1`` to
+    `INVENIO_REMOTE_AUTH_ENABLED` setting (`true`/`yes`/`1` to
     enable it, anything else - including leaving it unset - disables
     it). When enabled, the client credentials
-    ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``
-    must also be provided (see the deployment's ``variables``/``.env``
+    `INVENIO_EINFRA_CONSUMER_KEY` and `INVENIO_EINFRA_CONSUMER_SECRET`
+    must also be provided (see the deployment's `variables`/`.env`
     configuration).
 
     Invenio configuration variables set:
 
-    * ``OAUTHCLIENT_REMOTE_APPS`` - always updated (merged with any
-      existing value); gets an ``"e-infra"`` entry only when e-INFRA
+    * `OAUTHCLIENT_REMOTE_APPS` - always updated (merged with any
+      existing value); gets an `"e-infra"` entry only when e-INFRA
       login is enabled.
-    * ``EINFRA`` - only when e-INFRA login is enabled; the e-INFRA
+    * `EINFRA` - only when e-INFRA login is enabled; the e-INFRA
       client credentials and endpoint configuration.
-    * ``USERPROFILES_READ_ONLY`` - only when e-INFRA login is enabled;
-      forced to ``True``.
+    * `USERPROFILES_READ_ONLY` - only when e-INFRA login is enabled;
+      forced to `True`.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_einfra_oidc()
+        ```
 
-    Make sure to set ``INVENIO_REMOTE_AUTH_ENABLED=true`` and provide
-    ``INVENIO_EINFRA_CONSUMER_KEY`` and ``INVENIO_EINFRA_CONSUMER_SECRET``
-    in your deployment's ``variables`` or environment.
+    Make sure to set `INVENIO_REMOTE_AUTH_ENABLED=true` and provide
+    `INVENIO_EINFRA_CONSUMER_KEY` and `INVENIO_EINFRA_CONSUMER_SECRET`
+    in your deployment's `variables` or environment.
 
     """
     try:

@@ -66,25 +66,25 @@ of Invenio config variables it sets.
 
 | Function | What it does |
 |---|---|
-| [`initialize_i18n()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.initialize_i18n) | Enable translated validation error messages. |
-| [`initialize_glitchtip(dsn=None, deployment_version=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.initialize_glitchtip) | Set up error reporting to Glitchtip/Sentry (optional dependency). |
-| [`configure_generic_parameters(languages=..., use_path_pid_ids=False)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_generic_parameters) | Core infrastructure: URLs, security headers, login, database, S3, OpenSearch, Redis, Celery, secret key, default identifier/vocabulary schemes. Call this first. |
-| [`configure_files(...)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_files) | File upload limits, record quotas, and file-related toggles. |
-| [`configure_ui(code=..., name=..., ...)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_ui) | Branding, theme, page templates, front page and analytics. |
-| [`configure_communities(communities_roles=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_communities) | Community roles and who can do what inside a community. |
-| [`configure_workflows(*workflow_definitions, ...)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_workflows) | Set up submission/review workflows from [`IndividualWorkflow`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.IndividualWorkflow)/[`CommunityWorkflow`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.CommunityWorkflow) definitions. Preferred over `register_workflow()` for most repositories. |
-| [`register_workflow(workflow_code, workflow_name, permissions_policy, requests_policy)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.register_workflow) | Low-level, single-workflow building block; registers one workflow directly instead of going through `configure_workflows()`. Warns by default recommending `configure_workflows()` instead - pass `use_low_level_workflows=True` to silence it. |
-| [`configure_cron(**extra_cron_items)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_cron) | Scheduled background jobs (`CELERY_BEAT_SCHEDULE`). |
-| [`configure_stats(enable=True)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_stats) | Usage statistics (record views, downloads, ...). |
-| [`configure_vocabulary(code, **kwargs)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_vocabulary) | Declare a custom controlled vocabulary. |
-| [`configure_datastreams(readers=None, writers=None, transformers=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_datastreams) | Register custom vocabulary-import sources. |
-| [`configure_jobs(permission_policy=None, logging_level=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_jobs) | Who can view "Jobs" admin logs, and how verbose they are. |
-| [`configure_oai()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_oai) | OAI-PMH repository name. Call after `configure_ui()`. |
-| [`configure_einfra_oidc()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_einfra_oidc) | "Log in with e-INFRA" (CESNET/Perun) single sign-on. |
-| [`configure_llm(api_token=None, ...)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.configure_llm) | LLM client(s) for oarepo-checks' AI-assisted record validation (optional dependency). |
-| [`add_model(model_package_name)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.add_model) | Register a data model for global/cross-model search. |
-| [`load_configuration_variables()`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.load_configuration_variables) | Read the deployment's `INVENIO_...` configuration values. |
-| [`override_configuration(env=None)`](https://oarepo.github.io/oarepo-config/api.html#oarepo_config.override_configuration) | Set arbitrary config constants straight from `INVENIO_<X>` env vars. |
+| [`initialize_i18n()`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.initialize_i18n) | Enable translated validation error messages. |
+| [`initialize_glitchtip(dsn=None, deployment_version=None)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.initialize_glitchtip) | Set up error reporting to Glitchtip/Sentry (optional dependency). |
+| [`configure_generic_parameters(languages=..., use_path_pid_ids=False)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_generic_parameters) | Core infrastructure: URLs, security headers, login, database, S3, OpenSearch, Redis, Celery, secret key, default identifier/vocabulary schemes. Call this first. |
+| [`configure_files(...)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_files) | File upload limits, record quotas, and file-related toggles. |
+| [`configure_ui(code=..., name=..., ...)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_ui) | Branding, theme, page templates, front page and analytics. |
+| [`configure_communities(communities_roles=None)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_communities) | Community roles and who can do what inside a community. |
+| [`configure_workflows(*workflow_definitions, ...)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_workflows) | Set up submission/review workflows from [`IndividualWorkflow`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.IndividualWorkflow)/[`CommunityWorkflow`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.CommunityWorkflow) definitions. Preferred over `register_workflow()` for most repositories. |
+| [`register_workflow(workflow_code, workflow_name, permissions_policy, requests_policy)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.register_workflow) | Low-level, single-workflow building block; registers one workflow directly instead of going through `configure_workflows()`. Warns by default recommending `configure_workflows()` instead - pass `use_low_level_workflows=True` to silence it. |
+| [`configure_cron(**extra_cron_items)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_cron) | Scheduled background jobs (`CELERY_BEAT_SCHEDULE`). |
+| [`configure_stats(enable=True)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_stats) | Usage statistics (record views, downloads, ...). |
+| [`configure_vocabulary(code, **kwargs)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_vocabulary) | Declare a custom controlled vocabulary. |
+| [`configure_datastreams(readers=None, writers=None, transformers=None)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_datastreams) | Register custom vocabulary-import sources. |
+| [`configure_jobs(permission_policy=None, logging_level=None)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_jobs) | Who can view "Jobs" admin logs, and how verbose they are. |
+| [`configure_oai()`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_oai) | OAI-PMH repository name. Call after `configure_ui()`. |
+| [`configure_einfra_oidc()`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_einfra_oidc) | "Log in with e-INFRA" (CESNET/Perun) single sign-on. |
+| [`configure_llm(api_token=None, ...)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.configure_llm) | LLM client(s) for oarepo-checks' AI-assisted record validation (optional dependency). |
+| [`add_model(model_package_name)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.add_model) | Register a data model for global/cross-model search. |
+| [`load_configuration_variables()`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.load_configuration_variables) | Read the deployment's `INVENIO_...` configuration values. |
+| [`override_configuration(env=None)`](https://oarepo.github.io/oarepo-config/reference/index.html#oarepo_config.override_configuration) | Set arbitrary config constants straight from `INVENIO_<X>` env vars. |
 
 ## Documentation
 
@@ -92,5 +92,7 @@ The [full documentation site](https://oarepo.github.io/oarepo-config/)
 covers everything that doesn't fit here: the complete environment
 variable reference, call-ordering rules, a full production `invenio.cfg`
 example, and how the "write into `invenio.cfg`'s globals" mechanism
-works internally. Build it locally with `./docs/build.sh` (add `--open`
-or `--serve`).
+works internally. Build it locally with `./run.sh docs`. The variable
+reference (`docs/variables.md`) is generated separately: regenerate it
+with `.venv/bin/python scripts/mkvars.py` after changing which variables a
+`configure_*()` function sets.

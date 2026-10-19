@@ -56,12 +56,6 @@ tests = [
 oarepo14 = [
     "oarepo[rdm,tests]>=14.0.0,<15.0.0",
 ]
-docs = [
-    "sphinx>=7.4,<9.0",
-    "furo>=2024.8.6",
-    "myst-parser>=3.0",
-    "sphinx-autobuild>=2024.10.3",
-]
 
 
 [tool.hatch.build.targets.sdist]

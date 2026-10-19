@@ -33,22 +33,24 @@ def configure_cron(**extra_cron_items: Any) -> None:
         **extra_cron_items: Additional scheduled jobs to add (or to
             override, if the name matches one of the built-in jobs
             above), one keyword per job. Each value follows Celery's
-            "beat schedule" format, e.g.::
+            "beat schedule" format, e.g.:
 
-                config.configure_cron(
-                    my_job={
-                        "task": "my_package.tasks.my_task",
-                        "schedule": timedelta(
-                            minutes=30
-                        ),
-                    },
-                )
+            ```python
+            config.configure_cron(
+                my_job={
+                    "task": "my_package.tasks.my_task",
+                    "schedule": timedelta(
+                        minutes=30
+                    ),
+                },
+            )
+            ```
 
     Invenio configuration variables set:
 
-    * ``CELERY_BEAT_SCHEDULE`` - merged with any schedule already
-      defined earlier in ``invenio.cfg``; entries from
-      ``**extra_cron_items`` win over the built-in defaults listed
+    * `CELERY_BEAT_SCHEDULE` - merged with any schedule already
+      defined earlier in `invenio.cfg`; entries from
+      `**extra_cron_items` win over the built-in defaults listed
       above when their names collide.
 
     """

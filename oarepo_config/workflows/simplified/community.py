@@ -55,8 +55,8 @@ class CommunityWorkflow(BaseWorkflowSettings):
 
     If not specified (empty list), any member of the community can create a
     draft.  Used in addition to the site-wide
-    :attr:`~BaseWorkflowSettings.draft_creation_roles` /
-    :attr:`~BaseWorkflowSettings.draft_creation_needs` restrictions.
+    `draft_creation_roles` /
+    `draft_creation_needs` restrictions.
     """
 
     read_restricted_community_roles: list[str] = dataclasses.field(default_factory=lambda: ["curator", "owner"])
@@ -67,7 +67,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
 
     Note:
         Community roles are used instead of
-        :class:`~invenio_rdm_records.services.generators.RecordCommunitiesAction`
+        `RecordCommunitiesAction`
         so that each workflow can have independent read/draft/manage permissions.
     """
 
@@ -79,7 +79,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
 
     Note:
         Community roles are used instead of
-        :class:`~invenio_rdm_records.services.generators.RecordCommunitiesAction`
+        `RecordCommunitiesAction`
         so that each workflow can have independent read/draft/manage permissions.
     """
 
@@ -91,7 +91,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
 
     Note:
         Community roles are used instead of
-        :class:`~invenio_rdm_records.services.generators.RecordCommunitiesAction`
+        `RecordCommunitiesAction`
         so that each workflow can have independent read/draft/manage permissions.
     """
 
@@ -116,13 +116,13 @@ class CommunityWorkflow(BaseWorkflowSettings):
     def _build_record_create_generators(self) -> tuple[Generator, ...]:
         """Extend base create generators with community membership constraints.
 
-        Calls :meth:`~BaseWorkflowSettings._build_record_create_generators` to
+        Calls `_build_record_create_generators` to
         resolve site-wide role- and need-based restrictions, then appends an
-        :class:`~oarepo_communities.services.permissions.generators.InAnyCommunity`
-        generator for each role listed in :attr:`draft_creation_community_roles`.
+        `InAnyCommunity`
+        generator for each role listed in `draft_creation_community_roles`.
 
         Returns:
-            A tuple of permission generators for the ``can_create`` policy action.
+            A tuple of permission generators for the `can_create` policy action.
 
         """
         create_generators = list(super()._build_record_create_generators())
@@ -137,21 +137,21 @@ class CommunityWorkflow(BaseWorkflowSettings):
         original_permissions: list[Generator],
         community_roles: list[str],
     ) -> list[Generator]:
-        """Replace :class:`RecordCommunitiesAction` with explicit community-role generators.
+        """Replace `RecordCommunitiesAction` with explicit community-role generators.
 
         Filters *original_permissions* to remove any
-        :class:`~invenio_rdm_records.services.generators.RecordCommunitiesAction`
+        `RecordCommunitiesAction`
         instance (which grants access to *all* community members), then appends a
-        :class:`~oarepo_communities.services.permissions.generators.CommunityRole`
+        `CommunityRole`
         generator for each role in *community_roles*.
 
         This lets each workflow define fine-grained, role-scoped access instead of
         the blanket community-wide access granted by
-        :class:`RecordCommunitiesAction`.
+        `RecordCommunitiesAction`.
 
         Args:
             original_permissions: The existing generator list from the base
-                permission policy (e.g. ``can_rdm_view``).
+                permission policy (e.g. `can_rdm_view`).
             community_roles: Community role names to grant access to.
 
         Returns:
@@ -163,15 +163,15 @@ class CommunityWorkflow(BaseWorkflowSettings):
         return result
 
     def _build_record_rdm_view_permissions(self, original_rdm_permissions: list[Generator]) -> list[Generator]:
-        """Build ``can_rdm_view`` generators for this workflow.
+        """Build `can_rdm_view` generators for this workflow.
 
-        Replaces :class:`RecordCommunitiesAction` with
-        :attr:`read_restricted_community_roles`-scoped generators so that only
+        Replaces `RecordCommunitiesAction` with
+        `read_restricted_community_roles`-scoped generators so that only
         the listed community roles (rather than all community members) can read
         restricted records.
 
         Args:
-            original_rdm_permissions: The existing ``can_rdm_view`` generators
+            original_rdm_permissions: The existing `can_rdm_view` generators
                 from the base permission policy.
 
         Returns:
@@ -183,15 +183,15 @@ class CommunityWorkflow(BaseWorkflowSettings):
         )
 
     def _build_record_rdm_preview_generators(self, original_rdm_permissions: list[Generator]) -> list[Generator]:
-        """Build ``can_rdm_preview`` generators for this workflow.
+        """Build `can_rdm_preview` generators for this workflow.
 
-        Replaces :class:`RecordCommunitiesAction` with
-        :attr:`read_draft_community_roles`-scoped generators so that only the
+        Replaces `RecordCommunitiesAction` with
+        `read_draft_community_roles`-scoped generators so that only the
         listed community roles (rather than all community members) can preview
         draft records.
 
         Args:
-            original_rdm_permissions: The existing ``can_rdm_preview`` generators
+            original_rdm_permissions: The existing `can_rdm_preview` generators
                 from the base permission policy.
 
         Returns:
@@ -201,15 +201,15 @@ class CommunityWorkflow(BaseWorkflowSettings):
         return self._replace_communities_action_with_roles(original_rdm_permissions, self.read_draft_community_roles)
 
     def _build_record_rdm_manage_generators(self, original_rdm_permissions: list[Generator]) -> list[Generator]:
-        """Build ``can_rdm_manage`` generators for this workflow.
+        """Build `can_rdm_manage` generators for this workflow.
 
-        Replaces :class:`RecordCommunitiesAction` with
-        :attr:`record_manage_community_roles`-scoped generators so that only
+        Replaces `RecordCommunitiesAction` with
+        `record_manage_community_roles`-scoped generators so that only
         the listed community roles (rather than all community members) can
         manage records.
 
         Args:
-            original_rdm_permissions: The existing ``can_rdm_manage`` generators
+            original_rdm_permissions: The existing `can_rdm_manage` generators
                 from the base permission policy.
 
         Returns:

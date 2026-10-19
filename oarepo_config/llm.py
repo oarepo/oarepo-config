@@ -22,60 +22,58 @@ def configure_llm(  # noqa: PLR0913
 ) -> None:
     """Set up the LLM client(s) used by oarepo-checks' AI-assisted record validation.
 
-    ``oarepo-checks`` can validate a record's metadata by sending it to a
-    Large Language Model and checking the response (its ``"llm"`` check,
+    `oarepo-checks` can validate a record's metadata by sending it to a
+    Large Language Model and checking the response (its `"llm"` check,
     shown to users as "AI validation") before a record may be published.
     This registers one such LLM client (built-in support is for
     chat.ai.e-infra.cz) that the check can use.
 
     Call it once per LLM client/token you want available - each call reads
     back and extends whatever a previous call already registered (via
-    :func:`get_constant_from_caller`), it does not replace it. This also
+    `get_constant_from_caller`), it does not replace it. This also
     means, when calling it more than once, that **whichever call has
-    ``as_default=True`` last wins** as the default client.
+    `as_default=True` last wins** as the default client.
 
-    Requires the optional ``oarepo-checks`` package to be installed;
-    without it, calling this raises an ``ImportError`` explaining that the
+    Requires the optional `oarepo-checks` package to be installed;
+    without it, calling this raises an `ImportError` explaining that the
     package needs to be installed first.
 
     Args:
-        api_token: Bearer token for the ``ChatEInfraClient``
+        api_token: Bearer token for the `ChatEInfraClient`
             (chat.ai.e-infra.cz). If not given, this call only touches
-            ``CHECKS_ENABLED``/``CHECKS_GENERIC_COMMUNITY``/the default
+            `CHECKS_ENABLED`/`CHECKS_GENERIC_COMMUNITY`/the default
             client marker below, without registering a new client under
-            ``client_name``. Typically read from the deployment's
-            ``variables``/``.env``/environment via
-            :func:`load_configuration_variables`, not hardcoded.
-        enabled: Set to ``False`` to skip configuring the LLM subsystem
+            `client_name`. Typically read from the deployment's
+            `variables`/`.env`/environment via
+            [`load_configuration_variables`][oarepo_config.load_configuration_variables], not hardcoded.
+        enabled: Set to `False` to skip configuring the LLM subsystem
             entirely (nothing else below is set).
         client_name: The key this client is registered under in
-            ``OAREPO_CHECKS_LLM_CLIENTS``. Use a different name per call
+            `OAREPO_CHECKS_LLM_CLIENTS`. Use a different name per call
             if you are registering more than one client.
-        api_url: The ``ChatEInfraClient`` API endpoint to send requests to.
-        model: The model name the ``ChatEInfraClient`` requests.
+        api_url: The `ChatEInfraClient` API endpoint to send requests to.
+        model: The model name the `ChatEInfraClient` requests.
         fallback_community: Slug of the community used for checks that
             aren't tied to a specific community. If given, overrides
             whatever a previous call already set; if not given, an
             already-set value is kept, defaulting to
-            ``"llm-settings-community"`` if no call has provided one yet.
-        as_default: Mark ``client_name`` as the client checks use when
-            they don't request one by name (``OAREPO_CHECKS_DEFAULT_LLM_CLIENT``).
+            `"llm-settings-community"` if no call has provided one yet.
+        as_default: Mark `client_name` as the client checks use when
+            they don't request one by name (`OAREPO_CHECKS_DEFAULT_LLM_CLIENT`).
 
     Invenio configuration variables set:
 
-    * ``CHECKS_ENABLED`` - the ``enabled`` argument above.
-    * ``OAREPO_CHECKS_LLM_CLIENTS`` - only if ``enabled``; extended (not
-      replaced) with a ``ChatEInfraClient`` entry under ``client_name``,
-      only if ``api_token`` was given.
-    * ``OAREPO_CHECKS_DEFAULT_LLM_CLIENT`` - only if ``enabled`` and
-      ``as_default``; set to ``client_name``.
-    * ``CHECKS_GENERIC_COMMUNITY`` - only if ``enabled``; ``fallback_community``
-      if given, else an already-set value, else ``"llm-settings-community"``.
+    * `CHECKS_ENABLED` - the `enabled` argument above.
+    * `OAREPO_CHECKS_LLM_CLIENTS` - only if `enabled`; extended (not
+      replaced) with a `ChatEInfraClient` entry under `client_name`,
+      only if `api_token` was given.
+    * `OAREPO_CHECKS_DEFAULT_LLM_CLIENT` - only if `enabled` and
+      `as_default`; set to `client_name`.
+    * `CHECKS_GENERIC_COMMUNITY` - only if `enabled`; `fallback_community`
+      if given, else an already-set value, else `"llm-settings-community"`.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         env = config.load_configuration_variables()
         config.configure_llm(
             api_token=env.get(
@@ -91,6 +89,7 @@ def configure_llm(  # noqa: PLR0913
             client_name="chat_einfra_backup",
             as_default=False,
         )
+        ```
 
     """
     try:

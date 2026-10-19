@@ -29,19 +29,19 @@ class CSP:
     """Valid sources for JavaScript."""
 
     script_src_elem: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for ``<script>`` elements. Falls back to :attr:`script_src`."""
+    """Valid sources for `<script>` elements. Falls back to `script_src`."""
 
     script_src_attr: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for inline event handler attributes. Falls back to :attr:`script_src`."""
+    """Valid sources for inline event handler attributes. Falls back to `script_src`."""
 
     style_src: list[str] = dataclasses.field(default_factory=list)
     """Valid sources for CSS."""
 
     style_src_elem: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for ``<style>`` elements. Falls back to :attr:`style_src`."""
+    """Valid sources for `<style>` elements. Falls back to `style_src`."""
 
     style_src_attr: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for inline style attributes. Falls back to :attr:`style_src`."""
+    """Valid sources for inline style attributes. Falls back to `style_src`."""
 
     img_src: list[str] = dataclasses.field(default_factory=list)
     """Valid sources for images."""
@@ -53,16 +53,16 @@ class CSP:
     """Valid sources for fetch/XHR/WebSocket/EventSource calls (e.g. REST API endpoints)."""
 
     object_src: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for ``<object>``, ``<embed>`` and ``<applet>`` plugins."""
+    """Valid sources for `<object>`, `<embed>` and `<applet>` plugins."""
 
     media_src: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for ``<audio>``, ``<video>`` and ``<embed>`` media."""
+    """Valid sources for `<audio>`, `<video>` and `<embed>` media."""
 
     frame_src: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for nested browsing contexts (``<iframe>``)."""
+    """Valid sources for nested browsing contexts (`<iframe>`)."""
 
     frame_ancestors: list[str] = dataclasses.field(default_factory=list)
-    """Sources allowed to embed this page; the modern replacement for ``X-Frame-Options``."""
+    """Sources allowed to embed this page; the modern replacement for `X-Frame-Options`."""
 
     child_src: list[str] = dataclasses.field(default_factory=list)
     """Valid sources for nested browsing contexts and workers."""
@@ -77,29 +77,29 @@ class CSP:
     """Valid sources that may be prefetched."""
 
     form_action: list[str] = dataclasses.field(default_factory=list)
-    """Valid targets for ``<form>`` submissions."""
+    """Valid targets for `<form>` submissions."""
 
     base_uri: list[str] = dataclasses.field(default_factory=list)
-    """Valid sources for the document's ``<base>`` element."""
+    """Valid sources for the document's `<base>` element."""
 
     report_to: list[str] = dataclasses.field(default_factory=list)
-    """``Report-To`` group name(s) to send CSP reports to; the modern replacement for :attr:`report_uri`."""
+    """`Report-To` group name(s) to send CSP reports to; the modern replacement for `report_uri`."""
 
     report_uri: str | None = None
     """URL to send CSP violation reports to."""
 
     report_only: bool = False
-    """Report violations without enforcing the policy. Requires :attr:`report_uri`."""
+    """Report violations without enforcing the policy. Requires `report_uri`."""
 
     #: Fields that map to Talisman's standalone CSP options rather than to a
-    #: directive inside the ``content_security_policy`` dict.
+    #: directive inside the `content_security_policy` dict.
     _NON_DIRECTIVE_FIELDS: ClassVar[frozenset[str]] = frozenset({"report_uri", "report_only"})
 
-    #: Directives that CSP does not let ``default-src`` stand in for.
+    #: Directives that CSP does not let `default-src` stand in for.
     _NO_DEFAULT_SRC: ClassVar[frozenset[str]] = frozenset({"base-uri", "form-action", "frame-ancestors", "report-to"})
 
     #: Directives that CSP resolves through a more specific directive before
-    #: it ever considers ``default-src``.
+    #: it ever considers `default-src`.
     _FALLBACK_PARENT: ClassVar[dict[str, str]] = {
         "script-src-elem": "script-src",
         "script-src-attr": "script-src",
@@ -110,21 +110,21 @@ class CSP:
     }
 
     def apply_defaults(self, headers: dict[str, Any]) -> dict[str, Any]:
-        """Resolve this policy against the ``content_security_policy`` already in *headers*.
+        """Resolve this policy against the `content_security_policy` already in *headers*.
 
         Directives set here are merged with the sources already configured for
         them (or, lacking those, with the sources of the directive they'd fall
-        back to, e.g. ``default-src`` for ``connect_src``), so that setting one
+        back to, e.g. `default-src` for `connect_src`), so that setting one
         directive doesn't silently drop defaults the app still needs. Unset
-        directives keep the configured value as-is. Same for ``report_uri``,
-        ``report_only``.
+        directives keep the configured value as-is. Same for `report_uri`,
+        `report_only`.
 
         The result replaces the CSP keys in *headers* rather than merging into
-        them: ``headers.update(csp.apply_defaults(headers))``.
+        them: `headers.update(csp.apply_defaults(headers))`.
 
         Raises:
             ValueError: If report-only mode ends up enabled without any
-                ``report_uri``, which Flask-Talisman rejects.
+                `report_uri`, which Flask-Talisman rejects.
 
         """
         existing = self._existing_policy(headers)
@@ -220,10 +220,10 @@ def configure_ui(  # noqa PLR0915
 
     Args:
         code: A short, technical, all-lowercase identifier for this
-            repository (e.g. ``"myrepo"``); used internally to select
+            repository (e.g. `"myrepo"`); used internally to select
             the repository's own theme files.
         name: The repository's display name, shown in the browser title
-            and on the front page, e.g. ``_("My Repository")``.
+            and on the front page, e.g. `_("My Repository")`.
         subtitle: A short subtitle/tagline shown next to the name.
         description: A longer description of the repository, used for
             SEO and on the front page.
@@ -233,32 +233,30 @@ def configure_ui(  # noqa PLR0915
             SEO.
         use_default_frontpage: Whether to use Invenio's generic front
             page. Most repositories provide a custom front page, so this
-            defaults to ``False``.
+            defaults to `False`.
         show_frontpage_intro: Whether to show the introductory text
             section on the front page.
-        analytics: Set to ``"matomo"`` to enable Matomo web analytics
+        analytics: Set to `"matomo"` to enable Matomo web analytics
             tracking (only takes effect on deployed, non-local
             instances; requires the Matomo URL/site ID to be configured
-            in the deployment's environment). ``False`` (the default)
+            in the deployment's environment). `False` (the default)
             disables analytics.
         languages: Extra UI languages to offer, as a tuple of
-            ``(language_code, label)`` pairs. English is always
+            `(language_code, label)` pairs. English is always
             available and does not need to be listed. This should
             normally match what was passed to
-            :func:`configure_generic_parameters`.
+            [`configure_generic_parameters`][oarepo_config.configure_generic_parameters].
         csp: Content Security Policy configuration. Only the sources passed
             here are recorded; the ones the deployment already allows (set up
-            by :func:`configure_generic_parameters`) are added on top of them
-            by :meth:`CSP.apply_defaults`.
+            by [`configure_generic_parameters`][oarepo_config.configure_generic_parameters]) are added on top of them
+            by `CSP.apply_defaults`.
 
-    Should be called after :func:`configure_generic_parameters` (it
+    Should be called after [`configure_generic_parameters`][oarepo_config.configure_generic_parameters] (it
     builds on settings that function prepares) and before
-    :func:`configure_oai` (which needs the repository name set here).
+    [`configure_oai`][oarepo_config.configure_oai] (which needs the repository name set here).
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_ui(
             code="myrepo",
             name=_("My Repository"),
@@ -275,54 +273,55 @@ def configure_ui(  # noqa PLR0915
                 ],
             ),
         )
+        ```
 
     Invenio configuration variables set, grouped by area:
 
     Versioning
-        * ``DEPLOYMENT_VERSION``
+        * `DEPLOYMENT_VERSION`
 
     Theme & security
-        * ``APP_THEME``
-        * ``APP_DEFAULT_SECURE_HEADERS`` - extends the value prepared by
-          :func:`configure_generic_parameters`.
+        * `APP_THEME`
+        * `APP_DEFAULT_SECURE_HEADERS` - extends the value prepared by
+          [`configure_generic_parameters`][oarepo_config.configure_generic_parameters].
 
     Page layout templates
-        * ``INSTANCE_THEME_FILE``
-        * ``BASE_TEMPLATE``, ``ADMINISTRATION_THEME_BASE_TEMPLATE``,
-          ``COVER_TEMPLATE``
-        * ``THEME_CSS_TEMPLATE``, ``THEME_JAVASCRIPT_TEMPLATE``
-        * ``HEADER_TEMPLATE``, ``THEME_HEADER_TEMPLATE``,
-          ``THEME_HEADER_LOGIN_TEMPLATE``, ``THEME_FOOTER_TEMPLATE``
-        * ``THEME_TRACKINGCODE_TEMPLATE``, ``THEME_FRONTPAGE_TEMPLATE``
-        * ``SETTINGS_TEMPLATE``, ``SEARCH_UI_SEARCH_TEMPLATE``
+        * `INSTANCE_THEME_FILE`
+        * `BASE_TEMPLATE`, `ADMINISTRATION_THEME_BASE_TEMPLATE`,
+          `COVER_TEMPLATE`
+        * `THEME_CSS_TEMPLATE`, `THEME_JAVASCRIPT_TEMPLATE`
+        * `HEADER_TEMPLATE`, `THEME_HEADER_TEMPLATE`,
+          `THEME_HEADER_LOGIN_TEMPLATE`, `THEME_FOOTER_TEMPLATE`
+        * `THEME_TRACKINGCODE_TEMPLATE`, `THEME_FRONTPAGE_TEMPLATE`
+        * `SETTINGS_TEMPLATE`, `SEARCH_UI_SEARCH_TEMPLATE`
 
     Analytics
-        * ``MATOMO_ANALYTICS_TEMPLATE``, ``MATOMO_ANALYTICS_URL``,
-          ``MATOMO_ANALYTICS_SITE_ID`` - only if ``analytics="matomo"``
+        * `MATOMO_ANALYTICS_TEMPLATE`, `MATOMO_ANALYTICS_URL`,
+          `MATOMO_ANALYTICS_SITE_ID` - only if `analytics="matomo"`
           and this is not a local-development deployment.
 
     Branding
-        * ``THEME_FRONTPAGE``, ``THEME_LOGO``, ``THEME_FRONTPAGE_LOGO``
-        * ``THEME_SITENAME``, ``THEME_FRONTPAGE_TITLE``,
-          ``THEME_SHOW_FRONTPAGE_INTRO_SECTION``
+        * `THEME_FRONTPAGE`, `THEME_LOGO`, `THEME_FRONTPAGE_LOGO`
+        * `THEME_SITENAME`, `THEME_FRONTPAGE_TITLE`,
+          `THEME_SHOW_FRONTPAGE_INTRO_SECTION`
 
     Repository metadata (SEO & front page)
-        * ``REPOSITORY_NAME``, ``REPOSITORY_DESCRIPTION``,
-          ``REPOSITORY_SUPPORT_CONTACT``, ``REPOSITORY_SUBTITLE``,
-          ``REPOSITORY_KEYWORDS``
+        * `REPOSITORY_NAME`, `REPOSITORY_DESCRIPTION`,
+          `REPOSITORY_SUPPORT_CONTACT`, `REPOSITORY_SUBTITLE`,
+          `REPOSITORY_KEYWORDS`
 
     Build pipeline
-        * ``JAVASCRIPT_PACKAGES_MANAGER``, ``ASSETS_BUILDER``,
-          ``WEBPACKEXT_NPM_PKG_CLS``, ``WEBPACKEXT_PROJECT``
+        * `JAVASCRIPT_PACKAGES_MANAGER`, `ASSETS_BUILDER`,
+          `WEBPACKEXT_NPM_PKG_CLS`, `WEBPACKEXT_PROJECT`
 
     Records & deposit UI
-        * ``RECORDS_UI_ENDPOINTS``,
-          ``APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED``,
-          ``DASHBOARD_RECORD_CREATE_URL``
-        * ``APP_RDM_DETAIL_SIDE_BAR_TEMPLATES``
+        * `RECORDS_UI_ENDPOINTS`,
+          `APP_RDM_DEPOSIT_NG_FILES_UI_ENABLED`,
+          `DASHBOARD_RECORD_CREATE_URL`
+        * `APP_RDM_DETAIL_SIDE_BAR_TEMPLATES`
 
     Search UI
-        * ``THEME_SEARCH_ENDPOINT``, ``SEARCH_UI_SEARCH_VIEW``
+        * `THEME_SEARCH_ENDPOINT`, `SEARCH_UI_SEARCH_VIEW`
 
     """
     env = load_configuration_variables()

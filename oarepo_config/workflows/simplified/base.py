@@ -30,10 +30,10 @@ def add_if_in_state(
     states: list[str],
     generators: tuple[Generator, ...] | list[Generator],
 ) -> list[Generator]:
-    """Wrap generators in an :class:`IfInState` constraint when states are provided.
+    """Wrap generators in an `IfInState` constraint when states are provided.
 
     If *states* is non-empty, returns a single-element list containing an
-    :class:`~oarepo_workflows.services.permissions.IfInState` generator that
+    `IfInState` generator that
     activates *generators* only when the record is in one of the listed states.
     If *states* is empty the generators are returned unchanged as a plain list.
 
@@ -43,7 +43,7 @@ def add_if_in_state(
         generators: Permission generators to conditionally wrap.
 
     Returns:
-        A list of generators, optionally wrapped in an :class:`IfInState`
+        A list of generators, optionally wrapped in an `IfInState`
         constraint.
 
     """
@@ -105,19 +105,19 @@ class BaseWorkflowSettings:
 
     When enabled and no role- or need-based restrictions are configured, any
     authenticated user may create a draft.  Subclasses may override this
-    default (e.g. :class:`IndividualWorkflow` sets it to ``True``).
+    default (e.g. `IndividualWorkflow` sets it to `True`).
     """
 
     draft_creation_roles: list[str] = dataclasses.field(default_factory=list)
     """Restrict draft creation to users who hold at least one of these site-wide roles.
 
-    When non-empty, takes priority over :attr:`authenticated_draft_creation`.
+    When non-empty, takes priority over `authenticated_draft_creation`.
     """
 
     draft_creation_needs: list[str] = dataclasses.field(default_factory=list)
     """Restrict draft creation to users who hold at least one of these permission needs.
 
-    When non-empty, takes priority over :attr:`authenticated_draft_creation`.
+    When non-empty, takes priority over `authenticated_draft_creation`.
     """
 
     # --- public API -----------------------------------------------------------
@@ -147,11 +147,11 @@ class BaseWorkflowSettings:
     # --- protected helpers ----------------------------------------------------
 
     def _build_record_view_permissions(self) -> tuple[Generator, ...]:
-        """Build per-state view permission generators from :attr:`record_view_permissions`.
+        """Build per-state view permission generators from `record_view_permissions`.
 
         Returns:
-            A tuple of :class:`~oarepo_workflows.services.permissions.IfInState`
-            generators - one per entry in :attr:`record_view_permissions` - or
+            A tuple of `IfInState`
+            generators - one per entry in `record_view_permissions` - or
             an empty tuple when no overrides are configured.
 
         """
@@ -164,19 +164,19 @@ class BaseWorkflowSettings:
 
         Applies the following priority order:
 
-        1. **Role-based** - :attr:`draft_creation_roles`: users holding any of
+        1. **Role-based** - `draft_creation_roles`: users holding any of
            these site-wide roles are allowed.
-        2. **Need-based** - :attr:`draft_creation_needs`: users possessing any
+        2. **Need-based** - `draft_creation_needs`: users possessing any
            of these permission needs are allowed.
         3. **Authenticated fallback** - when neither (1) nor (2) are set and
-           :attr:`authenticated_draft_creation` is ``True``, any authenticated
+           `authenticated_draft_creation` is `True`, any authenticated
            user is allowed.
 
-        Subclasses may call ``super()._build_record_create_generators()`` and
+        Subclasses may call `super()._build_record_create_generators()` and
         extend the returned tuple with additional generators.
 
         Returns:
-            A tuple of permission generators for the ``can_create`` policy action.
+            A tuple of permission generators for the `can_create` policy action.
 
         """
         create_generators: list[Generator] = []
@@ -193,20 +193,20 @@ class BaseWorkflowSettings:
         class_name: str,
         requests: dict[str, Any],
     ) -> type[WorkflowRequestPolicy]:
-        """Dynamically create a named :class:`WorkflowRequestPolicy` subclass.
+        """Dynamically create a named `WorkflowRequestPolicy` subclass.
 
-        This is a thin convenience wrapper around :func:`type` that removes the
-        boilerplate of repeating ``(self.base_request_policy,)`` in every
-        ``_build_request_policy`` override.
+        This is a thin convenience wrapper around `type` that removes the
+        boilerplate of repeating `(self.base_request_policy,)` in every
+        `_build_request_policy` override.
 
         Args:
-            class_name: The ``__name__`` to assign to the generated class.
+            class_name: The `__name__` to assign to the generated class.
             requests: A mapping of request-type IDs to
-                :class:`~oarepo_workflows.requests.WorkflowRequest` instances
+                `WorkflowRequest` instances
                 that will become class-level attributes of the new policy.
 
         Returns:
-            A freshly created subclass of :attr:`base_request_policy` with
+            A freshly created subclass of `base_request_policy` with
             *requests* merged in as class attributes.
 
         """

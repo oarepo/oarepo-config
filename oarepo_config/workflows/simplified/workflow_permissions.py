@@ -173,23 +173,27 @@ class DefaultRDMWorkflowPermissions(BaseWorkflowPermissionPolicy):
     """RDM-aligned workflow permissions; subclass and pass to the Workflow constructor.
 
     This policy mirrors RDMRecordPermissionPolicy but uses IfInState to unify
-    draft and published permissions into single ``can_*`` attributes, and uses
+    draft and published permissions into single `can_*` attributes, and uses
     IfRestricted to correctly gate restricted and embargoed records.
 
-    Example::
-
+    Example:
+        ```python
         class MyWorkflowPermissions(
             DefaultRDMWorkflowPermissions
         ):
             can_read = [AnyUser()]
+        ```
 
-    in ``invenio.cfg``::
+        in `invenio.cfg`:
 
+        ```python
         WORKFLOWS = {
             'default': Workflow(
                 permission_policy_cls=MyWorkflowPermissions, ...
             )
         }
+        ```
+
     """
 
     # ------------------------------------------------------------------

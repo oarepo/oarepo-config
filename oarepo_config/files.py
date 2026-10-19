@@ -37,75 +37,73 @@ def configure_files(  # noqa: PLR0913, PLR0917
 
     Args:
         max_file_size: Maximum size of a single uploaded file in bytes.
-            Defaults to 1 GB (``1 * 10**9``).
+            Defaults to 1 GB (`1 * 10**9`).
         max_files_count: Maximum number of files allowed per record
-            deposition. Defaults to ``100``.
+            deposition. Defaults to `100`.
         max_total_size: Maximum combined size of all files in a single
             record deposition, in bytes. Defaults to 5 GB
-            (``5 * 10**9``).
-        allow_metadata_only_records: When ``False``, users must upload
+            (`5 * 10**9`).
+        allow_metadata_only_records: When `False`, users must upload
             at least one file before they can publish a record
-            deposition. When ``True`` (the default), metadata-only
+            deposition. When `True` (the default), metadata-only
             records are allowed.
-        allow_empty_files: When ``False``, zero-byte files are rejected.
-            When ``True``, they are allowed. Defaults to the value of
-            ``allow_metadata_only_records`` so that requiring files also
+        allow_empty_files: When `False`, zero-byte files are rejected.
+            When `True`, they are allowed. Defaults to the value of
+            `allow_metadata_only_records` so that requiring files also
             prevents users from satisfying the requirement with an empty
             file.
         file_modification_grace_period: Grace period after a record is
             published during which its files can still be modified without
             creating a new version. Checked at publish time. Defaults to
-            45 days (``timedelta(days=45)``).
-        allow_immediate_file_modification: When ``True`` (the default),
+            45 days (`timedelta(days=45)`).
+        allow_immediate_file_modification: When `True` (the default),
             record owners may unlock and edit their published files
-            themselves within ``file_modification_grace_period``, while
+            themselves within `file_modification_grace_period`, while
             admins and system processes may do so at any time. When
-            ``False``, the default Invenio policy (admin-only) is left in
+            `False`, the default Invenio policy (admin-only) is left in
             place.
-        allow_immediate_quota_increase: When ``True`` (the default), users
+        allow_immediate_quota_increase: When `True` (the default), users
             may immediately raise a draft's storage quota from their
             additional allowance (this surfaces the "Manage storage" UI in
             the file uploader); admins may do so for any record. When
-            ``False``, immediate quota increases stay disabled.
+            `False`, immediate quota increases stay disabled.
         max_additional_quota_size: Additional quota users/admins may grant
             on top of the default record quota. Defaults to 0.
 
     Invenio configuration variables set:
 
-    * ``RDM_FILES_DEFAULT_MAX_FILE_SIZE`` - backend limit on the size of
+    * `RDM_FILES_DEFAULT_MAX_FILE_SIZE` - backend limit on the size of
       a single file.
-    * ``RDM_FILES_DEFAULT_QUOTA_SIZE`` - backend limit on the total size
+    * `RDM_FILES_DEFAULT_QUOTA_SIZE` - backend limit on the total size
       of all files in a record deposition.
-    * ``RDM_RECORDS_MAX_FILES_COUNT`` - backend limit on the number of
+    * `RDM_RECORDS_MAX_FILES_COUNT` - backend limit on the number of
       files per record.
-    * ``RDM_ALLOW_METADATA_ONLY_RECORDS`` - whether metadata-only
+    * `RDM_ALLOW_METADATA_ONLY_RECORDS` - whether metadata-only
       records are allowed.
-    * ``RECORDS_RESOURCES_ALLOW_EMPTY_FILES`` - whether zero-byte files
+    * `RECORDS_RESOURCES_ALLOW_EMPTY_FILES` - whether zero-byte files
       may be uploaded.
-    * ``RDM_FILE_MODIFICATION_PERIOD`` - time window after record
+    * `RDM_FILE_MODIFICATION_PERIOD` - time window after record
       creation during which modified files may be published.
-    * ``RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED`` - whether published
+    * `RDM_IMMEDIATE_FILE_MODIFICATION_ENABLED` - whether published
       files may be edited immediately; set to
-      ``allow_immediate_file_modification``.
-    * ``RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES`` - ordered list of
+      `allow_immediate_file_modification`.
+    * `RDM_IMMEDIATE_FILE_MODIFICATION_POLICIES` - ordered list of
       policies deciding who may edit published files immediately (only
-      set when ``allow_immediate_file_modification`` is ``True``).
-    * ``RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED`` - whether users may
+      set when `allow_immediate_file_modification` is `True`).
+    * `RDM_IMMEDIATE_QUOTA_INCREASE_ENABLED` - whether users may
       immediately raise a draft's quota; set to
-      ``allow_immediate_quota_increase``.
-    * ``RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES`` - ordered list of policies
+      `allow_immediate_quota_increase`.
+    * `RDM_IMMEDIATE_QUOTA_INCREASE_POLICIES` - ordered list of policies
       deciding who may raise a draft's quota (only set when
-      ``allow_immediate_quota_increase`` is ``True``).
-    * ``APP_RDM_DEPOSIT_FORM_QUOTA`` - deposit-form UI quota object with
-      ``maxFiles`` and ``maxStorage``.
-    * ``FILES_REST_DEFAULT_MAX_FILE_SIZE`` and
-      ``FILES_REST_DEFAULT_QUOTA_SIZE`` - fallback variables used by
+      `allow_immediate_quota_increase` is `True`).
+    * `APP_RDM_DEPOSIT_FORM_QUOTA` - deposit-form UI quota object with
+      `maxFiles` and `maxStorage`.
+    * `FILES_REST_DEFAULT_MAX_FILE_SIZE` and
+      `FILES_REST_DEFAULT_QUOTA_SIZE` - fallback variables used by
       the lower-level file storage layer.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         # Use the default file quotas and toggles. All parameters below
         # match the helper's built-in defaults and are shown explicitly
         # for reference; they can be omitted when calling the helper.
@@ -115,6 +113,7 @@ def configure_files(  # noqa: PLR0913, PLR0917
             max_total_size=5 * 10**9,
             allow_metadata_only_records=True,
         )
+        ```
 
     """
     RDM_FILES_DEFAULT_MAX_FILE_SIZE = max_file_size

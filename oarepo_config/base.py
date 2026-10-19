@@ -27,23 +27,23 @@ def set_constants_in_caller(constants: dict[str, Any]) -> None:
     """Set the constants in the caller's globals.
 
     Example:
-    ``mymodule``:
+    `mymodule`:
 
-    .. code-block:: python
+    ```python
+    import config
 
-        import config
+    config.doit()
+    print(MY_CONSTANT)
+    ```
 
-        config.doit()
-        print(MY_CONSTANT)
+    `config`:
 
-    ``config``:
-
-    .. code-block:: python
-
-        def doit():
-            set_constants_in_caller(
-                {"MY_CONSTANT": 42}
-            )
+    ```python
+    def doit():
+        set_constants_in_caller(
+            {"MY_CONSTANT": 42}
+        )
+    ```
 
     """
     # Get the caller's frame
@@ -75,26 +75,26 @@ def get_constant_from_caller(name: str, default: Any = None) -> Any:
     """Get constant from the caller frame and optionally return a default value if not found.
 
     Example:
-    ``mymodule``:
+    `mymodule`:
 
-    .. code-block:: python
+    ```python
+    import config
 
-        import config
+    MY_CONSTANT = 42
+    config.doit()
+    ```
 
-        MY_CONSTANT = 42
-        config.doit()
+    `config`:
 
-    ``config``:
-
-    .. code-block:: python
-
-        def doit():
-            # prints 42
-            print(
-                get_constant_from_caller(
-                    "MY_CONSTANT", 20
-                )
+    ```python
+    def doit():
+        # prints 42
+        print(
+            get_constant_from_caller(
+                "MY_CONSTANT", 20
             )
+        )
+    ```
 
     """
     current_frame = inspect.currentframe()
@@ -166,14 +166,14 @@ def get_invenio_cfg_path() -> str | Path:
 def load_configuration_overrides() -> Config:
     """Read deployment configuration values from the current directory and the process environment.
 
-    This is the part of :func:`load_configuration_variables` that does
-    *not* depend on the location of ``invenio.cfg``: it merges, lowest
-    to highest priority, a ``variables`` file in the current working
-    directory, a ``.env`` file in the current working directory, any
-    ``.json``/``.yaml``/``.yml`` files under the directory named by the
-    ``INVENIO_CONFIG_PATH`` environment variable (if set), and finally
+    This is the part of [`load_configuration_variables`][oarepo_config.load_configuration_variables] that does
+    *not* depend on the location of `invenio.cfg`: it merges, lowest
+    to highest priority, a `variables` file in the current working
+    directory, a `.env` file in the current working directory, any
+    `.json`/`.yaml`/`.yml` files under the directory named by the
+    `INVENIO_CONFIG_PATH` environment variable (if set), and finally
     the actual process environment variables whose name starts with
-    ``INVENIO_``.
+    `INVENIO_`.
     """
     env = Config(Path(__file__).parent)
 
@@ -217,25 +217,25 @@ class DictWithGetAttr(dict):
 # Loading it this way so could interpolate values
 @functools.lru_cache(maxsize=1)
 def load_configuration_variables() -> DictWithGetAttr:
-    """Read the deployment's configuration values (``INVENIO_...`` variables).
+    """Read the deployment's configuration values (`INVENIO_...` variables).
 
     Collects configuration values set by the deployment, from multiple
     places, each one able to override the previous (lowest to highest
     priority):
 
-    1. a ``variables`` file next to ``invenio.cfg`` (the instance
+    1. a `variables` file next to `invenio.cfg` (the instance
        directory);
-    2. a ``variables`` file in the current working directory;
-    3. a ``.env`` file in the current working directory;
-    4. any ``.json``/``.yaml``/``.yml`` files under the directory named
-       by the ``INVENIO_CONFIG_PATH`` environment variable, if set;
+    2. a `variables` file in the current working directory;
+    3. a `.env` file in the current working directory;
+    4. any `.json`/`.yaml`/`.yml` files under the directory named
+       by the `INVENIO_CONFIG_PATH` environment variable, if set;
     5. the actual process environment variables (always wins).
 
-    Values such as ``"True"``/``"False"`` or JSON snippets are converted
+    Values such as `"True"`/`"False"` or JSON snippets are converted
     to real Python types (booleans, numbers, lists, dicts) where
     possible. The result can be accessed both as a dictionary and via
-    attribute access (e.g. ``env.INVENIO_SECRET_KEY``); accessing a
-    variable that was never set raises ``AttributeError``.
+    attribute access (e.g. `env.INVENIO_SECRET_KEY`); accessing a
+    variable that was never set raises `AttributeError`.
     """
     env = Config(Path(__file__).parent)
     # lowest priority are variables
@@ -316,20 +316,20 @@ def override_configuration(env: dict[str, Any] | None = None) -> None:
     """Apply ad-hoc configuration overrides from the environment, without writing Python code.
 
     Lets a deployment set (or override) any Invenio configuration value
-    directly from the ``variables``/``.env`` files or the process
-    environment, by prefixing its name with ``INVENIO_``. For example,
-    setting ``INVENIO_RDM_ARCHIVE_DOWNLOAD_ENABLED=false`` in the
-    deployment's configuration will set the ``RDM_ARCHIVE_DOWNLOAD_ENABLED``
-    setting to ``False``, without needing to change ``invenio.cfg``.
+    directly from the `variables`/`.env` files or the process
+    environment, by prefixing its name with `INVENIO_`. For example,
+    setting `INVENIO_RDM_ARCHIVE_DOWNLOAD_ENABLED=false` in the
+    deployment's configuration will set the `RDM_ARCHIVE_DOWNLOAD_ENABLED`
+    setting to `False`, without needing to change `invenio.cfg`.
 
     This is not applied automatically - call it explicitly from
-    ``invenio.cfg``, typically as the very last step, so that these
-    overrides win over anything set by the ``configure_*()`` functions
+    `invenio.cfg`, typically as the very last step, so that these
+    overrides win over anything set by the `configure_*()` functions
     above it.
 
     Args:
         env: Normally left unset, in which case the values loaded from
-            ``variables``/``.env``/the process environment are used.
+            `variables`/`.env`/the process environment are used.
 
     """
     if env is None:

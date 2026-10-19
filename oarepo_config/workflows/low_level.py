@@ -47,15 +47,15 @@ def register_workflow(
 
     This is a low-level, single-workflow building block. Repositories
     that use the community-based workflow shape provided by the
-    ``oarepo_app`` package typically use its higher-level
-    ``configure_workflows(IndividualWorkflow(...), CommunityWorkflow(...))``
+    `oarepo_app` package typically use its higher-level
+    `configure_workflows(IndividualWorkflow(...), CommunityWorkflow(...))`
     helper instead - see this package's README for the difference.
 
     Args:
         workflow_code: A short, unique identifier for the workflow, e.g.
-            ``"default"``.
+            `"default"`.
         workflow_name: The human-readable name of the workflow, shown to
-            users, e.g. ``_("Default workflow")``.
+            users, e.g. `_("Default workflow")`.
         permissions_policy: Who is allowed to do what with records that
             use this workflow (create, edit, delete, publish, ...). Pass
             either a permissions policy class or its import path as a
@@ -64,26 +64,24 @@ def register_workflow(
             records using this workflow (e.g. a publish request that
             needs a curator's approval). Pass either a request policy
             class or its import path as a string.
-        use_low_level_workflows: Set to ``True`` to silence the warning
-            recommending :func:`configure_workflows` instead, for the
+        use_low_level_workflows: Set to `True` to silence the warning
+            recommending [`configure_workflows`][oarepo_config.configure_workflows] instead, for the
             (uncommon) cases that genuinely need this low-level,
             single-workflow API.
 
-    Requires the optional ``oarepo_workflows`` (and, for its defaults,
-    ``oarepo_requests``) package to be installed.
+    Requires the optional `oarepo_workflows` (and, for its defaults,
+    `oarepo_requests`) package to be installed.
 
     Invenio configuration variables set:
 
-    * ``WORKFLOWS`` - the new workflow is appended; workflows already
+    * `WORKFLOWS` - the new workflow is appended; workflows already
       registered (by earlier calls) are kept.
-    * ``REQUESTS_PERMISSION_POLICY`` - only if not already set by an
-      earlier call; defaults to :class:`oarepo_config.requests.RequestsPermissionPolicy`
+    * `REQUESTS_PERMISSION_POLICY` - only if not already set by an
+      earlier call; defaults to `oarepo_config.requests.RequestsPermissionPolicy`
       (workflow-based, plus creation of community-topic request types).
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         from oarepo_workflows.services.permissions import (
             DefaultWorkflowPermissions,
         )
@@ -97,6 +95,7 @@ def register_workflow(
             permissions_policy=DefaultWorkflowPermissions,
             requests_policy=CreatorsFromWorkflowRequestsPermissionPolicy,
         )
+        ```
 
     """
     if not use_low_level_workflows:

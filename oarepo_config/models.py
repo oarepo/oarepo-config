@@ -22,29 +22,28 @@ def add_model(model_package_name: str) -> None:
     once (as opposed to searching within just one model). This does not
     register the model itself (its API endpoints, forms, etc.) - that is
     normally done separately, by calling that model package's own
-    ``register()`` function.
+    `register()` function.
 
     Args:
         model_package_name: The Python import path of the generated
-            model package to add, e.g. ``"datasets"`` for a model built
-            from a ``datasets`` model package. If the package cannot be
+            model package to add, e.g. `"datasets"` for a model built
+            from a `datasets` model package. If the package cannot be
             found or has not been built yet, this is only logged as an
             error - it does not stop the repository from starting.
 
     Invenio configuration variables set:
 
-    * ``GLOBAL_SEARCH_MODELS`` - the model's ``MODEL_DEFINITION`` is
+    * `GLOBAL_SEARCH_MODELS` - the model's `MODEL_DEFINITION` is
       appended to this list; any models already registered (by earlier
       calls, or by other packages) are kept.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         from datasets import datasets_model
 
         datasets_model.register()
         config.add_model("datasets")
+        ```
 
     """
     from invenio_base.utils import obj_or_import_string
