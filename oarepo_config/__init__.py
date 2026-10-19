@@ -46,6 +46,7 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
+from .ark import configure_ark
 from .datastreams import configure_datastreams
 from .detail_sidebar import configure_detail_sidebar
 from .einfra import configure_einfra_oidc
@@ -103,6 +104,7 @@ __all__ = (
     "IndividualWorkflow",
     "__version__",
     "add_model",
+    "configure_ark",
     "configure_communities",
     "configure_cron",
     "configure_datastreams",
