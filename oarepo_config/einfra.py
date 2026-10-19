@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2025 CESNET z.s.p.o
 # SPDX-License-Identifier: MIT
 
