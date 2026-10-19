@@ -30,23 +30,22 @@ def configure_jobs(
             only administrators can. Pass your own permission policy
             class (or its import path as a string) to change this.
         logging_level: How detailed the job logs should be, e.g.
-            ``"DEBUG"``, ``"INFO"`` (the default), ``"WARNING"``.
+            `"DEBUG"`, `"INFO"` (the default), `"WARNING"`.
 
     Invenio configuration variables set:
 
-    * ``APP_LOGS_PERMISSION_POLICY`` - the ``permission_policy`` above.
-    * ``JOBS_LOGGING_LEVEL`` - the ``logging_level`` above.
+    * `APP_LOGS_PERMISSION_POLICY` - the `permission_policy` above.
+    * `JOBS_LOGGING_LEVEL` - the `logging_level` above.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_jobs()
         # or with custom settings:
         config.configure_jobs(
             permission_policy="my_package:policies:MyJobPolicy",
             logging_level="DEBUG",
         )
+        ```
 
     """
     from invenio_jobs.services.permissions import (

@@ -14,16 +14,15 @@ def initialize_i18n() -> None:
     required field is missing), the error message shown to them is
     translated into their chosen language instead of always being shown
     in English. Takes no parameters; call it once, near the top of
-    ``invenio.cfg``.
+    `invenio.cfg`.
 
     Invenio configuration variables set: none - this only patches
     Marshmallow's error-message machinery in memory.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.initialize_i18n()
+        ```
 
     """
     from flask_babel import lazy_gettext as _

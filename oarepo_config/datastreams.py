@@ -35,30 +35,28 @@ def configure_datastreams(
     Args:
         readers: Extra readers to make available, as a mapping of a
             short name to either an import path string
-            (``"my_package.readers:MyReader"``) or the class/object
+            (`"my_package.readers:MyReader"`) or the class/object
             itself.
         writers: Extra writers to make available, in the same format as
-            ``readers``.
+            `readers`.
         transformers: Extra transformers to make available, in the same
-            format as ``readers``.
+            format as `readers`.
 
     Any readers/writers/transformers already registered (for example by
-    :func:`configure_generic_parameters`) are kept; the ones passed here
+    [`configure_generic_parameters`][oarepo_config.configure_generic_parameters]) are kept; the ones passed here
     are added on top.
 
     Invenio configuration variables set:
 
-    * ``VOCABULARIES_DATASTREAM_READERS`` - only if ``readers`` is
+    * `VOCABULARIES_DATASTREAM_READERS` - only if `readers` is
       given; merged with any existing value.
-    * ``VOCABULARIES_DATASTREAM_WRITERS`` - only if ``writers`` is
+    * `VOCABULARIES_DATASTREAM_WRITERS` - only if `writers` is
       given; merged with any existing value.
-    * ``VOCABULARIES_DATASTREAM_TRANSFORMERS`` - only if
-      ``transformers`` is given; merged with any existing value.
+    * `VOCABULARIES_DATASTREAM_TRANSFORMERS` - only if
+      `transformers` is given; merged with any existing value.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_datastreams(
             readers={
                 "myreader": "my_package:MyReader"
@@ -67,6 +65,7 @@ def configure_datastreams(
                 "mywriter": "my_package:MyWriter"
             },
         )
+        ```
 
     """
     # can't move into a function cause of constant_from_caller methods

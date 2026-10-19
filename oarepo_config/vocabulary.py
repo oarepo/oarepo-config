@@ -21,29 +21,27 @@ def configure_vocabulary(code: str, **kwargs: Any) -> None:
 
     Args:
         code: A short, unique identifier for the vocabulary, e.g.
-            ``"languages"``.
+            `"languages"`.
         **kwargs: Extra details describing the vocabulary, typically
-            including ``name`` (its display name), ``description``, and
-            ``props`` (a description of any extra fields each entry in
+            including `name` (its display name), `description`, and
+            `props` (a description of any extra fields each entry in
             the vocabulary should have, and how they appear in forms).
             See the
-            `OARepo reference docs <https://nrp-cz.github.io/docs/customize/configure/reference#configure_vocabulary>`_
+            [OARepo reference docs](https://nrp-cz.github.io/docs/customize/configure/reference#configure_vocabulary)
             for the full list of supported keys.
 
-    Calling this multiple times with different ``code`` values adds
+    Calling this multiple times with different `code` values adds
     multiple vocabularies; it does not replace previously configured
     ones.
 
     Invenio configuration variables set:
 
-    * ``INVENIO_VOCABULARY_TYPE_METADATA`` - the entry for ``code`` is
-      set to ``kwargs``; entries for other vocabulary codes (added by
+    * `INVENIO_VOCABULARY_TYPE_METADATA` - the entry for `code` is
+      set to `kwargs`; entries for other vocabulary codes (added by
       earlier calls) are kept.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_vocabulary(
             code="languages",
             name=_("Languages"),
@@ -61,6 +59,7 @@ def configure_vocabulary(code: str, **kwargs: Any) -> None:
             },
             dump_options=True,
         )
+        ```
 
     """
     INVENIO_VOCABULARY_TYPE_METADATA = get_constant_from_caller("INVENIO_VOCABULARY_TYPE_METADATA", {})

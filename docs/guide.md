@@ -4,7 +4,7 @@ Reference material that doesn't fit on the [front page](index.md): how
 configuration values are loaded, the order to call functions in, the
 full list of environment variables, a full example `invenio.cfg`, how
 the package works internally, and known gaps. For a one-line-per-function
-summary with links into the {doc}`API reference <api>`, see the
+summary with links into the [API reference](reference/index.md), see the
 [front page](index.md).
 
 ## Configuration sources and precedence
@@ -12,7 +12,7 @@ summary with links into the {doc}`API reference <api>`, see the
 This section is for whoever **deploys/operates** an instance (sets up
 `variables`, `.env`, or the process environment) — for how
 `invenio.cfg` itself *consumes* these values in code, see
-[Reading configuration variables in invenio.cfg](#reading-configuration-variables-in-invenio-cfg)
+[Reading configuration variables in invenio.cfg](#reading-configuration-variables-in-inveniocfg)
 further down.
 
 Several functions (`configure_generic_parameters`, `configure_ui`,

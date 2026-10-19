@@ -1,40 +1,42 @@
 # SPDX-FileCopyrightText: 2025 CESNET z.s.p.o
 # SPDX-License-Identifier: MIT
 
-"""Helper functions for writing a clean, high-level ``invenio.cfg``.
+"""Helper functions for writing a clean, high-level `invenio.cfg`.
 
 Instead of hand-assembling dozens of Flask/Invenio config constants,
-``invenio.cfg`` calls a small number of ``configure_*()`` functions from
+`invenio.cfg` calls a small number of `configure_*()` functions from
 this package. Each one computes a group of related settings and writes
-them directly into ``invenio.cfg``'s own configuration, as if you had
-set them by hand::
+them directly into `invenio.cfg`'s own configuration, as if you had
+set them by hand:
 
-    import oarepo_config as config
-    from invenio_i18n import (
-        lazy_gettext as _,
-    )
+```python
+import oarepo_config as config
+from invenio_i18n import (
+    lazy_gettext as _,
+)
 
-    config.initialize_i18n()
+config.initialize_i18n()
 
-    config.configure_generic_parameters(
-        languages=(("cs", _("Czech")),),
-    )
+config.configure_generic_parameters(
+    languages=(("cs", _("Czech")),),
+)
 
-    config.configure_ui(
-        code="myrepo",
-        name=_("My repository"),
-        description=_(
-            "Description of my repository"
-        ),
-    )
+config.configure_ui(
+    code="myrepo",
+    name=_("My repository"),
+    description=_(
+        "Description of my repository"
+    ),
+)
 
-    config.configure_communities()
-    config.configure_cron()
-    config.configure_stats()
+config.configure_communities()
+config.configure_cron()
+config.configure_stats()
 
-    # Feel free to add/override plain CONFIG_VARIABLE = value assignments
-    # below, or use config.configure_vocabulary(...), config.add_model(...),
-    # config.register_workflow(...), etc. for further options.
+# Feel free to add/override plain CONFIG_VARIABLE = value assignments
+# below, or use config.configure_vocabulary(...), config.add_model(...),
+# config.register_workflow(...), etc. for further options.
+```
 
 See the project's README for the full list of available functions, the
 order they should be called in, and the environment variables they read.
@@ -56,8 +58,8 @@ except ImportError:
     def initialize_glitchtip(dsn: str | None = None, deployment_version: str | None = None) -> None:  # noqa: ARG001
         """Set up automatic error reporting to Glitchtip/Sentry.
 
-        Requires the optional ``oarepo-glitchtip`` package; without it,
-        calling this raises an ``ImportError`` explaining that the
+        Requires the optional `oarepo-glitchtip` package; without it,
+        calling this raises an `ImportError` explaining that the
         package needs to be installed first.
 
         Args:
@@ -69,7 +71,7 @@ except ImportError:
                 specific version.
 
         Invenio configuration variables set: implemented entirely in
-        the separate ``oarepo-glitchtip`` package, so the exact set of
+        the separate `oarepo-glitchtip` package, so the exact set of
         variables it writes is documented there, not here.
 
         """

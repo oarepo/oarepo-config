@@ -82,23 +82,21 @@ def configure_communities(
             and its members), "curator" (can review/curate submitted
             records) and "member" (can only view). Pass your own list to
             replace the defaults, e.g. to add a "submitter" role. Each
-            role dictionary understands the keys ``name``, ``title``,
-            ``description``, ``is_owner``, ``can_manage``,
-            ``can_curate`` and ``can_manage_roles`` (the names of the
+            role dictionary understands the keys `name`, `title`,
+            `description`, `is_owner`, `can_manage`,
+            `can_curate` and `can_manage_roles` (the names of the
             roles this role is allowed to add/remove).
 
     Invenio configuration variables set:
 
-    * ``COMMUNITIES_REGISTER_UI_BLUEPRINT`` - always ``True``; enables
+    * `COMMUNITIES_REGISTER_UI_BLUEPRINT` - always `True`; enables
       the communities UI.
-    * ``COMMUNITIES_PERMISSION_POLICY`` - the permission policy class for
+    * `COMMUNITIES_PERMISSION_POLICY` - the permission policy class for
       communities.
-    * ``COMMUNITIES_ROLES`` - the list of available roles in communities.
+    * `COMMUNITIES_ROLES` - the list of available roles in communities.
 
     Example:
-
-    .. code-block:: python
-
+        ```python
         config.configure_communities()
         # or with custom settings:
 
@@ -136,6 +134,7 @@ def configure_communities(
                 ),
             ]
         )
+        ```
 
     """
     COMMUNITIES_REGISTER_UI_BLUEPRINT = True

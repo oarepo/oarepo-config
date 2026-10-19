@@ -30,26 +30,24 @@ def configure_workflows(
     a "WORKFLOWS" entry in the invenio.cfg context (in the caller's globals).
 
     Example:
+        ```python
+        # invenio.cfg
+        from oarepo_app.config import (
+            configure_workflows,
+            IndividualWorkflow,
+            CommunityWorkflow,
+        )
 
-        .. code-block:: python
-
-            # invenio.cfg
-            from oarepo_app.config import (
-                configure_workflows,
-                IndividualWorkflow,
-                CommunityWorkflow,
-            )
-
-            configure_workflows(
-                IndividualWorkflow(
-                    authenticated_draft_creation=False,
-                    review_required=True,
-                    publish_without_review=False,
-                ),
-                CommunityWorkflow(),
-            )
-            # no need to assign the result to WORKFLOWS, that is done automatically
-
+        configure_workflows(
+            IndividualWorkflow(
+                authenticated_draft_creation=False,
+                review_required=True,
+                publish_without_review=False,
+            ),
+            CommunityWorkflow(),
+        )
+        # no need to assign the result to WORKFLOWS, that is done automatically
+        ```
 
     If the workflow definitions are empty, a permissive IndividualWorkflow will be created
     (authenticated draft creation, publish without review allowed).
