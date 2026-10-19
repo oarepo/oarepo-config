@@ -47,6 +47,7 @@ from __future__ import annotations
 from importlib.metadata import PackageNotFoundError, version
 
 from .datastreams import configure_datastreams
+from .detail_sidebar import configure_detail_sidebar
 from .einfra import configure_einfra_oidc
 from .files import configure_files
 from .jobs import configure_jobs
@@ -105,6 +106,7 @@ __all__ = (
     "configure_communities",
     "configure_cron",
     "configure_datastreams",
+    "configure_detail_sidebar",
     "configure_einfra_oidc",
     "configure_files",
     "configure_generic_parameters",
