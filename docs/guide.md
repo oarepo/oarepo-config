@@ -167,20 +167,6 @@ raises `AttributeError` when `invenio.cfg` is imported.
 | `INVENIO_CONFIG_PATH` | `load_configuration_overrides` | optional, extra directory of `.json`/`.yaml`/`.yml` overrides |
 | `INVENIO_INSTANCE_PATH` | `load_configuration_variables` | optional, explicit path to the instance dir containing `invenio.cfg`/`variables` |
 
-## `initial_configuration.py` / `initial_rdm_config.py`
-
-Two additional modules ship plain module-level constants rather than
-`configure_*()` functions:
-
-* `oarepo_config.initial_configuration` — currently just
-  `THEME_FRONTPAGE = False`.
-* `oarepo_config.initial_rdm_config` — a large block of RDM/OAI-PMH
-  defaults (OAI server fetchers/classes, dashboard/communities/requests
-  routes, citation styles incl. `iso690-author-date-cs`, person/org and
-  identifier schemes incl. `scopusid`/`researcherid`/`vedidk`/`ico`, IIIF
-  preview settings, etc.) intended to replace pieces of
-  `invenio-app-rdm`'s own defaults.
-
 ## Full example
 
 Adapted from a production `invenio.cfg` (CESNET catch-all data
