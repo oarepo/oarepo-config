@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .base import set_constants_in_caller
-
 from invenio_base.utils import obj_or_import_string
+
+from .base import set_constants_in_caller
 
 if TYPE_CHECKING:
     from invenio_records_permissions.generators import Generator
