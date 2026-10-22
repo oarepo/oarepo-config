@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 
 from .base import set_constants_in_caller
 
+from invenio_base.utils import obj_or_import_string
+
 if TYPE_CHECKING:
     from invenio_records_permissions.generators import Generator
 
@@ -58,6 +60,9 @@ def configure_jobs(
         can_read: tuple[Generator, ...] = (AdministrationWithQueryFilter(),)
 
     # invenio-jobs configuration
-    APP_LOGS_PERMISSION_POLICY = permission_policy or JobLogsPermissionPolicy
+    APP_LOGS_PERMISSION_POLICY = obj_or_import_string(
+        permission_policy,
+        default=JobLogsPermissionPolicy,
+    )
     JOBS_LOGGING_LEVEL = logging_level or "INFO"
     set_constants_in_caller(locals())
