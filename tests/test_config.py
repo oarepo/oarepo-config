@@ -51,9 +51,12 @@ def test_datastreams():
 
 def test_jobs():
     """Custom job settings override the helper defaults."""
-    configure_jobs(permission_policy="example.Policy", logging_level="DEBUG")
+    import json
 
-    assert APP_LOGS_PERMISSION_POLICY == "example.Policy"  # noqa: F821
+    # for test reasons something that can be imported
+    configure_jobs(permission_policy="json.dumps", logging_level="DEBUG")
+
+    assert json.dumps == APP_LOGS_PERMISSION_POLICY  # noqa: F821
     assert JOBS_LOGGING_LEVEL == "DEBUG"  # noqa: F821
 
 
