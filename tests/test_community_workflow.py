@@ -91,7 +91,7 @@ def test_requests():
     assert submission.recipients
     assert submission.transitions.submitted == "submitted"
     assert submission.transitions.accepted == "published"
-    assert submission.transitions.declined == "review_requested"
+    assert submission.transitions.declined == "draft"
 
 
 def test_workflow():
