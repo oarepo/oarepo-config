@@ -226,6 +226,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="revision_requested",
+                    cancelled="draft",
                 ),
                 events=WorkflowEvents(
                     {CommentEventType.type_id or "C": WorkflowEvent(submitters=[*requestors, *reviewer_generators])}
@@ -243,6 +244,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="revision_requested",
+                    cancelled="draft",
                 ),
             ),
             PublishNewVersionRequestType.type_id: WorkflowRequest(
@@ -257,6 +259,7 @@ class IndividualWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="revision_requested",
+                    cancelled="draft",
                 ),
             ),
             UserAccessRequest.type_id: WorkflowRequest(
