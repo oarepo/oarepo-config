@@ -272,6 +272,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="draft",
+                    cancelled="draft",
                 ),
             ),
             PublishChangedMetadataRequestType.type_id: WorkflowRequest(
@@ -289,6 +290,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="revision_requested",
+                    cancelled="draft",
                 ),
             ),
             PublishNewVersionRequestType.type_id: WorkflowRequest(
@@ -306,6 +308,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
                     submitted="submitted",
                     accepted="published",
                     declined="revision_requested",
+                    cancelled="draft",
                 ),
             ),
             # note: we need to patch https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/services/access/service.py#L784,
