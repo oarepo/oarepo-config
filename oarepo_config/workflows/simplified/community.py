@@ -271,7 +271,7 @@ class CommunityWorkflow(BaseWorkflowSettings):
                 transitions=WorkflowTransitions(
                     submitted="submitted",
                     accepted="published",
-                    declined="review_requested",
+                    declined="draft",
                 ),
             ),
             PublishChangedMetadataRequestType.type_id: WorkflowRequest(
