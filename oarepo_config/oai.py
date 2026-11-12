@@ -68,7 +68,9 @@ def configure_oai(
         config.configure_oai()
         # or with an explicit contact:
         config.configure_oai(
-            admin_emails=["repository@example.com"]
+            admin_emails=[
+                "repository@example.com"
+            ]
         )
         ```
 
