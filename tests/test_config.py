@@ -47,7 +47,9 @@ def test_cron():
 
 def test_cron_matches_upstream_schedule():
     """Every job InvenioRDM schedules is scheduled here too, unless deliberately left out."""
-    from invenio_app_rdm.config import CELERY_BEAT_SCHEDULE as upstream_schedule
+    from invenio_app_rdm import config as app_rdm_config
+
+    upstream_schedule = app_rdm_config.CELERY_BEAT_SCHEDULE
 
     globals().pop("CELERY_BEAT_SCHEDULE", None)
     globals()["COMMUNITIES_COLLECTIONS_ENABLED"] = True
