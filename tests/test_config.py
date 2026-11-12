@@ -32,10 +32,68 @@ def test_communities():
 
 def test_cron():
     """Built-in jobs remain present and extra jobs are added."""
+    globals().pop("CELERY_BEAT_SCHEDULE", None)
+    globals().pop("COMMUNITIES_COLLECTIONS_ENABLED", None)
+
     configure_cron(custom={"task": "example.task"})
 
     assert CELERY_BEAT_SCHEDULE["custom"]["task"] == "example.task"  # noqa: F821
     assert "indexer" in CELERY_BEAT_SCHEDULE  # noqa: F821
+    # opt-in jobs stay off
+    assert "file-checks" not in CELERY_BEAT_SCHEDULE  # noqa: F821
+    assert "file-integrity-report" not in CELERY_BEAT_SCHEDULE  # noqa: F821
+    assert "update-collections-size" not in CELERY_BEAT_SCHEDULE  # noqa: F821
+
+
+def test_cron_matches_upstream_schedule():
+    """Every job InvenioRDM schedules is scheduled here too, unless deliberately left out."""
+    from invenio_app_rdm.config import CELERY_BEAT_SCHEDULE as upstream_schedule
+
+    globals().pop("CELERY_BEAT_SCHEDULE", None)
+    globals()["COMMUNITIES_COLLECTIONS_ENABLED"] = True
+    try:
+        configure_cron(file_integrity_check_days=14)
+    finally:
+        globals().pop("COMMUNITIES_COLLECTIONS_ENABLED", None)
+
+    scheduled_tasks = {job["task"] for job in CELERY_BEAT_SCHEDULE.values()}  # noqa: F821
+    upstream_tasks = {job["task"] for job in upstream_schedule.values()}
+    # OARepo models do not index usage statistics into record documents
+    deliberately_left_out = {"invenio_rdm_records.services.tasks.reindex_stats"}
+
+    assert upstream_tasks - scheduled_tasks == deliberately_left_out
+    assert CELERY_BEAT_SCHEDULE["file-checks"] == upstream_schedule["file-checks"]  # noqa: F821
+
+
+def test_cron_file_integrity_checks():
+    """Fixity checking is spread over the requested number of days."""
+    import pytest
+
+    globals().pop("CELERY_BEAT_SCHEDULE", None)
+
+    configure_cron(file_integrity_check_days=180)
+
+    assert CELERY_BEAT_SCHEDULE["file-checks"]["kwargs"]["frequency"] == {"days": 180}  # noqa: F821
+    assert "file-integrity-report" in CELERY_BEAT_SCHEDULE  # noqa: F821
+
+    with pytest.raises(ValueError, match="file_integrity_check_days"):
+        configure_cron(file_integrity_check_days=0)
+
+
+def test_cron_all_tasks_importable():
+    """A typo in a task path would only surface as a silently skipped beat job."""
+    from importlib import import_module
+
+    globals().pop("CELERY_BEAT_SCHEDULE", None)
+    globals()["COMMUNITIES_COLLECTIONS_ENABLED"] = True
+    try:
+        configure_cron(file_integrity_check_days=14)
+    finally:
+        globals().pop("COMMUNITIES_COLLECTIONS_ENABLED", None)
+
+    for name, job in CELERY_BEAT_SCHEDULE.items():  # noqa: F821
+        module_name, _, task_name = job["task"].rpartition(".")
+        assert hasattr(import_module(module_name), task_name), name
 
 
 def test_datastreams():
@@ -63,10 +121,48 @@ def test_jobs():
 def test_oai():
     """OAI uses the configured repository name."""
     globals()["REPOSITORY_NAME"] = "Repository"
+    globals().pop("REPOSITORY_SUPPORT_CONTACT", None)
+    globals().pop("OAISERVER_ADMIN_EMAILS", None)
 
     configure_oai()
 
     assert globals()["OAISERVER_REPOSITORY_NAME"] == "Repository"
+    assert OAISERVER_PAGE_SIZE == 50  # noqa: F821
+    assert OAISERVER_RESUMPTION_TOKEN_EXPIRE_TIME == 120  # noqa: F821
+    # no contact known: invenio-oaiserver's own value is left untouched
+    assert "OAISERVER_ADMIN_EMAILS" not in globals()
+
+
+def test_oai_admin_emails():
+    """The administrator contact comes from the argument or from the support contact."""
+    globals()["REPOSITORY_NAME"] = "Repository"
+
+    globals()["REPOSITORY_SUPPORT_CONTACT"] = "support@example.com"
+    configure_oai()
+    assert globals()["OAISERVER_ADMIN_EMAILS"] == ["support@example.com"]
+
+    # a support contact that is not a bare e-mail address is not announced
+    globals().pop("OAISERVER_ADMIN_EMAILS")
+    globals()["REPOSITORY_SUPPORT_CONTACT"] = "Call us or write to support@example.com"
+    configure_oai()
+    assert "OAISERVER_ADMIN_EMAILS" not in globals()
+
+    configure_oai(admin_emails="admin@example.com", page_size=10, resumption_token_expire_time=60)
+    assert globals()["OAISERVER_ADMIN_EMAILS"] == ["admin@example.com"]
+    assert OAISERVER_PAGE_SIZE == 10  # noqa: F821
+    assert OAISERVER_RESUMPTION_TOKEN_EXPIRE_TIME == 60  # noqa: F821
+
+    configure_oai(admin_emails=("a@example.com", "b@example.com"))
+    assert globals()["OAISERVER_ADMIN_EMAILS"] == ["a@example.com", "b@example.com"]
+
+
+def test_oai_repository_name():
+    """An explicit name wins and does not need configure_ui to have run."""
+    globals().pop("REPOSITORY_NAME", None)
+
+    configure_oai(repository_name="Harvestable Repository", admin_emails=["admin@example.com"])
+
+    assert globals()["OAISERVER_REPOSITORY_NAME"] == "Harvestable Repository"
 
 
 def test_vocabulary():
@@ -130,6 +226,20 @@ def test_generic(monkeypatch):
     assert SQLALCHEMY_DATABASE_URI.endswith("@db:5432/repo")  # noqa: F821
     assert CACHE_REDIS_URL == "redis://redis:6379/0"  # noqa: F821
     assert I18N_LANGUAGES == [("cs", "Czech")]  # noqa: F821
+    # the client's own timeout applies unless the deployment asks for another one
+    assert "timeout" not in SEARCH_CLIENT_CONFIG  # noqa: F821
+
+    # InvenioRDM flavour defaults are applied along the way
+    assert REST_CSRF_ENABLED is True  # noqa: F821
+    assert RATELIMIT_STORAGE_URI == "redis://redis:6379/4"  # noqa: F821
+    assert ACCESS_CACHE == "invenio_cache:current_cache"  # noqa: F821
+    assert SQLALCHEMY_ENGINE_OPTIONS["pool_recycle"] == 3600  # noqa: F821
+    # ... without clobbering what this function sets itself
+    assert RATELIMIT_GUEST_USER == "5000 per hour;500 per minute"  # noqa: F821
+
+    env["INVENIO_OPENSEARCH_TIMEOUT"] = 60
+    generic_parameters.configure_generic_parameters()
+    assert SEARCH_CLIENT_CONFIG["timeout"] == 60  # noqa: F821
 
 
 def test_ui(monkeypatch):

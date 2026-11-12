@@ -15,6 +15,7 @@ from .base import set_constants_in_caller
 
 def configure_stats(
     enable: bool = True,
+    count_preview_downloads: bool = True,
 ) -> None:
     """Set up usage statistics (record views, downloads, etc.).
 
@@ -26,10 +27,17 @@ def configure_stats(
         enable: Set to `False` to turn off collecting new usage
             statistics events (for example on a staging/test instance).
             Defaults to `True`.
+        count_preview_downloads: Whether a file fetched by the in-page
+            file previewer counts as a download. `True` (the default,
+            same as upstream InvenioRDM) counts it; with `False`, as on
+            Zenodo, merely opening a record page that previews a file no
+            longer inflates the download numbers.
 
     Invenio configuration variables set:
 
     * `STATS_REGISTER_RECEIVERS` - the `enable` argument above.
+    * `RDM_STATS_EXCLUDE_PREVIEW_FILE_DOWNLOAD_EVENTS` - the inverse of
+      `count_preview_downloads`.
     * `STATS_EVENTS`, `STATS_AGGREGATIONS`, `STATS_QUERIES`,
       `STATS_PERMISSION_FACTORY` - always set to `invenio-app-rdm`'s
       defaults, regardless of `enable`.
@@ -54,6 +62,7 @@ def configure_stats(
     set_constants_in_caller(
         {
             "STATS_REGISTER_RECEIVERS": STATS_REGISTER_RECEIVERS,
+            "RDM_STATS_EXCLUDE_PREVIEW_FILE_DOWNLOAD_EVENTS": not count_preview_downloads,
             "STATS_EVENTS": STATS_EVENTS,
             "STATS_AGGREGATIONS": STATS_AGGREGATIONS,
             "STATS_QUERIES": STATS_QUERIES,

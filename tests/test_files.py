@@ -31,6 +31,8 @@ def test_configure_files_defaults():
         "maxStorage": 5 * 10**9,
     }
     assert RDM_FILES_DEFAULT_MAX_ADDITIONAL_QUOTA_SIZE == 0  # noqa: F821
+    assert RDM_ARCHIVE_DOWNLOAD_ENABLED is True  # noqa: F821
+    assert RECORDS_RESOURCES_ARCHIVE_DOWNLOAD_MAX_SIZE is None  # noqa: F821
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is True  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
     assert timedelta(days=45) == RDM_FILE_MODIFICATION_PERIOD  # noqa: F821
@@ -102,3 +104,16 @@ def test_configure_files_allow_empty_files_override():
 
     assert RDM_ALLOW_METADATA_ONLY_RECORDS is False  # noqa: F821
     assert RECORDS_RESOURCES_ALLOW_EMPTY_FILES is True  # noqa: F821
+
+
+def test_configure_files_archive_download():
+    """The "Download all" archive can be capped or turned off."""
+    configure_files(max_archive_download_size=300 * 10**6)
+
+    assert RDM_ARCHIVE_DOWNLOAD_ENABLED is True  # noqa: F821
+    assert RECORDS_RESOURCES_ARCHIVE_DOWNLOAD_MAX_SIZE == 300 * 10**6  # noqa: F821
+
+    configure_files(allow_archive_download=False)
+
+    assert RDM_ARCHIVE_DOWNLOAD_ENABLED is False  # noqa: F821
+    assert RECORDS_RESOURCES_ARCHIVE_DOWNLOAD_MAX_SIZE is None  # noqa: F821

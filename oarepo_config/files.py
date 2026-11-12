@@ -27,6 +27,8 @@ def configure_files(  # noqa: PLR0913, PLR0917
     allow_immediate_file_modification: bool = True,
     allow_immediate_quota_increase: bool = True,
     max_additional_quota_size: int = 0,
+    allow_archive_download: bool = True,
+    max_archive_download_size: int | None = None,
 ) -> None:
     """Set up file upload quotas and file-related toggles.
 
@@ -69,6 +71,16 @@ def configure_files(  # noqa: PLR0913, PLR0917
             `False`, immediate quota increases stay disabled.
         max_additional_quota_size: Additional quota users/admins may grant
             on top of the default record quota. Defaults to 0.
+        allow_archive_download: Whether all files of a record can be
+            downloaded at once as a single ZIP archive ("Download all").
+            The archive is assembled on the fly by a web worker, which
+            stays busy for the whole download. Defaults to `True`.
+        max_archive_download_size: Largest total size of a record's files,
+            in bytes, for which the "Download all" archive is still
+            offered; larger records only offer per-file downloads. `None`
+            (the default, same as upstream InvenioRDM) means no limit - set
+            one if your repository accepts large files (Zenodo uses
+            300 MB, `300 * 10**6`).
 
     Invenio configuration variables set:
 
@@ -101,6 +113,12 @@ def configure_files(  # noqa: PLR0913, PLR0917
     * `FILES_REST_DEFAULT_MAX_FILE_SIZE` and
       `FILES_REST_DEFAULT_QUOTA_SIZE` - fallback variables used by
       the lower-level file storage layer.
+    * `RDM_FILES_DEFAULT_MAX_ADDITIONAL_QUOTA_SIZE` - the
+      `max_additional_quota_size` above.
+    * `RDM_ARCHIVE_DOWNLOAD_ENABLED` - whether the "Download all"
+      archive is available.
+    * `RECORDS_RESOURCES_ARCHIVE_DOWNLOAD_MAX_SIZE` - total size limit
+      for the "Download all" archive.
 
     Example:
         ```python
@@ -135,6 +153,9 @@ def configure_files(  # noqa: PLR0913, PLR0917
     RECORDS_RESOURCES_ALLOW_EMPTY_FILES = (
         allow_empty_files if allow_empty_files is not None else allow_metadata_only_records
     )
+
+    RDM_ARCHIVE_DOWNLOAD_ENABLED = allow_archive_download
+    RECORDS_RESOURCES_ARCHIVE_DOWNLOAD_MAX_SIZE = max_archive_download_size
 
     RDM_FILE_MODIFICATION_PERIOD = file_modification_grace_period
 

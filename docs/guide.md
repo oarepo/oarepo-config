@@ -141,18 +141,23 @@ raises `AttributeError` when `invenio.cfg` is imported.
 | `INVENIO_SITE_UI_URL`, `INVENIO_SITE_API_URL` | `configure_generic_parameters` | optional, overrides host/port composition |
 | `INVENIO_DATABASE_USER/PASSWORD/HOST/PORT/DBNAME` | `configure_generic_parameters` | fallback for `SQLALCHEMY_DATABASE_URI` |
 | `INVENIO_SQLALCHEMY_DATABASE_URI` | `configure_generic_parameters` | optional, overrides the above |
+| `INVENIO_PGBOUNCER_ENABLED` | `configure_generic_parameters` | optional; `True` disables connection pooling in the application (`NullPool`) when PgBouncer pools instead |
+| `INVENIO_SQLALCHEMY_ENGINE_OPTIONS` | `configure_generic_parameters` | optional JSON object merged over the default `SQLALCHEMY_ENGINE_OPTIONS`, e.g. `{"pool_size": 10, "pool_pre_ping": true}` |
 | `INVENIO_S3_PROTOCOL/HOST/PORT` | `configure_generic_parameters` | fallback for `S3_ENDPOINT_URL` |
 | `INVENIO_S3_ENDPOINT_URL` | `configure_generic_parameters` | optional, overrides the above |
 | `INVENIO_S3_ACCESS_KEY`, `INVENIO_S3_SECRET_KEY` | `configure_generic_parameters` | required, min length enforced by MinIO/S3 itself |
 | `INVENIO_OPENSEARCH_HOST/PORT` | `configure_generic_parameters` | `SEARCH_HOSTS` |
 | `INVENIO_OPENSEARCH_USE_SSL/VERIFY_CERTS/ASSERT_HOSTNAME/SHOW_WARN` | `configure_generic_parameters` | `SEARCH_CLIENT_CONFIG` |
 | `INVENIO_OPENSEARCH_CA_CERTS_PATH` | `configure_generic_parameters` | optional |
+| `INVENIO_OPENSEARCH_TIMEOUT` | `configure_generic_parameters` | optional, search request timeout in seconds (client default: 10) |
 | `INVENIO_SEARCH_INDEX_PREFIX` | `configure_generic_parameters` | required |
 | `INVENIO_REDIS_HOST`, `INVENIO_REDIS_PORT` | `configure_generic_parameters` | required |
 | `INVENIO_REDIS_CACHE_DB` | `configure_generic_parameters` | fallback for `CACHE_REDIS_URL` |
 | `INVENIO_REDIS_SESSION_DB` | `configure_generic_parameters` | fallback for `ACCOUNTS_SESSION_REDIS_URL` |
 | `INVENIO_REDIS_COMMUNITIES_CACHE_DB` | `configure_generic_parameters` | fallback for `COMMUNITIES_IDENTITIES_CACHE_REDIS_URL` |
 | `INVENIO_REDIS_CELERY_RESULT_DB` | `configure_generic_parameters` | fallback for `CELERY_RESULT_BACKEND` |
+| `INVENIO_REDIS_RATELIMIT_DB` | `configure_generic_parameters` | optional, default `4`; Redis database for the rate limiting counters (`RATELIMIT_STORAGE_URI`). Must not be the communities cache database, which is flushed daily |
+| `INVENIO_RATELIMIT_STORAGE_URI` | `configure_generic_parameters` | optional, overrides the above |
 | `INVENIO_CACHE_REDIS_URL`, `INVENIO_ACCOUNTS_SESSION_REDIS_URL`, `INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL`, `INVENIO_CELERY_RESULT_BACKEND` | `configure_generic_parameters` | optional, override the `INVENIO_REDIS_*_DB` composition above |
 | `INVENIO_RABBIT_USER/PASSWORD/HOST/PORT` | `configure_generic_parameters` | fallback for `CELERY_BROKER_URL` |
 | `INVENIO_CELERY_BROKER_URL` | `configure_generic_parameters` | optional, overrides the above |
@@ -160,12 +165,55 @@ raises `AttributeError` when `invenio.cfg` is imported.
 | `INVENIO_SECURITY_REGISTERABLE/RECOVERABLE/CHANGEABLE/CONFIRMABLE/LOGIN_WITHOUT_CONFIRMATION` | `configure_generic_parameters` | required |
 | `INVENIO_MAIL_DEFAULT_SENDER` | `configure_generic_parameters` | optional (defaults to a placeholder test address) |
 | `INVENIO_MAIL_SUPPRESS_SEND` | `configure_generic_parameters` | optional |
+| `INVENIO_APP_RDM_ADMIN_EMAIL_RECIPIENT` | `configure_generic_parameters` | optional; recipient of the daily file integrity report, see `configure_cron(file_integrity_check_days=...)` |
 | `INVENIO_DEPLOYMENT_VERSION` | `configure_ui` | optional, defaults to `"local development"`; also gates whether Matomo analytics is wired up |
 | `INVENIO_MATOMO_ANALYTICS_URL`, `INVENIO_MATOMO_ANALYTICS_SITE_ID` | `configure_ui` | required only if `analytics="matomo"` and not local dev |
 | `INVENIO_REMOTE_AUTH_ENABLED` | `configure_einfra_oidc` | optional, default disabled |
 | `INVENIO_EINFRA_CONSUMER_KEY`, `INVENIO_EINFRA_CONSUMER_SECRET` | `configure_einfra_oidc` | required only if e-INFRA login is enabled |
 | `INVENIO_CONFIG_PATH` | `load_configuration_overrides` | optional, extra directory of `.json`/`.yaml`/`.yml` overrides |
 | `INVENIO_INSTANCE_PATH` | `load_configuration_variables` | optional, explicit path to the instance dir containing `invenio.cfg`/`variables` |
+
+## Parity with upstream InvenioRDM
+
+A stock InvenioRDM instance gets its instance-wide defaults from
+`invenio_app_rdm.config`. OARepo does not load that module - it would
+bring back the stock RDM record UI, routes and templates that OARepo
+replaces - so the settings OARepo still relies on are re-applied in three
+places:
+
+| Where | What | Applies to |
+|---|---|---|
+| `oarepo.initial_rdm_config` (package `oarepo`) | inert and corrective defaults: error handlers, notification preference schemas, thumbnail sizes, per-endpoint rate limits, indexing retries, denial of the legacy files API, ... | every OARepo application |
+| `oarepo_rdm.initial_config` (package `oarepo-rdm`) | `SITEMAP_SECTIONS` with a records section that understands OARepo models | every OARepo application |
+| `configure_generic_parameters()` (this package) | defaults that switch on enforcement or depend on the deployment: CSRF protection, permission cache, account rate limits, Redis rate limit storage, database pool options | repositories, through `invenio.cfg` |
+
+The split is deliberate: the first two are entry point configuration
+modules loaded by every application, including each library's test suite,
+so they must not change behaviour there.
+
+What that means in practice for a repository:
+
+* **CSRF protection** of the REST API is on (`REST_CSRF_ENABLED`). Browser
+  code must send the `csrftoken` cookie back in the `X-CSRFToken` header on
+  `POST`/`PUT`/`PATCH`/`DELETE`; the HTTP clients exported by oarepo-ui and
+  react-invenio-forms already do. A plain `fetch()` in your own UI code does
+  not, and gets a `400`. API clients authenticating with an access token are
+  exempt.
+* **Rate limits** are counted in Redis and therefore shared by all web
+  processes, instead of each process allowing the full limit on its own.
+* **Scheduled jobs**: `configure_cron()` schedules every job upstream does,
+  except `reindex-stats` (OARepo models do not index usage statistics into
+  the record documents). File fixity checking is opt-in.
+* **Sitemap**: `/sitemap_index_0.xml` (advertised in `/robots.txt`) lists
+  the public records of all models and the public communities; it is
+  refreshed daily by `configure_cron()`.
+* **Not copied on purpose**: `DB_VERSIONING_USER_MODEL` (part of the
+  database schema of existing deployments), `FILES_REST_STORAGE_CLASS_LIST`,
+  `RECORDS_RESOURCES_IMAGE_FORMATS`, and the IIIF, static pages, VCS and
+  profiler settings.
+
+To see what an instance ends up with, compare `app.config` with
+`invenio_app_rdm.config` from `invenio shell`.
 
 ## Full example
 
