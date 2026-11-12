@@ -19,6 +19,7 @@ from .base import (
     merge_with_caller,
     set_constants_in_caller,
 )
+from .rdm_defaults import rdm_defaults
 
 
 def configure_global_logging() -> None:
@@ -57,6 +58,12 @@ def configure_generic_parameters(  # noqa PLR0915
     * translation/locale and file-upload defaults
     * default identifier schemes recognised for names, funders and
       affiliations (e.g. ORCID, ROR, VEDIDK, Scopus author ID)
+
+    * the InvenioRDM security defaults that upstream ships in
+      `invenio_app_rdm.config` and that only make sense for a deployed
+      repository (CSRF protection, shared rate limiting, database pool
+      options, permission cache) - see "InvenioRDM flavour defaults"
+      below
 
     Because most values come from the environment, this function will
     fail to start the application if a required `INVENIO_...` variable
@@ -116,7 +123,8 @@ def configure_generic_parameters(  # noqa PLR0915
 
     Search (OpenSearch)
         * `SEARCH_INDEX_PREFIX`, `SEARCH_HOSTS`,
-          `SEARCH_CLIENT_CONFIG`
+          `SEARCH_CLIENT_CONFIG` - set `INVENIO_OPENSEARCH_TIMEOUT`
+          (seconds) to raise the search request timeout.
         * `VOCABULARIES_SERVICE_CONFIG`,
           `VOCABULARIES_RESOURCE_CONFIG` - only if the optional
           `oarepo_vocabularies` package is installed.
@@ -163,6 +171,35 @@ def configure_generic_parameters(  # noqa PLR0915
     Miscellaneous
         * `ROR_CLIENT_ID`, `SESSION_COOKIE_DOMAIN`,
           `COLLECT_STORAGE`
+
+    InvenioRDM flavour defaults
+        Upstream InvenioRDM applies these through
+        `invenio_app_rdm.config`, which OARepo does not load. The inert
+        ones are defaults of every OARepo application (see
+        `oarepo.initial_rdm_config` and `oarepo_rdm.initial_config`);
+        the ones below switch on enforcement or depend on the
+        deployment, so they are applied here. Each of them can be
+        overridden by a plain assignment later in `invenio.cfg`.
+
+        * `REST_CSRF_ENABLED` - CSRF protection of the REST API for
+          browser-session requests (API-token requests are exempt).
+        * `ACCESS_CACHE` - caches resolved action permissions.
+        * `RATELIMIT_STORAGE_URI` - rate limiting counters shared by
+          all web processes in Redis instead of per-process memory.
+          Taken from `INVENIO_RATELIMIT_STORAGE_URI`, or built from the
+          Redis connection and `INVENIO_REDIS_RATELIMIT_DB` (default
+          `4`).
+        * `ACCOUNTS_LOGIN_RATELIMIT`,
+          `ACCOUNTS_FORGOT_PASSWORD_EMAIL_RATELIMIT`,
+          `ACCOUNTS_SEND_CONFIRMATION_RATELIMIT`
+        * `SQLALCHEMY_ENGINE_OPTIONS` - connection pool recycling and
+          timeout, UTC session time zone, host name as the connection's
+          `application_name`. `INVENIO_PGBOUNCER_ENABLED=True` disables
+          pooling in the application; `INVENIO_SQLALCHEMY_ENGINE_OPTIONS`
+          (a JSON object) is merged over the result.
+        * `APP_RDM_ADMIN_EMAIL_RECIPIENT` - recipient of the file
+          integrity report, from
+          `INVENIO_APP_RDM_ADMIN_EMAIL_RECIPIENT`.
 
     In addition, if `use_path_pid_ids` is `True`, this patches the
     `url_prefix` of `RDMParentRecordLinksResourceConfig`,
@@ -297,6 +334,9 @@ def configure_generic_parameters(  # noqa PLR0915
         "ssl_show_warn": env.INVENIO_OPENSEARCH_SHOW_WARN,
         "ca_certs": env.get("INVENIO_OPENSEARCH_CA_CERTS_PATH", None),
     }
+    if env.get("INVENIO_OPENSEARCH_TIMEOUT", None) is not None:
+        # request timeout in seconds; the client's own default (10s) applies otherwise
+        SEARCH_CLIENT_CONFIG["timeout"] = env.INVENIO_OPENSEARCH_TIMEOUT
 
     # caches
     INVENIO_CACHE_TYPE = "redis"
@@ -476,4 +516,5 @@ def configure_generic_parameters(  # noqa PLR0915
 
     if Path("/opt/homebrew/lib").exists() and platform.system() == "Darwin":
         os.environ["DYLD_FALLBACK_LIBRARY_PATH"] = "/opt/homebrew/lib"
-    set_constants_in_caller(locals())
+    # InvenioRDM flavour defaults; anything set explicitly above wins
+    set_constants_in_caller({**rdm_defaults(env), **locals()})
