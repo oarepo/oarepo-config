@@ -92,6 +92,10 @@ def configure_cron(**extra_cron_items: Any) -> None:
                 "task": "invenio_rdm_records.services.tasks.update_expired_embargos",
                 "schedule": crontab(minute=0, hour=0),
             },
+            "update-collections-size": {
+                "task": "invenio_rdm_records.collections.tasks.update_collections_size",
+                "schedule": timedelta(hours=1),
+            },
             **extra_cron_items,
         },
     )
