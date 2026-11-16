@@ -81,6 +81,7 @@ except ImportError:
 
 
 from .base import load_configuration_variables, override_configuration
+from .collections import configure_collections
 from .communities import configure_communities
 from .cron import configure_cron
 from .generic_parameters import configure_generic_parameters
@@ -105,6 +106,7 @@ __all__ = (
     "__version__",
     "add_model",
     "configure_ark",
+    "configure_collections",
     "configure_communities",
     "configure_cron",
     "configure_datastreams",
