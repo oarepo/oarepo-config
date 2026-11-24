@@ -11,6 +11,8 @@ from .base import set_constants_in_caller
 def configure_collections(
     communities_collections_enabled: bool = True,
     max_depth: int = 2,
+    max_trees: int = 10,
+    max_collections_per_tree: int = 100,
     collections_community_slug="global",
 ) -> None:
     """Configure collections feature.
@@ -22,4 +24,6 @@ def configure_collections(
     COMMUNITIES_COLLECTIONS_ENABLED = communities_collections_enabled
     COLLECTIONS_MAX_DEPTH = max_depth
     INVENIO_COLLECTIONS_COMMUNITY_SLUG = "global"
+    COLLECTIONS_MAX_TREES = max_trees
+    COLLECTIONS_MAX_COLLECTIONS_PER_TREE = max_collections_per_tree
     set_constants_in_caller(locals())
