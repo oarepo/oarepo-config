@@ -49,7 +49,7 @@ from importlib.metadata import PackageNotFoundError, version
 from .ark import configure_ark
 from .datastreams import configure_datastreams
 from .detail_sidebar import configure_detail_sidebar
-from .einfra import configure_einfra_oidc
+from .einfra import configure_einfra_oidc, configure_cesid_oidc
 from .files import configure_files
 from .jobs import configure_jobs
 
@@ -106,6 +106,7 @@ __all__ = (
     "__version__",
     "add_model",
     "configure_ark",
+    "configure_cesid_oidc",
     "configure_collections",
     "configure_communities",
     "configure_cron",
