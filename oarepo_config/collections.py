@@ -5,19 +5,28 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from .base import set_constants_in_caller
 
 
 def configure_collections(
-    communities_collections_enabled: bool = True,
-    max_depth: int = 2,
+    enabled: bool = True,
+    max_trees: int = 10,
+    max_collections_per_tree: int = 100,
+    community_slug: Literal["global"] | None = "global",
 ) -> None:
     """Configure collections feature.
 
-    Collections and are curated, browsable subsets of a community's records.
+    Collections are curated, browsable subsets of a community's records.
     They are saved searches. Each collection stores a search query, and its records are whatever that query matches.
     A record is never added to a collection by hand.
     """
-    COMMUNITIES_COLLECTIONS_ENABLED = communities_collections_enabled
-    COLLECTIONS_MAX_DEPTH = max_depth
+    if community_slug not in ("global", None):
+        raise ValueError(f"community_slug must be 'global' or None, got {community_slug!r}")
+    COMMUNITIES_COLLECTIONS_ENABLED = enabled
+    COLLECTIONS_MAX_DEPTH = 1
+    COLLECTIONS_COMMUNITY_SLUG = community_slug
+    COLLECTIONS_MAX_TREES = max_trees
+    COLLECTIONS_MAX_COLLECTIONS_PER_TREE = max_collections_per_tree
     set_constants_in_caller(locals())
